@@ -706,12 +706,6 @@
             margin-top: 2rem;
         }
 
-        @media (max-width: 768px) {
-            .contact-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
         .contact-header {
             text-align: center;
             margin-bottom: 3rem;
@@ -1024,6 +1018,275 @@
             border-left: 3px solid var(--accent);
             font-family: 'Courier New', monospace;
             word-break: break-all;
+        }
+
+        /* تحسينات للهواتف */
+        @media (max-width: 768px) {
+            /* تحسين شاشة الدخول للهواتف */
+            .login-container {
+                overflow-y: auto;
+            }
+            
+            .login-pages {
+                width: 95%;
+                max-width: 350px;
+                padding: 10px;
+            }
+            
+            .login-page {
+                padding: 25px 20px;
+            }
+            
+            .login-page h2 {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+            
+            .form-group input {
+                padding: 14px;
+                font-size: 16px;
+            }
+            
+            .login-btn {
+                padding: 16px;
+                font-size: 18px;
+            }
+            
+            /* تحسين اللمبة للهواتف */
+            #bulbWrapper {
+                margin-top: 20px;
+            }
+            
+            #bulb {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .w-1.h-\[30vh\] {
+                height: 20vh;
+            }
+            
+            /* تحسين التلميح */
+            #hint {
+                font-size: 16px;
+                padding: 12px 20px;
+                bottom: 30px;
+                text-align: center;
+                width: 90%;
+                left: 5%;
+            }
+            
+            /* تحسين الأزرار العلوية */
+            .mode-bas-btn {
+                padding: 12px 18px;
+                font-size: 14px;
+                top: 15px;
+                right: 15px;
+            }
+            
+            .anime-title {
+                top: 15px;
+                left: 15px;
+                font-size: 12px;
+            }
+            
+            /* تحسين القوائم للهواتف */
+            .navbar .container {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+            
+            .navbar .flex.justify-between {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .navbar .text-2xl {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+            
+            .nav-btn {
+                padding: 8px 12px;
+                font-size: 12px;
+                margin: 2px;
+            }
+            
+            /* تحسين الصفحات الرئيسية */
+            .portfolio-page {
+                padding-top: 120px;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .page-title {
+                font-size: 2.5rem;
+            }
+            
+            /* تحسين الشبكات */
+            .grid {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .md\:grid-cols-2, 
+            .lg\:grid-cols-3, 
+            .lg\:grid-cols-4 {
+                grid-template-columns: 1fr;
+            }
+            
+            /* تحسين البطاقات */
+            .skill-card, 
+            .project-card, 
+            .service-card {
+                padding: 1.5rem;
+            }
+            
+            .hero-content .text-xl {
+                font-size: 1.1rem;
+            }
+            
+            /* تحسين الأقسام */
+            .container.mx-auto.px-6 {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+            
+            .py-20 {
+                padding-top: 3rem;
+                padding-bottom: 3rem;
+            }
+            
+            /* تحسين الصورة الشخصية */
+            .profile-image {
+                width: 150px;
+                height: 150px;
+            }
+            
+            /* تحسين الأزرار */
+            .contact-btn {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+            
+            /* تحسين مولد كلمات السر */
+            .password-generator {
+                padding: 1.5rem;
+            }
+            
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .flex.gap-4 {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            /* تحسين الروابط الاجتماعية */
+            .social-links {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+            
+            /* إخفاء بعض العناصر الزخرفية على الهواتف */
+            .anime-silhouette {
+                display: none;
+            }
+            
+            .manga-text {
+                display: none;
+            }
+        }
+        
+        /* تحسينات إضافية للشاشات الصغيرة جداً */
+        @media (max-width: 480px) {
+            .login-page {
+                padding: 20px 15px;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .profile-image {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .nav-btn {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+            
+            .portfolio-page {
+                padding-top: 140px;
+            }
+        }
+        
+        /* تحسينات للوضع الأفقي على الهواتف */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .login-container {
+                overflow-y: auto;
+            }
+            
+            #bulbWrapper {
+                margin-top: 10px;
+            }
+            
+            #hint {
+                position: relative;
+                bottom: auto;
+                margin-top: 20px;
+            }
+            
+            .login-pages {
+                margin-top: 20px;
+                margin-bottom: 20px;
+            }
+        }
+        
+        /* تحسينات عامة للتصميم المتجاوب */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        /* منع التكبير التلقائي لحقول الإدخال على iOS */
+        input, select, textarea {
+            font-size: 16px;
+        }
+        
+        /* تحسين قابلية النقر على العناصر التفاعلية */
+        button, .nav-btn, .login-btn, .contact-btn {
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* تحسينات للشريط العلوي الثابت */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        
+        /* إضافة مساحة آمنة للهواتف ذات الشقوق */
+        .safe-area-padding {
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
         }
     </style>
 </head>
@@ -1849,6 +2112,32 @@
                 el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
                 observer.observe(el);
             });
+            
+            // تحسينات للهواتف
+            // منع التكبير التلقائي على الهواتف عند التركيز على الحقول
+            document.querySelectorAll('input, select, textarea').forEach(element => {
+                element.addEventListener('focus', function() {
+                    window.scrollTo(0, 0);
+                    document.body.scrollTop = 0;
+                });
+            });
+            
+            // تحسين سلوك القائمة على الهواتف
+            const navButtons = document.querySelectorAll('.nav-btn');
+            navButtons.forEach(button => {
+                button.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.95)';
+                });
+                
+                button.addEventListener('touchend', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+            
+            // إضافة مساحة آمنة للهواتف الحديثة
+            if (CSS.supports('padding-top: env(safe-area-inset-top)')) {
+                document.body.classList.add('safe-area-padding');
+            }
         });
     </script>
 </body>
