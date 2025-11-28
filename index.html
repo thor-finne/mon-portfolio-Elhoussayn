@@ -1,0 +1,1855 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Elhoussayn Oubenmoussa - Cybersécurité</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #e50914;
+            --secondary: #20a4f3;
+            --accent: #f7b731;
+            --background: 240 10% 3.9%;
+            --foreground: 0 0% 98%;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .login-container {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: background 0.7s ease-in-out;
+            animation: gradientShift 20s ease infinite;
+            background-size: 400% 400%;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .anime-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.4;
+        }
+
+        .anime-silhouette {
+            position: absolute;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            border-radius: 10px;
+            animation: floatAnime 25s infinite ease-in-out;
+        }
+
+        .silhouette-1 {
+            width: 150px; height: 200px;
+            top: 10%; left: 5%;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+
+        .silhouette-2 {
+            width: 120px; height: 180px;
+            top: 60%; right: 8%;
+            clip-path: polygon(0% 0%, 100% 0%, 80% 100%, 20% 100%);
+        }
+
+        .silhouette-3 {
+            width: 140px; height: 190px;
+            bottom: 10%; left: 15%;
+            clip-path: polygon(25% 0%, 75% 0%, 100% 100%, 0% 100%);
+        }
+
+        .silhouette-4 {
+            width: 130px; height: 170px;
+            top: 20%; right: 20%;
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        }
+
+        @keyframes floatAnime {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg); 
+                opacity: 0.3;
+            }
+            25% { 
+                transform: translateY(-15px) rotate(2deg); 
+                opacity: 0.5;
+            }
+            50% { 
+                transform: translateY(0px) rotate(0deg); 
+                opacity: 0.3;
+            }
+            75% { 
+                transform: translateY(15px) rotate(-2deg); 
+                opacity: 0.5;
+            }
+        }
+
+        .manga-text {
+            position: absolute;
+            color: rgba(255,255,255,0.1);
+            font-size: 24px;
+            font-weight: bold;
+            font-family: 'Arial', sans-serif;
+            animation: textFloat 30s infinite linear;
+        }
+
+        .text-1 { top: 15%; left: 8%; animation-delay: 0s; }
+        .text-2 { top: 70%; right: 12%; animation-delay: 5s; }
+        .text-3 { bottom: 20%; left: 20%; animation-delay: 10s; }
+        .text-4 { top: 30%; right: 25%; animation-delay: 15s; }
+
+        @keyframes textFloat {
+            0% { transform: translateX(-100px) rotate(-5deg); opacity: 0; }
+            10% { opacity: 0.3; }
+            50% { transform: translateX(100px) rotate(5deg); opacity: 0.3; }
+            90% { opacity: 0; }
+            100% { transform: translateX(-100px) rotate(-5deg); opacity: 0; }
+        }
+
+        @keyframes swing {
+            0% { transform: rotate(3deg); }
+            100% { transform: rotate(-3deg); }
+        }
+
+        .swing-animation {
+            transform-origin: top center;
+            animation: swing 3s ease-in-out infinite alternate;
+        }
+
+        .bulb-on {
+            background: radial-gradient(circle at 60% 40%, 
+                rgba(255,255,255,0.9), 
+                #ffd700 40%, 
+                #ff6b35 80%);
+            box-shadow: 
+                0 0 80px 20px rgba(255,215,0,0.8),
+                0 0 160px 60px rgba(255,107,53,0.4),
+                0 0 240px 100px rgba(229,9,20,0.2),
+                inset 0 0 40px rgba(255,255,255,0.6);
+            filter: drop-shadow(0 0 30px #ffd700) 
+                    drop-shadow(0 0 60px #ff6b35);
+        }
+
+        .bulb-off {
+            background: radial-gradient(circle at 60% 40%, 
+                rgba(255,255,255,0.2), 
+                rgba(255,255,255,0.1) 40%, 
+                rgba(0,0,0,0.3) 80%);
+            opacity: 0.8;
+            box-shadow: 
+                inset 0 0 30px rgba(0,0,0,0.6),
+                0 0 40px rgba(255,255,255,0.1);
+        }
+
+        @keyframes flicker {
+            0%,100% { opacity: 1; }
+            50% { opacity: 0.9; }
+            52% { opacity: 0.7; }
+            54% { opacity: 0.9; }
+            56% { opacity: 1; }
+            58% { opacity: 0.8; }
+            60% { opacity: 1; }
+        }
+
+        .filament-on {
+            stroke: #fff;
+            stroke-width: 2.5;
+            filter: 
+                drop-shadow(0 0 8px #fff) 
+                drop-shadow(0 0 15px #ffd700)
+                drop-shadow(0 0 25px #ff6b35);
+            animation: flicker 3s infinite;
+        }
+
+        .filament-off {
+            stroke: #666;
+            stroke-width: 1;
+        }
+
+        .room-light {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 30%, 
+                rgba(255,215,0,0.3), 
+                rgba(255,107,53,0.2) 40%,
+                rgba(229,9,20,0.15) 60%,
+                transparent 80%);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .room-light.on {
+            opacity: 1;
+        }
+
+        .login-pages {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 400px;
+            opacity: 0;
+            transition: all 0.5s ease;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        .login-pages.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .login-page {
+            background: linear-gradient(135deg, 
+                rgba(229, 9, 20, 0.9), 
+                rgba(32, 164, 243, 0.9),
+                rgba(247, 183, 49, 0.85));
+            padding: 40px;
+            border-radius: 20px;
+            color: white;
+            border: 3px solid rgba(255,255,255,0.4);
+            backdrop-filter: blur(15px);
+            position: relative;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.5),
+                0 0 80px rgba(229, 9, 20, 0.4),
+                0 0 120px rgba(32, 164, 243, 0.3);
+            transform: perspective(1000px) rotateX(5deg) translateY(0);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .login-page::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, 
+                #e50914, #20a4f3, #f7b731, #2ecc71, #9b59b6);
+            border-radius: 23px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            animation: borderGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+        }
+
+        .login-page:hover::before {
+            opacity: 0.8;
+        }
+
+        .login-page:hover {
+            transform: perspective(1000px) rotateX(2deg) translateY(-5px);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.6),
+                0 0 100px rgba(229, 9, 20, 0.5),
+                0 0 150px rgba(32, 164, 243, 0.4);
+        }
+
+        .login-page h2 {
+            margin-bottom: 25px;
+            text-align: center;
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+            text-shadow: 
+                3px 3px 6px rgba(0,0,0,0.5), 
+                0 0 20px rgba(255,255,255,0.3),
+                0 0 30px rgba(255,215,0,0.4);
+            font-family: 'Arial', sans-serif;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 12px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-family: 'Arial', sans-serif;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid rgba(255,255,255,0.4);
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
+            font-family: 'Arial', sans-serif;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255,255,255,0.8);
+            font-style: italic;
+        }
+
+        .form-group input:focus {
+            border-color: rgba(255,255,255,0.8);
+            outline: none;
+            background: rgba(255,255,255,0.3);
+            box-shadow: 
+                inset 0 2px 8px rgba(0,0,0,0.3),
+                0 0 25px rgba(255,255,255,0.4);
+            transform: translateY(-3px);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #e50914, #20a4f3);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            box-shadow: 0 8px 25px rgba(229, 9, 20, 0.5);
+            position: relative;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .login-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s;
+        }
+
+        .login-btn:hover::before {
+            left: 100%;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(32, 164, 243, 0.7);
+            background: linear-gradient(135deg, #20a4f3, #e50914);
+        }
+
+        .login-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .mode-bas-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #e50914, #20a4f3);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+            transition: all 0.3s ease;
+            z-index: 100;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .mode-bas-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(229, 9, 20, 0.5);
+        }
+
+        .battery-circle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, #e50914, #20a4f3);
+            border-radius: 50%;
+            box-shadow: 0 0 25px #e50914, 0 0 50px rgba(32, 164, 243, 0.6);
+            opacity: 0;
+            transition: all 0.5s ease;
+            z-index: 100;
+        }
+
+        .battery-circle.show {
+            opacity: 1;
+        }
+
+        #hint {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+            font-size: 20px;
+            background: rgba(0,0,0,0.4);
+            padding: 15px 30px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+        }
+
+        .anime-title {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            font-style: italic;
+            z-index: 100;
+        }
+
+        /* Portfolio Styles */
+        .portfolio-section {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            z-index: 1000;
+            overflow-y: auto;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .portfolio-section.active {
+            display: block;
+        }
+
+        .portfolio-page {
+            display: none;
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        .portfolio-page.active {
+            display: block;
+        }
+
+        .project-detail-page {
+            display: none;
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        .project-detail-page.active {
+            display: block;
+        }
+
+        .anime-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(229, 9, 20, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(32, 164, 243, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(247, 183, 49, 0.08) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .navbar {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 2px solid transparent;
+            padding: 10px 20px;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 5px;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: var(--primary);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(229, 9, 20, 0.5);
+        }
+
+        .skill-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: var(--primary);
+        }
+
+        .project-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .contact-btn {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(229, 9, 20, 0.4);
+        }
+
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: var(--primary);
+            transform: translateY(-5px) rotate(360deg);
+            border-color: var(--accent);
+        }
+
+        .glow-text {
+            text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor;
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .page-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .contact-card {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.1), 
+                rgba(255, 255, 255, 0.05));
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 80px rgba(229, 9, 20, 0.2);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, 
+                #e50914, #20a4f3, #f7b731, #2ecc71, #9b59b6);
+            border-radius: 22px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            animation: borderGlow 4s ease-in-out infinite;
+        }
+
+        .contact-card:hover::before {
+            opacity: 0.8;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.4),
+                0 0 100px rgba(229, 9, 20, 0.3);
+        }
+
+        .contact-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+            border-color: var(--primary);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, 
+                rgba(229, 9, 20, 0.1), 
+                rgba(32, 164, 243, 0.1),
+                rgba(247, 183, 49, 0.1));
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .contact-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .contact-header h2 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .contact-header p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.08), 
+                rgba(255, 255, 255, 0.03));
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .social-section {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            transform: translateY(-5px);
+        }
+
+        .social-link i {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover i {
+            transform: scale(1.2);
+        }
+
+        .instagram:hover i {
+            color: #E1306C;
+        }
+
+        .discord:hover i {
+            color: #5865F2;
+        }
+
+        .profile-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary);
+            box-shadow: 0 0 30px rgba(229, 9, 20, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .profile-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 50px rgba(229, 9, 20, 0.7);
+        }
+
+        .project-header {
+            background: linear-gradient(135deg, rgba(229, 9, 20, 0.2), rgba(32, 164, 243, 0.2));
+            padding: 4rem 0;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .project-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .project-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .tech-badge {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            color: var(--accent);
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4);
+        }
+
+        .education-timeline {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .timeline-item {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 3px solid var(--primary);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .development-plan {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .plan-steps {
+            display: grid;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* أنماط جديدة لمولد كلمات السر */
+        .password-generator {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .password-display {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            text-align: center;
+            margin: 1rem 0;
+            position: relative;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            word-break: break-all;
+        }
+
+        .strength-meter {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .strength-fill {
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .strength-weak { background: #e50914; width: 25%; }
+        .strength-medium { background: #f7b731; width: 50%; }
+        .strength-strong { background: #2ecc71; width: 75%; }
+        .strength-very-strong { background: #27ae60; width: 100%; }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .copy-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .password-history {
+            margin-top: 2rem;
+        }
+
+        .history-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.5rem 1rem;
+            margin: 0.5rem 0;
+            border-radius: 5px;
+            border-left: 3px solid var(--accent);
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginContainer" class="login-container">
+        <div class="anime-background">
+            <div class="anime-silhouette silhouette-1"></div>
+            <div class="anime-silhouette silhouette-2"></div>
+            <div class="anime-silhouette silhouette-3"></div>
+            <div class="anime-silhouette silhouette-4"></div>
+            
+            <div class="manga-text text-1">SECURITY</div>
+            <div class="manga-text text-2">CYBER</div>
+            <div class="manga-text text-3">CODE</div>
+            <div class="manga-text text-4">HACK</div>
+        </div>
+
+        <div class="anime-title">EL HOUSSAYN - PORTFOLIO</div>
+
+        <button class="mode-bas-btn" id="modeBasBtn">Mode Bas</button>
+
+        <div class="battery-circle" id="batteryCircle"></div>
+
+        <div id="room" class="min-h-screen w-full flex flex-col items-center justify-start overflow-hidden relative">
+            <div id="lightEffect" class="room-light"></div>
+
+            <div id="bulbWrapper" class="relative z-10 flex flex-col items-center cursor-pointer group mt-10">
+                <div class="w-1 h-[30vh] bg-gradient-to-b from-gray-900 to-gray-700 swing-animation"></div>
+                
+                <div class="swing-animation -mt-1 flex flex-col items-center">
+                    <div class="w-12 h-8 bg-gradient-to-r from-gray-600 via-gray-300 to-gray-600"></div>
+                    <div class="w-10 h-3 bg-gradient-to-r from-gray-700 via-gray-400 to-gray-700"></div>
+                    <div class="w-6 h-4 bg-black rounded-b-md"></div>
+                    
+                    <div id="bulb" class="w-40 h-40 rounded-full mt-2 bulb-off relative transition-all duration-300">
+                        <div class="absolute top-5 left-8 w-10 h-6 bg-white opacity-30 rounded-full"></div>
+                        <svg class="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
+                            <path d="M 40 0 L 40 40" stroke="#666" stroke-width="0.5" />
+                            <path d="M 60 0 L 60 40" stroke="#666" stroke-width="0.5" />
+                            <path id="coil1" d="M 40 40 Q 50 60 60 40" fill="none" class="filament-off"></path>
+                            <path id="coil2" d="M 40 40 Q 50 55 60 40" fill="none" class="filament-off"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div id="loginPages" class="login-pages">
+                <div class="login-page" id="page1">
+                    <h2>🎌 Connexion</h2>
+                    <div class="form-group">
+                        <label>👤 Nom d'utilisateur</label>
+                        <input type="text" placeholder="Entrez votre nom de guerrier..." id="username1" value="Thorfinn">
+                    </div>
+                    <div class="form-group">
+                        <label>🔒 Mot de passe</label>
+                        <input type="password" placeholder="Votre technique secrète..." id="password1" value="password123">
+                    </div>
+                    <button class="login-btn" onclick="loginToPortfolio()">⚔️ SE CONNECTER</button>
+                </div>
+            </div>
+
+            <p id="hint" class="absolute bottom-20 text-white opacity-90 animate-pulse text-lg font-bold z-10">
+                💡 Cliquez sur la Lampe Magique
+            </p>
+        </div>
+    </div>
+
+    <!-- Portfolio Section -->
+    <div id="portfolioSection" class="portfolio-section">
+        <div class="anime-bg"></div>
+
+        <nav class="navbar fixed top-0 w-full z-50">
+            <div class="container mx-auto px-6 py-4">
+                <div class="flex justify-between items-center">
+                    <div class="text-2xl font-bold glow-text" style="color: var(--accent);">
+                        EL HOUSSAYN OUBENMOUSSA
+                    </div>
+                    <div class="flex space-x-4">
+                        <button class="nav-btn active" onclick="showPage('home')">Accueil</button>
+                        <button class="nav-btn" onclick="showPage('about')">À Propos</button>
+                        <button class="nav-btn" onclick="showPage('skills')">Compétences</button>
+                        <button class="nav-btn" onclick="showPage('projects')">Projets</button>
+                        <button class="nav-btn" onclick="showPage('contact')">Contact</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Page Accueil -->
+        <div id="home" class="portfolio-page active">
+            <section class="hero-section">
+                <div class="container mx-auto px-6">
+                    <div class="hero-content text-center">
+                        <div class="mb-8 flex justify-center">
+                            <img src="image/ma.png" 
+                                 alt="EL HOUSSAYN OUBENMOUSSA" 
+                                 class="profile-image floating">
+                        </div>
+                        <h1 class="hero-title mb-6">
+                            EL HOUSSAYN OUBENMOUSSA
+                        </h1>
+                        <div class="text-2xl mb-8 text-gray-300">
+                            Jeune Passionné de Cybersécurité - 17 Ans
+                        </div>
+                        <p class="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
+                            Actuellement en préparation pour intégrer un Bac Pro Systèmes Numériques en 2025/2026<br>
+                            Accompagné par la Mission Locale et inscrit à France Travail
+                        </p>
+                        <div class="flex justify-center space-x-6">
+                            <button class="contact-btn" onclick="showPage('projects')">
+                                Voir mes Projets
+                            </button>
+                            <button class="contact-btn bg-transparent border-2 border-red-500" onclick="showPage('contact')">
+                                Me Contacter
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Page À Propos -->
+        <div id="about" class="portfolio-page">
+            <section class="py-20 bg-black bg-opacity-50">
+                <div class="container mx-auto px-6">
+                    <h2 class="page-title">À PROPOS DE MOI</h2>
+                    <div class="grid md:grid-cols-2 gap-12 items-center">
+                        <div class="animate-fade-in-up">
+                            <h3 class="text-2xl font-bold mb-6 text-red-400">Mon Parcours</h3>
+                            <p class="text-lg text-gray-300 mb-6">
+                                Jeune marocain de 17 ans arrivé en France en 2023. Après avoir découvert ma passion 
+                                pour l'informatique et la cybersécurité, j'ai décidé de me réorienter vers le domaine du numérique.
+                            </p>
+                            <p class="text-lg text-gray-300 mb-6">
+                                Après avoir essayé la menuiserie pendant 2 mois, j'ai réalisé que ma véritable passion 
+                                était dans le numérique. Je suis actuellement accompagné par la Mission Locale 
+                                et inscrit à France Travail pour préparer mon intégration en Bac Pro SN.
+                            </p>
+                            
+                            <div class="education-timeline">
+                                <h4 class="text-xl font-bold mb-4 text-yellow-400">Parcours Scolaire et Professionnel</h4>
+                                <div class="timeline-item">
+                                    <div class="font-bold text-white">2025/2026 (Objectif)</div>
+                                    <div class="text-gray-400">Intégration en Bac Pro Systèmes Numériques</div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="font-bold text-white">2024/2025 (Actuel)</div>
+                                    <div class="text-gray-400">Mission Locale & France Travail - Préparation</div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="font-bold text-white">2024/2025 : Seconde Bac Pro Menuiserie Bois</div>
+                                    <div class="text-gray-400">2 mois - Abandon pour réorientation</div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="font-bold text-white">2023/2024 : 3ème en France</div>
+                                    <div class="text-gray-400">Apprentissage du français et adaptation</div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="font-bold text-white">Arrivée en France</div>
+                                    <div class="text-gray-400">2023 - Début de mon parcours français</div>
+                                </div>
+                            </div>
+
+                            <div class="development-plan">
+                                <h4 class="text-xl font-bold mb-4 text-green-400">Mon Objectif : Bac Pro SN 2025/2026</h4>
+                                <div class="plan-steps">
+                                    <div class="step">
+                                        <div class="step-number">1</div>
+                                        <div class="step-content">
+                                            <h4 class="font-bold text-white">Préparation Technique</h4>
+                                            <p class="text-gray-300">Développement de mes compétences en cybersécurité et réseaux</p>
+                                        </div>
+                                    </div>
+                                    <div class="step">
+                                        <div class="step-number">2</div>
+                                        <div class="step-content">
+                                            <h4 class="font-bold text-white">Candidature 2025</h4>
+                                            <p class="text-gray-300">Dépôt des dossiers pour Bac Pro SN 2025/2026</p>
+                                        </div>
+                                    </div>
+                                    <div class="step">
+                                        <div class="step-number">3</div>
+                                        <div class="step-content">
+                                            <h4 class="font-bold text-white">Intégration Réussie</h4>
+                                            <p class="text-gray-300">Début de la formation en Systèmes Numériques</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="animate-fade-in-up">
+                            <div class="skill-card p-8">
+                                <h3 class="text-2xl font-bold mb-6 text-yellow-400">Objectif Professionnel</h3>
+                                <p class="text-gray-300 mb-4">
+                                    <strong>Objectif Principal :</strong><br>
+                                    Intégrer un Bac Pro Systèmes Numériques en 2025/2026
+                                </p>
+                                <p class="text-gray-300 mb-4">
+                                    <strong>Accompagnement :</strong><br>
+                                    Mission Locale et France Travail
+                                </p>
+                                <p class="text-gray-300">
+                                    <strong>Projet à long terme :</strong><br>
+                                    Devenir expert en cybersécurité après le bac
+                                </p>
+                                
+                                <div class="mt-6 p-4 bg-gradient-to-r from-red-500 to-blue-500 rounded-lg">
+                                    <h4 class="font-bold text-white mb-2">Compétences Linguistiques</h4>
+                                    <p class="text-white">Arabe (Langue maternelle) • Français (Niveau B2) • Compréhension de tous les accents arabes</p>
+                                </div>
+                            </div>
+
+                            <div class="skill-card p-6 mt-6">
+                                <h3 class="text-xl font-bold mb-4 text-green-400">Pourquoi le Bac Pro SN ?</h3>
+                                <ul class="text-gray-300 space-y-2">
+                                    <li>✅ Spécialisation en réseaux et cybersécurité</li>
+                                    <li>✅ Enseignement pratique et technique</li>
+                                    <li>✅ Débouchés vers les métiers du numérique</li>
+                                    <li>✅ Poursuite d'études possible en BTS</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Page Compétences -->
+        <div id="skills" class="portfolio-page">
+            <section class="py-20">
+                <div class="container mx-auto px-6">
+                    <h2 class="page-title">MES COMPÉTENCES</h2>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <div class="skill-card p-6 text-center">
+                            <div class="text-4xl mb-4 text-red-400">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3">Cybersécurité</h3>
+                            <p class="text-gray-300">Bases de la sécurité informatique et tests d'intrusion</p>
+                            <div class="w-full bg-gray-700 rounded-full h-2 mt-4">
+                                <div class="bg-red-500 h-2 rounded-full" style="width: 70%"></div>
+                            </div>
+                        </div>
+
+                        <div class="skill-card p-6 text-center">
+                            <div class="text-4xl mb-4 text-blue-400">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3">Kali Linux</h3>
+                            <p class="text-gray-300">Environnement de test et outils de sécurité</p>
+                            <div class="w-full bg-gray-700 rounded-full h-2 mt-4">
+                                <div class="bg-blue-500 h-2 rounded-full" style="width: 75%"></div>
+                            </div>
+                        </div>
+
+                        <div class="skill-card p-6 text-center">
+                            <div class="text-4xl mb-4 text-green-400">
+                                <i class="fas fa-network-wired"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3">Réseaux</h3>
+                            <p class="text-gray-300">Protocoles HTTP/HTTPS, TCP/IP, DNS</p>
+                            <div class="w-full bg-gray-700 rounded-full h-2 mt-4">
+                                <div class="bg-green-500 h-2 rounded-full" style="width: 65%"></div>
+                            </div>
+                        </div>
+
+                        <div class="skill-card p-6 text-center">
+                            <div class="text-4xl mb-4 text-purple-400">
+                                <i class="fas fa-user-secret"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3">Sécurité Wireless</h3>
+                            <p class="text-gray-300">Analyse et sécurisation des réseaux sans-fil</p>
+                            <div class="w-full bg-gray-700 rounded-full h-2 mt-4">
+                                <div class="bg-purple-500 h-2 rounded-full" style="width: 60%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-12 skill-card p-8">
+                        <h3 class="text-2xl font-bold mb-6 text-yellow-400 text-center">Méthode d'Apprentissage</h3>
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div>
+                                <h4 class="text-lg font-bold mb-3 text-white">Auto-formation</h4>
+                                <ul class="text-gray-300 space-y-2">
+                                    <li>• YouTube et tutoriels en ligne</li>
+                                    <li>• Documentation technique</li>
+                                    <li>• Pratique en laboratoire virtuel</li>
+                                    <li>• Projets personnels</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold mb-3 text-white">Préparation Bac Pro SN</h4>
+                                <ul class="text-gray-300 space-y-2">
+                                    <li>• Développement des compétences techniques</li>
+                                    <li>• Renforcement des bases en réseaux</li>
+                                    <li>• Projets pratiques démontrables</li>
+                                    <li>• Préparation du dossier de candidature</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Page Projets -->
+        <div id="projects" class="portfolio-page">
+            <section class="py-20 bg-black bg-opacity-50">
+                <div class="container mx-auto px-6">
+                    <h2 class="page-title">MES PROJETS D'APPRENTISSAGE</h2>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        
+                        <!-- المشروع الجديد: مولد كلمات السر -->
+                        <div class="project-card p-6">
+                            <div class="text-3xl mb-4 text-purple-400">
+                                <i class="fas fa-key"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3">Générateur de Mots de Passe</h3>
+                            <p class="text-gray-300 mb-4">Outil de génération de mots de passe sécurisés avec analyse de force</p>
+                            <div class="flex space-x-2 mb-4">
+                                <span class="bg-purple-500 text-white px-2 py-1 rounded text-sm">JavaScript</span>
+                                <span class="bg-indigo-500 text-white px-2 py-1 rounded text-sm">HTML/CSS</span>
+                                <span class="bg-pink-500 text-white px-2 py-1 rounded text-sm">Sécurité</span>
+                            </div>
+                            <button class="contact-btn w-full text-sm" onclick="showProjectDetail('password-generator')">
+                                Voir le Projet
+                            </button>
+                        </div>
+
+                        <!-- باقي المشاريع -->
+                        <div class="project-card p-6">
+                            <div class="text-3xl mb-4 text-red-400">
+                                <i class="fas fa-wifi"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3">Sécurité des Réseaux Sans-Fil</h3>
+                            <p class="text-gray-300 mb-4">Analyse de la sécurité WiFi et tests de pénétration</p>
+                            <div class="flex space-x-2 mb-4">
+                                <span class="bg-red-500 text-white px-2 py-1 rounded text-sm">Kali Linux</span>
+                                <span class="bg-blue-500 text-white px-2 py-1 rounded text-sm">Aircrack-ng</span>
+                                <span class="bg-green-500 text-white px-2 py-1 rounded text-sm">Wireshark</span>
+                            </div>
+                            <button class="contact-btn w-full text-sm" onclick="showProjectDetail('wireless-security')">
+                                Voir le Projet
+                            </button>
+                        </div>
+
+                        <div class="project-card p-6">
+                            <div class="text-3xl mb-4 text-blue-400">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3">Environnement de Test Sécurisé</h3>
+                            <p class="text-gray-300 mb-4">Configuration de lab virtuel pour tests de sécurité</p>
+                            <div class="flex space-x-2 mb-4">
+                                <span class="bg-green-500 text-white px-2 py-1 rounded text-sm">VirtualBox</span>
+                                <span class="bg-yellow-500 text-white px-2 py-1 rounded text-sm">Kali Linux</span>
+                                <span class="bg-purple-500 text-white px-2 py-1 rounded text-sm">Réseaux</span>
+                            </div>
+                            <button class="contact-btn w-full text-sm" onclick="showProjectDetail('test-environment')">
+                                Voir le Projet
+                            </button>
+                        </div>
+
+                        <div class="project-card p-6">
+                            <div class="text-3xl mb-4 text-yellow-400">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3">Analyse de Protocoles</h3>
+                            <p class="text-gray-300 mb-4">Étude des protocoles réseau et détection de vulnérabilités</p>
+                            <div class="flex space-x-2 mb-4">
+                                <span class="bg-purple-500 text-white px-2 py-1 rounded text-sm">HTTP/HTTPS</span>
+                                <span class="bg-pink-500 text-white px-2 py-1 rounded text-sm">TCP/IP</span>
+                                <span class="bg-indigo-500 text-white px-2 py-1 rounded text-sm">DNS</span>
+                            </div>
+                            <button class="contact-btn w-full text-sm" onclick="showProjectDetail('protocol-analysis')">
+                                Voir le Projet
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- صفحة تفصيلية لمشروع مولد كلمات السر -->
+        <div id="password-generator" class="project-detail-page">
+            <div class="project-header">
+                <div class="container mx-auto px-6">
+                    <button class="back-btn" onclick="showPage('projects')">
+                        <i class="fas fa-arrow-left mr-2"></i>Retour aux Projets
+                    </button>
+                    <h1 class="text-4xl md:text-5xl font-bold mb-4">Générateur de Mots de Passe Sécurisés</h1>
+                    <p class="text-xl text-gray-300">Outil interactif pour créer des mots de passe forts et analyser leur sécurité</p>
+                </div>
+            </div>
+
+            <div class="project-content">
+                <div class="grid md:grid-cols-3 gap-8 mb-8">
+                    <div class="project-section">
+                        <h3 class="text-2xl font-bold mb-4 text-red-400">
+                            <i class="fas fa-info-circle mr-2"></i>Description
+                        </h3>
+                        <p class="text-gray-300">
+                            Un générateur de mots de passe interactif qui crée des combinaisons sécurisées 
+                            en utilisant des lettres majuscules, minuscules, chiffres et symboles.
+                        </p>
+                    </div>
+
+                    <div class="project-section">
+                        <h3 class="text-2xl font-bold mb-4 text-blue-400">
+                            <i class="fas fa-cogs mr-2"></i>Technologies
+                        </h3>
+                        <div class="tech-stack">
+                            <span class="tech-badge">JavaScript</span>
+                            <span class="tech-badge">HTML5</span>
+                            <span class="tech-badge">CSS3</span>
+                            <span class="tech-badge">Algorithmes</span>
+                        </div>
+                    </div>
+
+                    <div class="project-section">
+                        <h3 class="text-2xl font-bold mb-4 text-green-400">
+                            <i class="fas fa-calendar mr-2"></i>Durée
+                        </h3>
+                        <p class="text-gray-300 text-xl">2 semaines</p>
+                        <p class="text-gray-400">Développement et tests</p>
+                    </div>
+                </div>
+
+                <!-- مولد كلمات السر التفاعلي -->
+                <div class="password-generator">
+                    <h3 class="text-2xl font-bold mb-6 text-yellow-400 text-center">
+                        <i class="fas fa-key mr-2"></i>Générateur de Mots de Passe
+                    </h3>
+                    
+                    <div class="password-display" id="passwordDisplay">
+                        Cliquez sur "Générer" pour créer un mot de passe
+                    </div>
+
+                    <div class="strength-meter">
+                        <div class="strength-fill strength-weak" id="strengthMeter"></div>
+                    </div>
+                    <div class="text-center text-sm text-gray-300 mb-4" id="strengthText">
+                        Force du mot de passe: Faible
+                    </div>
+
+                    <div class="options-grid">
+                        <div class="option-item">
+                            <input type="checkbox" id="uppercase" checked>
+                            <label for="uppercase" class="text-white">Lettres majuscules (A-Z)</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="lowercase" checked>
+                            <label for="lowercase" class="text-white">Lettres minuscules (a-z)</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="numbers" checked>
+                            <label for="numbers" class="text-white">Chiffres (0-9)</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="checkbox" id="symbols" checked>
+                            <label for="symbols" class="text-white">Symboles (!@#$%^&*)</label>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4 mb-4">
+                        <input type="range" id="passwordLength" min="8" max="32" value="16" class="flex-1">
+                        <span class="text-white font-bold" id="lengthValue">16 caractères</span>
+                    </div>
+
+                    <div class="flex gap-4 justify-center">
+                        <button class="contact-btn" onclick="generatePassword()">
+                            <i class="fas fa-sync-alt mr-2"></i>Générer
+                        </button>
+                        <button class="copy-btn" onclick="copyPassword()">
+                            <i class="fas fa-copy mr-2"></i>Copier
+                        </button>
+                    </div>
+
+                    <div class="password-history">
+                        <h4 class="text-lg font-bold mb-3 text-white">Derniers mots de passe générés:</h4>
+                        <div id="passwordHistory"></div>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <h3 class="text-2xl font-bold mb-4 text-purple-400">
+                        <i class="fas fa-star mr-2"></i>Fonctionnalités
+                    </h3>
+                    <ul class="feature-list">
+                        <li>Génération de mots de passe personnalisables</li>
+                        <li>Analyse de la force du mot de passe en temps réel</li>
+                        <li>Options de personnalisation (longueur, caractères)</li>
+                        <li>Historique des mots de passe générés</li>
+                        <li>Fonction de copie dans le presse-papiers</li>
+                        <li>Interface utilisateur intuitive et responsive</li>
+                    </ul>
+                </div>
+
+                <div class="project-section">
+                    <h3 class="text-2xl font-bold mb-4 text-green-400">
+                        <i class="fas fa-shield-alt mr-2"></i>Concepts de Sécurité Implémentés
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="text-lg font-bold mb-2 text-white">Complexité des Mots de Passe</h4>
+                            <ul class="text-gray-300">
+                                <li>• Utilisation de caractères variés</li>
+                                <li>• Longueur minimale de 8 caractères</li>
+                                <li>• Combinaison de différents types de caractères</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold mb-2 text-white">Entropie et Aléatoire</h4>
+                            <ul class="text-gray-300">
+                                <li>• Génération cryptographiquement sûre</li>
+                                <li>• Distribution uniforme des caractères</li>
+                                <li>• Éviter les motifs prévisibles</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Contact -->
+        <div id="contact" class="portfolio-page">
+            <section class="py-20">
+                <div class="container mx-auto px-6">
+                    <div class="contact-header">
+                        <h2>CONTACTEZ-MOI</h2>
+                        <p>Je suis à la recherche d'opportunités pour intégrer un Bac Pro SN en 2025/2026</p>
+                    </div>
+
+                    <div class="contact-grid">
+                        <div class="contact-card p-8">
+                            <h3 class="text-2xl font-bold mb-6 text-red-400">
+                                <i class="fas fa-comments mr-2"></i>Coordonnées
+                            </h3>
+                            
+                            <div class="space-y-6">
+                                <div class="contact-item p-4 flex items-center">
+                                    <div class="w-12 h-12 rounded-full bg-gradient-to-r from-red-500 to-yellow-500 flex items-center justify-center mr-4">
+                                        <i class="fas fa-envelope text-white"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-400 text-sm">Email</div>
+                                        <div class="text-white font-medium">e.oubenmoussa@gmail.com</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="contact-item p-4 flex items-center">
+                                    <div class="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center mr-4">
+                                        <i class="fas fa-phone text-white"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-400 text-sm">Téléphone</div>
+                                        <div class="text-white font-medium">+33 6 59 25 55 58</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="contact-item p-4 flex items-center">
+                                    <div class="w-12 h-12 rounded-full bg-gradient-to-r from-green-500 to-emerald-400 flex items-center justify-center mr-4">
+                                        <i class="fas fa-map-marker-alt text-white"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-gray-400 text-sm">Adresse</div>
+                                        <div class="text-white font-medium">7 Rue des Tanneurs, Béziers, France</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-8 space-y-4">
+                                <a href="mailto:e.oubenmoussa@gmail.com" class="w-full bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold py-3 px-6 rounded-full hover:from-red-600 hover:to-pink-600 transition-all duration-300 transform hover:-translate-y-1 shadow-lg flex items-center justify-center">
+                                    <i class="fas fa-envelope mr-2"></i>Envoyer un Email
+                                </a>
+                                <a href="tel:+33659255558" class="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold py-3 px-6 rounded-full hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 transform hover:-translate-y-1 shadow-lg flex items-center justify-center">
+                                    <i class="fas fa-phone mr-2"></i>Appeler Maintenant
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="space-y-6">
+                            <div class="service-card">
+                                <div class="service-icon">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                                <h4 class="text-xl font-bold mb-2 text-white">Recherche de Formation</h4>
+                                <p class="text-gray-300">Je cherche à intégrer un Bac Pro Systèmes Numériques pour 2025/2026</p>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-icon">
+                                    <i class="fas fa-briefcase"></i>
+                                </div>
+                                <h4 class="text-xl font-bold mb-2 text-white">Stage Découverte</h4>
+                                <p class="text-gray-300">Ouvert à un stage pour découvrir le milieu professionnel</p>
+                            </div>
+
+                            <div class="service-card">
+                                <div class="service-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h4 class="text-xl font-bold mb-2 text-white">Accompagnement</h4>
+                                <p class="text-gray-300">Actuellement accompagné par Mission Locale et France Travail</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="social-section">
+                        <h3 class="text-2xl font-bold mb-4 text-yellow-400">Réseaux Sociaux</h3>
+                        <p class="text-gray-300 mb-6">N'hésitez pas à me suivre sur mes réseaux</p>
+                        
+                        <div class="social-links">
+                            <a href="https://www.instagram.com/thor_finne/" class="social-link instagram">
+                                <i class="fab fa-instagram"></i>
+                                <span>Instagram</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // الكود الجديد - ساهل وبسيط
+        const bulb = document.getElementById("bulb");
+        const loginPages = document.getElementById("loginPages");
+        const loginContainer = document.getElementById("loginContainer");
+        const portfolioSection = document.getElementById("portfolioSection");
+        const lightEffect = document.getElementById("lightEffect");
+        const hint = document.getElementById("hint");
+
+        // تكليك على اللمبة
+        bulb.addEventListener('click', function() {
+            // غير اللون ديال اللمبة
+            bulb.classList.remove("bulb-off");
+            bulb.classList.add("bulb-on");
+            
+            // غير الفتيلة
+            document.getElementById("coil1").classList.remove("filament-off");
+            document.getElementById("coil1").classList.add("filament-on");
+            document.getElementById("coil2").classList.remove("filament-off");
+            document.getElementById("coil2").classList.add("filament-on");
+            
+            // وري الضوء
+            lightEffect.classList.add("on");
+            
+            // وري فورم التسجيل
+            loginPages.style.opacity = "1";
+            loginPages.style.pointerEvents = "all";
+            
+            // خبي التلميح
+            hint.style.opacity = "0";
+        });
+
+        // دالة التسجيل
+        function loginToPortfolio() {
+            const username = document.getElementById('username1').value;
+            const password = document.getElementById('password1').value;
+            
+            if (username && password) {
+                loginContainer.style.display = 'none';
+                portfolioSection.style.display = 'block';
+            } else {
+                alert('⚠️ Veuillez remplir tous les champs!');
+            }
+        }
+
+        // دالة تبديل الصفحات
+        function showPage(pageId) {
+            // إخفاء جميع الصفحات
+            document.querySelectorAll('.portfolio-page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // إخفاء صفحات التفاصيل
+            document.querySelectorAll('.project-detail-page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // عرض الصفحة المطلوبة
+            document.getElementById(pageId).classList.add('active');
+            
+            // تحديث الأزرار
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function showProjectDetail(projectId) {
+            // إخفاء جميع الصفحات
+            document.querySelectorAll('.portfolio-page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // إخفاء صفحات التفاصيل
+            document.querySelectorAll('.project-detail-page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // عرض صفحة التفاصيل المطلوبة
+            document.getElementById(projectId).classList.add('active');
+        }
+
+        // دالة إنشاء كلمة السر
+        function generatePassword() {
+            const uppercase = document.getElementById('uppercase').checked;
+            const lowercase = document.getElementById('lowercase').checked;
+            const numbers = document.getElementById('numbers').checked;
+            const symbols = document.getElementById('symbols').checked;
+            const length = document.getElementById('passwordLength').value;
+
+            const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
+            const numberChars = '0123456789';
+            const symbolChars = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+
+            let allowedChars = '';
+            let password = '';
+
+            if (uppercase) allowedChars += uppercaseChars;
+            if (lowercase) allowedChars += lowercaseChars;
+            if (numbers) allowedChars += numberChars;
+            if (symbols) allowedChars += symbolChars;
+
+            if (allowedChars.length === 0) {
+                alert('Veuillez sélectionner au moins un type de caractère');
+                return;
+            }
+
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * allowedChars.length);
+                password += allowedChars[randomIndex];
+            }
+
+            document.getElementById('passwordDisplay').textContent = password;
+            updatePasswordStrength(password);
+            addToHistory(password);
+        }
+
+        // دالة تحديث قوة كلمة السر
+        function updatePasswordStrength(password) {
+            const meter = document.getElementById('strengthMeter');
+            const text = document.getElementById('strengthText');
+            
+            let strength = 0;
+            
+            if (password.length >= 8) strength++;
+            if (password.length >= 12) strength++;
+            if (password.length >= 16) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[a-z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            meter.className = 'strength-fill';
+            if (strength <= 2) {
+                meter.classList.add('strength-weak');
+                text.textContent = 'Force du mot de passe: Faible';
+            } else if (strength <= 4) {
+                meter.classList.add('strength-medium');
+                text.textContent = 'Force du mot de passe: Moyenne';
+            } else if (strength <= 6) {
+                meter.classList.add('strength-strong');
+                text.textContent = 'Force du mot de passe: Forte';
+            } else {
+                meter.classList.add('strength-very-strong');
+                text.textContent = 'Force du mot de passe: Très forte';
+            }
+        }
+
+        // دالة نسخ كلمة السر
+        function copyPassword() {
+            const password = document.getElementById('passwordDisplay').textContent;
+            if (password && password !== 'Cliquez sur "Générer" pour créer un mot de passe') {
+                navigator.clipboard.writeText(password).then(() => {
+                    alert('Mot de passe copié dans le presse-papiers!');
+                });
+            }
+        }
+
+        // دالة إضافة إلى التاريخ
+        function addToHistory(password) {
+            const history = document.getElementById('passwordHistory');
+            const historyItem = document.createElement('div');
+            historyItem.className = 'history-item';
+            historyItem.textContent = password;
+            
+            history.insertBefore(historyItem, history.firstChild);
+            
+            if (history.children.length > 5) {
+                history.removeChild(history.lastChild);
+            }
+        }
+
+        // تحديث عرض طول كلمة السر
+        document.getElementById('passwordLength').addEventListener('input', function() {
+            document.getElementById('lengthValue').textContent = this.value + ' caractères';
+        });
+
+        // تفعيل الرسوم المتحركة للعناصر
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const animatedElements = document.querySelectorAll('.animate-fade-in-up');
+            animatedElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(50px)';
+                el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
