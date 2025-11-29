@@ -469,6 +469,7 @@
             display: none;
             min-height: 100vh;
             padding-top: 80px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
         }
 
         .project-detail-page.active {
@@ -1020,9 +1021,52 @@
             word-break: break-all;
         }
 
+        .project-detail-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .project-feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .demo-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .code-snippet {
+            background: #1e1e1e;
+            border-radius: 10px;
+            padding: 1.5rem;
+            font-family: 'Courier New', monospace;
+            color: #d4d4d4;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
         /* تحسينات للهواتف */
         @media (max-width: 768px) {
-            /* تحسين شاشة الدخول للهواتف */
             .login-container {
                 overflow-y: auto;
             }
@@ -1052,7 +1096,6 @@
                 font-size: 18px;
             }
             
-            /* تحسين اللمبة للهواتف */
             #bulbWrapper {
                 margin-top: 20px;
             }
@@ -1066,7 +1109,6 @@
                 height: 20vh;
             }
             
-            /* تحسين التلميح */
             #hint {
                 font-size: 16px;
                 padding: 12px 20px;
@@ -1076,7 +1118,6 @@
                 left: 5%;
             }
             
-            /* تحسين الأزرار العلوية */
             .mode-bas-btn {
                 padding: 12px 18px;
                 font-size: 14px;
@@ -1090,7 +1131,6 @@
                 font-size: 12px;
             }
             
-            /* تحسين القوائم للهواتف */
             .navbar .container {
                 padding-left: 15px;
                 padding-right: 15px;
@@ -1112,7 +1152,6 @@
                 margin: 2px;
             }
             
-            /* تحسين الصفحات الرئيسية */
             .portfolio-page {
                 padding-top: 120px;
             }
@@ -1125,7 +1164,6 @@
                 font-size: 2.5rem;
             }
             
-            /* تحسين الشبكات */
             .grid {
                 grid-template-columns: 1fr !important;
             }
@@ -1141,7 +1179,6 @@
                 grid-template-columns: 1fr;
             }
             
-            /* تحسين البطاقات */
             .skill-card, 
             .project-card, 
             .service-card {
@@ -1152,7 +1189,6 @@
                 font-size: 1.1rem;
             }
             
-            /* تحسين الأقسام */
             .container.mx-auto.px-6 {
                 padding-left: 15px;
                 padding-right: 15px;
@@ -1163,19 +1199,16 @@
                 padding-bottom: 3rem;
             }
             
-            /* تحسين الصورة الشخصية */
             .profile-image {
                 width: 150px;
                 height: 150px;
             }
             
-            /* تحسين الأزرار */
             .contact-btn {
                 padding: 12px 20px;
                 font-size: 14px;
             }
             
-            /* تحسين مولد كلمات السر */
             .password-generator {
                 padding: 1.5rem;
             }
@@ -1189,13 +1222,11 @@
                 gap: 1rem;
             }
             
-            /* تحسين الروابط الاجتماعية */
             .social-links {
                 flex-wrap: wrap;
                 gap: 1rem;
             }
             
-            /* إخفاء بعض العناصر الزخرفية على الهواتف */
             .anime-silhouette {
                 display: none;
             }
@@ -1205,7 +1236,6 @@
             }
         }
         
-        /* تحسينات إضافية للشاشات الصغيرة جداً */
         @media (max-width: 480px) {
             .login-page {
                 padding: 20px 15px;
@@ -1234,7 +1264,6 @@
             }
         }
         
-        /* تحسينات للوضع الأفقي على الهواتف */
         @media (max-height: 500px) and (orientation: landscape) {
             .login-container {
                 overflow-y: auto;
@@ -1256,24 +1285,20 @@
             }
         }
         
-        /* تحسينات عامة للتصميم المتجاوب */
         img {
             max-width: 100%;
             height: auto;
         }
         
-        /* منع التكبير التلقائي لحقول الإدخال على iOS */
         input, select, textarea {
             font-size: 16px;
         }
         
-        /* تحسين قابلية النقر على العناصر التفاعلية */
         button, .nav-btn, .login-btn, .contact-btn {
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
         }
         
-        /* تحسينات للشريط العلوي الثابت */
         .navbar {
             position: fixed;
             top: 0;
@@ -1281,7 +1306,6 @@
             z-index: 1000;
         }
         
-        /* إضافة مساحة آمنة للهواتف ذات الشقوق */
         .safe-area-padding {
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
@@ -1393,7 +1417,7 @@
                             Jeune Passionné de Cybersécurité - 17 Ans
                         </div>
                         <p class="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
-                            Actuellement en préparation pour intégrer un Bac Pro Systèmes Numériques en 2025/2026<br>
+                            Actuellement en préparation pour intégrer un Bac Pro Systèmes Numériques en 2026/2027<br>
                             Accompagné par la Mission Locale et inscrit à France Travail
                         </p>
                         <div class="flex justify-center space-x-6">
@@ -1430,7 +1454,7 @@
                             <div class="education-timeline">
                                 <h4 class="text-xl font-bold mb-4 text-yellow-400">Parcours Scolaire et Professionnel</h4>
                                 <div class="timeline-item">
-                                    <div class="font-bold text-white">2025/2026 (Objectif)</div>
+                                    <div class="font-bold text-white">2026/2027 (Objectif)</div>
                                     <div class="text-gray-400">Intégration en Bac Pro Systèmes Numériques</div>
                                 </div>
                                 <div class="timeline-item">
@@ -1452,7 +1476,7 @@
                             </div>
 
                             <div class="development-plan">
-                                <h4 class="text-xl font-bold mb-4 text-green-400">Mon Objectif : Bac Pro SN 2025/2026</h4>
+                                <h4 class="text-xl font-bold mb-4 text-green-400">Mon Objectif : Bac Pro SN 2026/2027</h4>
                                 <div class="plan-steps">
                                     <div class="step">
                                         <div class="step-number">1</div>
@@ -1464,8 +1488,8 @@
                                     <div class="step">
                                         <div class="step-number">2</div>
                                         <div class="step-content">
-                                            <h4 class="font-bold text-white">Candidature 2025</h4>
-                                            <p class="text-gray-300">Dépôt des dossiers pour Bac Pro SN 2025/2026</p>
+                                            <h4 class="font-bold text-white">Candidature 2026</h4>
+                                            <p class="text-gray-300">Dépôt des dossiers pour Bac Pro SN 2026/2027</p>
                                         </div>
                                     </div>
                                     <div class="step">
@@ -1483,7 +1507,7 @@
                                 <h3 class="text-2xl font-bold mb-6 text-yellow-400">Objectif Professionnel</h3>
                                 <p class="text-gray-300 mb-4">
                                     <strong>Objectif Principal :</strong><br>
-                                    Intégrer un Bac Pro Systèmes Numériques en 2025/2026
+                                    Intégrer un Bac Pro Systèmes Numériques en 2026/2027
                                 </p>
                                 <p class="text-gray-300 mb-4">
                                     <strong>Accompagnement :</strong><br>
@@ -1600,7 +1624,7 @@
                     <h2 class="page-title">MES PROJETS D'APPRENTISSAGE</h2>
                     <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         
-                        <!-- المشروع الجديد: مولد كلمات السر -->
+                        <!-- Générateur de Mots de Passe -->
                         <div class="project-card p-6">
                             <div class="text-3xl mb-4 text-purple-400">
                                 <i class="fas fa-key"></i>
@@ -1617,7 +1641,7 @@
                             </button>
                         </div>
 
-                        <!-- باقي المشاريع -->
+                        <!-- Sécurité des Réseaux Sans-Fil -->
                         <div class="project-card p-6">
                             <div class="text-3xl mb-4 text-red-400">
                                 <i class="fas fa-wifi"></i>
@@ -1634,6 +1658,25 @@
                             </button>
                         </div>
 
+                        <!-- Analyse de Protocoles -->
+                        <div class="project-card p-6">
+                            <div class="text-3xl mb-4 text-yellow-400">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3">Analyse de Protocoles</h3>
+                            <p class="text-gray-300 mb-4">Étude des protocoles réseau et détection de vulnérabilités</p>
+                            <div class="flex space-x-2 mb-4">
+                                <span class="bg-purple-500 text-white px-2 py-1 rounded text-sm">HTTP/HTTPS</span>
+                                <span class="bg-pink-500 text-white px-2 py-1 rounded text-sm">TCP/UDP</span>
+                                <span class="bg-indigo-500 text-white px-2 py-1 rounded text-sm">SSH</span>
+                                <span class="bg-green-500 text-white px-2 py-1 rounded text-sm">DNS</span>
+                            </div>
+                            <button class="contact-btn w-full text-sm" onclick="showProjectDetail('protocol-analysis')">
+                                Voir le Projet
+                            </button>
+                        </div>
+
+                        <!-- Environnement de Test Sécurisé -->
                         <div class="project-card p-6">
                             <div class="text-3xl mb-4 text-blue-400">
                                 <i class="fas fa-lock"></i>
@@ -1643,25 +1686,10 @@
                             <div class="flex space-x-2 mb-4">
                                 <span class="bg-green-500 text-white px-2 py-1 rounded text-sm">VirtualBox</span>
                                 <span class="bg-yellow-500 text-white px-2 py-1 rounded text-sm">Kali Linux</span>
-                                <span class="bg-purple-500 text-white px-2 py-1 rounded text-sm">Réseaux</span>
+                                <span class="bg-purple-500 text-white px-2 py-1 rounded text-sm">Hydra</span>
+                                <span class="bg-red-500 text-white px-2 py-1 rounded text-sm">Aircrack-ng</span>
                             </div>
                             <button class="contact-btn w-full text-sm" onclick="showProjectDetail('test-environment')">
-                                Voir le Projet
-                            </button>
-                        </div>
-
-                        <div class="project-card p-6">
-                            <div class="text-3xl mb-4 text-yellow-400">
-                                <i class="fas fa-shield-alt"></i>
-                            </div>
-                            <h3 class="text-xl font-bold mb-3">Analyse de Protocoles</h3>
-                            <p class="text-gray-300 mb-4">Étude des protocoles réseau et détection de vulnérabilités</p>
-                            <div class="flex space-x-2 mb-4">
-                                <span class="bg-purple-500 text-white px-2 py-1 rounded text-sm">HTTP/HTTPS</span>
-                                <span class="bg-pink-500 text-white px-2 py-1 rounded text-sm">TCP/IP</span>
-                                <span class="bg-indigo-500 text-white px-2 py-1 rounded text-sm">DNS</span>
-                            </div>
-                            <button class="contact-btn w-full text-sm" onclick="showProjectDetail('protocol-analysis')">
                                 Voir le Projet
                             </button>
                         </div>
@@ -1811,13 +1839,273 @@
             </div>
         </div>
 
+        <!-- صفحة تفصيلية لمشروع أمن الشبكات اللاسلكية -->
+        <div id="wireless-security" class="project-detail-page">
+            <div class="project-header">
+                <div class="container mx-auto px-6">
+                    <button class="back-btn" onclick="showPage('projects')">
+                        <i class="fas fa-arrow-left mr-2"></i>Retour aux Projets
+                    </button>
+                    <h1 class="text-4xl md:text-5xl font-bold mb-4">Sécurité des Réseaux Sans-Fil</h1>
+                    <p class="text-xl text-gray-300">Analyse approfondie de la sécurité WiFi et tests de pénétration</p>
+                </div>
+            </div>
+
+            <div class="project-detail-content">
+                <div class="grid md:grid-cols-3 gap-8 mb-8">
+                    <div class="project-section">
+                        <h3 class="text-2xl font-bold mb-4 text-red-400">
+                            <i class="fas fa-info-circle mr-2"></i>Description
+                        </h3>
+                        <p class="text-gray-300">
+                            Projet d'analyse de sécurité des réseaux WiFi utilisant Kali Linux et ses outils 
+                            pour identifier les vulnérabilités et tester la résistance des réseaux sans-fil.
+                        </p>
+                    </div>
+
+                    <div class="project-section">
+                        <h3 class="text-2xl font-bold mb-4 text-blue-400">
+                            <i class="fas fa-cogs mr-2"></i>Technologies
+                        </h3>
+                        <div class="tech-stack">
+                            <span class="tech-badge">Kali Linux</span>
+                            <span class="tech-badge">Aircrack-ng</span>
+                            <span class="tech-badge">Wireshark</span>
+                            <span class="tech-badge">Python</span>
+                        </div>
+                    </div>
+
+                    <div class="project-section">
+                        <h3 class="text-2xl font-bold mb-4 text-green-400">
+                            <i class="fas fa-calendar mr-2"></i>Durée
+                        </h3>
+                        <p class="text-gray-300 text-xl">3 semaines</p>
+                        <p class="text-gray-400">Recherche et tests pratiques</p>
+                    </div>
+                </div>
+
+                <div class="project-feature-grid">
+                    <div class="feature-card">
+                        <h4 class="text-lg font-bold mb-3 text-yellow-400">
+                            <i class="fas fa-wifi mr-2"></i>Analyse des Réseaux
+                        </h4>
+                        <p class="text-gray-300">Détection et analyse des réseaux WiFi environnants</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4 class="text-lg font-bold mb-3 text-purple-400">
+                            <i class="fas fa-shield-alt mr-2"></i>Tests WEP/WPA
+                        </h4>
+                        <p class="text-gray-300">Tests de sécurité sur différents protocoles de chiffrement</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4 class="text-lg font-bold mb-3 text-green-400">
+                            <i class="fas fa-chart-bar mr-2"></i>Analyse de Trafic
+                        </h4>
+                        <p class="text-gray-300">Capture et analyse du trafic réseau avec Wireshark</p>
+                    </div>
+                </div>
+
+                <div class="demo-section">
+                    <h3 class="text-2xl font-bold mb-4 text-blue-400">
+                        <i class="fas fa-code mr-2"></i>Exemple de Commande
+                    </h3>
+                    <div class="code-snippet">
+                        # Analyse des réseaux WiFi disponibles<br>
+                        sudo airodump-ng wlan0mon<br><br>
+                        
+                        # Capture des handshakes WPA<br>
+                        sudo airodump-ng -c 6 --bssid XX:XX:XX:XX:XX:XX -w capture wlan0mon
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- صفحة تفصيلية للبيئة الآمنة -->
+        <div id="test-environment" class="project-detail-page">
+            <div class="project-header">
+                <div class="container mx-auto px-6">
+                    <button class="back-btn" onclick="showPage('projects')">
+                        <i class="fas fa-arrow-left mr-2"></i>Retour aux Projets
+                    </button>
+                    <h1 class="text-4xl md:text-5xl font-bold mb-4">Environnement de Test Sécurisé</h1>
+                    <p class="text-xl text-gray-300">Configuration d'un laboratoire virtuel pour tests de sécurité</p>
+                </div>
+            </div>
+
+            <div class="project-detail-content">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="project-section">
+                        <h3 class="text-2xl font-bold mb-4 text-green-400">
+                            <i class="fas fa-server mr-2"></i>Configuration
+                        </h3>
+                        <ul class="feature-list">
+                            <li>Machine virtuelle Kali Linux</li>
+                            <li>Réseau interne isolé</li>
+                            <li>Machines cibles Windows/Linux</li>
+                            <li>Outils de test pré-installés</li>
+                        </ul>
+                    </div>
+
+                    <div class="project-section">
+                        <h3 class="text-2xl font-bold mb-4 text-yellow-400">
+                            <i class="fas fa-tools mr-2"></i>Outils Utilisés
+                        </h3>
+                        <div class="tech-stack">
+                            <span class="tech-badge">VirtualBox</span>
+                            <span class="tech-badge">VMware</span>
+                            <span class="tech-badge">Hydra</span>
+                            <span class="tech-badge">Aircrack-ng</span>
+                            <span class="tech-badge">Metasploit</span>
+                            <span class="tech-badge">Nmap</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <h3 class="text-2xl font-bold mb-4 text-blue-400">
+                        <i class="fas fa-cogs mr-2"></i>Fonctionnalités Implémentées
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="text-lg font-bold mb-2 text-white">Tests de Pénétration</h4>
+                            <ul class="text-gray-300">
+                                <li>• Tests de vulnérabilités avec Metasploit</li>
+                                <li>• Scan de ports avec Nmap</li>
+                                <li>• Tests de force brute avec Hydra</li>
+                                <li>• Analyse WiFi avec Aircrack-ng</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold mb-2 text-white">Environnement Isolé</h4>
+                            <ul class="text-gray-300">
+                                <li>• Réseau privé virtuel</li>
+                                <li>• Machines cibles configurables</li>
+                                <li>• Sauvegardes et restaurations</li>
+                                <li>• Documentation des tests</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- صفحة تفصيلية لتحليل البروتوكولات -->
+        <div id="protocol-analysis" class="project-detail-page">
+            <div class="project-header">
+                <div class="container mx-auto px-6">
+                    <button class="back-btn" onclick="showPage('projects')">
+                        <i class="fas fa-arrow-left mr-2"></i>Retour aux Projets
+                    </button>
+                    <h1 class="text-4xl md:text-5xl font-bold mb-4">Analyse de Protocoles</h1>
+                    <p class="text-xl text-gray-300">Étude des protocoles réseau et détection de vulnérabilités</p>
+                </div>
+            </div>
+
+            <div class="project-detail-content">
+                <div class="grid md:grid-cols-3 gap-8 mb-8">
+                    <div class="project-section">
+                        <h3 class="text-2xl font-bold mb-4 text-red-400">
+                            <i class="fas fa-info-circle mr-2"></i>Description
+                        </h3>
+                        <p class="text-gray-300">
+                            Analyse approfondie des protocoles réseau pour comprendre leur fonctionnement 
+                            et identifier les potentielles vulnérabilités de sécurité.
+                        </p>
+                    </div>
+
+                    <div class="project-section">
+                        <h3 class="text-2xl font-bold mb-4 text-blue-400">
+                            <i class="fas fa-cogs mr-2"></i>Protocoles Étudiés
+                        </h3>
+                        <div class="tech-stack">
+                            <span class="tech-badge">HTTP/HTTPS</span>
+                            <span class="tech-badge">TCP/UDP</span>
+                            <span class="tech-badge">SSH</span>
+                            <span class="tech-badge">DNS</span>
+                            <span class="tech-badge">FTP</span>
+                        </div>
+                    </div>
+
+                    <div class="project-section">
+                        <h3 class="text-2xl font-bold mb-4 text-green-400">
+                            <i class="fas fa-calendar mr-2"></i>Durée
+                        </h3>
+                        <p class="text-gray-300 text-xl">4 semaines</p>
+                        <p class="text-gray-400">Analyse et documentation</p>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <h3 class="text-2xl font-bold mb-4 text-purple-400">
+                        <i class="fas fa-network-wired mr-2"></i>Détails des Protocoles
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="text-lg font-bold mb-2 text-white">HTTP/HTTPS</h4>
+                            <ul class="text-gray-300">
+                                <li>• Analyse des requêtes et réponses</li>
+                                <li>• Détection d'informations sensibles</li>
+                                <li>• Tests de sécurité des cookies</li>
+                                <li>• Analyse du chiffrement SSL/TLS</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold mb-2 text-white">TCP/UDP</h4>
+                            <ul class="text-gray-300">
+                                <li>• Analyse des handshakes TCP</li>
+                                <li>• Détection de scans de ports</li>
+                                <li>• Analyse du trafic UDP</li>
+                                <li>• Identification de patterns suspects</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold mb-2 text-white">SSH</h4>
+                            <ul class="text-gray-300">
+                                <li>• Analyse des échanges de clés</li>
+                                <li>• Tests de configuration</li>
+                                <li>• Détection d'attaques par force brute</li>
+                                <li>• Audit des paramètres de sécurité</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold mb-2 text-white">DNS</h4>
+                            <ul class="text-gray-300">
+                                <li>• Analyse des requêtes DNS</li>
+                                <li>• Détection de fuites d'information</li>
+                                <li>• Tests de sécurité des serveurs DNS</li>
+                                <li>• Identification de DNS spoofing</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="demo-section">
+                    <h3 class="text-2xl font-bold mb-4 text-yellow-400">
+                        <i class="fas fa-code mr-2"></i>Outils d'Analyse
+                    </h3>
+                    <div class="code-snippet">
+                        # Analyse avec Wireshark<br>
+                        wireshark -i eth0 -f "tcp port 80"<br><br>
+                        
+                        # Scan de ports avec Nmap<br>
+                        nmap -sS -sV -O cible.com<br><br>
+                        
+                        # Test SSH avec Hydra<br>
+                        hydra -l admin -P wordlist.txt ssh://cible.com
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Page Contact -->
         <div id="contact" class="portfolio-page">
             <section class="py-20">
                 <div class="container mx-auto px-6">
                     <div class="contact-header">
                         <h2>CONTACTEZ-MOI</h2>
-                        <p>Je suis à la recherche d'opportunités pour intégrer un Bac Pro SN en 2025/2026</p>
+                        <p>Je suis à la recherche d'opportunités pour intégrer un Bac Pro SN en 2026/2027</p>
                     </div>
 
                     <div class="contact-grid">
@@ -1874,7 +2162,7 @@
                                     <i class="fas fa-graduation-cap"></i>
                                 </div>
                                 <h4 class="text-xl font-bold mb-2 text-white">Recherche de Formation</h4>
-                                <p class="text-gray-300">Je cherche à intégrer un Bac Pro Systèmes Numériques pour 2025/2026</p>
+                                <p class="text-gray-300">Je cherche à intégrer un Bac Pro Systèmes Numériques pour 2026/2027</p>
                             </div>
 
                             <div class="service-card">
@@ -1975,9 +2263,15 @@
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            event.target.classList.add('active');
+            
+            // إضافة active للزر المناسب
+            const activeBtn = document.querySelector(`.nav-btn[onclick="showPage('${pageId}')"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
         }
 
+        // دالة عرض صفحة تفاصيل المشروع
         function showProjectDetail(projectId) {
             // إخفاء جميع الصفحات
             document.querySelectorAll('.portfolio-page').forEach(page => {
@@ -1990,7 +2284,14 @@
             });
             
             // عرض صفحة التفاصيل المطلوبة
-            document.getElementById(projectId).classList.add('active');
+            const projectPage = document.getElementById(projectId);
+            if (projectPage) {
+                projectPage.classList.add('active');
+            } else {
+                console.error('Page de projet non trouvée:', projectId);
+                // إذا لم توجد الصفحة، العودة إلى صفحة المشاريع
+                showPage('projects');
+            }
         }
 
         // دالة إنشاء كلمة السر
@@ -2114,7 +2415,6 @@
             });
             
             // تحسينات للهواتف
-            // منع التكبير التلقائي على الهواتف عند التركيز على الحقول
             document.querySelectorAll('input, select, textarea').forEach(element => {
                 element.addEventListener('focus', function() {
                     window.scrollTo(0, 0);
@@ -2122,7 +2422,6 @@
                 });
             });
             
-            // تحسين سلوك القائمة على الهواتف
             const navButtons = document.querySelectorAll('.nav-btn');
             navButtons.forEach(button => {
                 button.addEventListener('touchstart', function() {
@@ -2134,7 +2433,6 @@
                 });
             });
             
-            // إضافة مساحة آمنة للهواتف الحديثة
             if (CSS.supports('padding-top: env(safe-area-inset-top)')) {
                 document.body.classList.add('safe-area-padding');
             }
